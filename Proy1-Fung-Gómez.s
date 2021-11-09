@@ -9,4 +9,4 @@
 
         .text
 
-# Planificación de proyectos
+# Planificación de registros
