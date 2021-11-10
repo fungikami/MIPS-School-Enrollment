@@ -1,0 +1,53 @@
+CI-0895 "Materia 01"  1
+   15-31324 "Estudiante 09" 
+   16-82431 "Estudiante 10" 
+   17-07230 "Estudiante 15" 
+   17-53031 "Estudiante 11" 
+   20-35368 "Estudiante 06" 
+
+CI-1688 "Materia 04" 16
+   19-00620 "Estudiante 07" 
+   21-12149 "Estudiante 00" 
+
+CI-1806 "Materia 06" 17
+   15-31324 "Estudiante 09" 
+   15-92677 "Estudiante 03" 
+   21-41678 "Estudiante 05" 
+
+CI-3492 "Materia 09"  8
+   15-92677 "Estudiante 03" 
+   20-35368 "Estudiante 06" 
+
+CI-4136 "Materia 05" 17
+   19-49939 "Estudiante 16" 
+   20-35368 "Estudiante 06" 
+
+CI-6303 "Materia 08" 22
+   17-21035 "Estudiante 02" 
+   19-49939 "Estudiante 16" 
+
+CI-7337 "Materia 07" 16
+   15-31324 "Estudiante 09" 
+   16-46067 "Estudiante 19" 
+   17-21035 "Estudiante 02" 
+   17-53031 "Estudiante 11" 
+   19-29226 "Estudiante 17" 
+   19-53168 "Estudiante 18" 
+   20-57475 "Estudiante 01" 
+   21-52263 "Estudiante 13" 
+
+CI-7394 "Materia 00"  5
+   15-92677 "Estudiante 03" 
+   17-53031 "Estudiante 11" 
+   19-29226 "Estudiante 17" 
+
+CI-9228 "Materia 02" 11
+   15-31324 "Estudiante 09" 
+   15-92677 "Estudiante 03" 
+   16-81038 "Estudiante 04" 
+
+CI-9484 "Materia 03" 12
+   16-82431 "Estudiante 10" 
+   19-53168 "Estudiante 18" 
+   21-12149 "Estudiante 00" 
+
