@@ -27,7 +27,23 @@ main:
     bltz $v0, fin
     move $a0 $v0 # Guarda el file descriptor en $a0
 
-    Estudiantes>.append(estudiante)
+    # Leer archivo ($v0=14) ($a0=$v0)
+    # Verificar $v0 < 0 (too malo)
+
+    # Crear <estructura Estudiantes>
+
+    # Por cada línea:
+        # Crear estudiante
+        # 8 chars:
+            # Guardar estudiante.carnet
+        # do while != “”:
+            # Guardar estudiante.nombre
+        # 6 chars:
+            # Guardar estudiante.indice
+        # 3 chars:
+            # Guardar estudiante.creditosAprov
+        
+    # <estructura Estudiantes>.append(estudiante)
 
     # ------------ MATERIAS ---------------
 
