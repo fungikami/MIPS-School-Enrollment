@@ -4,19 +4,15 @@
 # Fecha: 25-nov-2021
 
         .data
-hola: .asciiz "Hello World \n"
 
-# TODO
+arcEst:	.asciiz "caso1-Estudiantes.txt"
+arcMat:	.asciiz "caso1-Materias.txt"	
+arcIns:	.asciiz "caso1-SolInscripcion.txt"
+arcCor:	.asciiz "caso1-SolCorreccion.txt"
+arcTen: .asciiz "caso1-InsTentativa.txt"
+arcDef:	.asciiz "caso1-InsDefinitiva.txt"
 
         .text
 
 # Planificación de registros
 
-# Crea la estructura de datos de materia
-li $t0 1 # Carga mi nota en CI3815
-addi $t0 $t1 $t2 # Suma las notas
-
-sw $t0 P
-li $v0, 4				
-la $a0, hola
-syscall
