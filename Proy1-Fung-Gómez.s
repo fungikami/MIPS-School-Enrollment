@@ -17,16 +17,17 @@ arcDef:	.asciiz "caso1-InsDefinitiva.txt"
 # Planificación de registros
 
 main:
+# ------------ ESTUDIANTES ---------------
+
     # Abrir archivo
     li $v0 13
     lw $a0 arcEst
     li $a1 0
     syscall # Retorna $v0 (file descriptor)
 
-    # Verificar si el archivo existe
-    bltz $v0, fin
-    move $a0 $v0 # Guarda el file descriptor en $a0
+    move $a0 $v0
 
+    # Verificar $v0 < 0 (too malo)
     # Leer archivo ($v0=14) ($a0=$v0)
     # Verificar $v0 < 0 (too malo)
 
@@ -42,8 +43,19 @@ main:
             # Guardar estudiante.indice
         # 3 chars:
             # Guardar estudiante.creditosAprov
+
+        # syscall 9 (52 bytes) [verificar]
+        # sw $[carnet] ($v0)
+        # sw $[nombre] 9($v0)
+        # sw $[índice] 30($v0)
+        # sw $[credAprov] 38($v0)
+        # sw $zero 42($v0)
+        # sw $zero 46($v0)
+        # sw $zero 54($v0)
         
-    # <estructura Estudiantes>.append(estudiante)
+
+
+        # <dict de Estudiantes>.hash(estudiante)
 
     # ------------ MATERIAS ---------------
 
@@ -59,23 +71,29 @@ main:
     # Leer archivo ($v0=14) ($a0=$v0)
     # Verificar $v0 < 0 (too malo)
 
-
-
-
     # Por cada línea:
         # Crear materia
         # 7 chars:
-            # Guardar materia.codigo
+            # Guardar materia.código
         # do while != “”:
             # Guardar materia.nombre
         # 1 chars:
-            # Guardar materia.creditos
+            # Guardar materia.créditos
         # 3 chars:
             # Guardar materia.cupos
         # 3 chars:
-            # Guardar materia.creditos
+            # Guardar materia.miniCréditos
+
+
+        # syscall 9 (51 bytes) [verificar]
+        # sw $[código] ($v0)
+        # sw $[nombre] 8($v0)
+        # sw $[créditos] 39($v0)
+        # sw $[cupos] 43($v0)
+        # sw $[miniCréditos] 47($v0)
+        # sw $[cabezaLista] 51($v0)
         
-        # <estructura Materia>.append(materia)
+        # <dict de Materias>.hash(materia)
 
     # ------------ SOLICITUDES ---------------
 
@@ -96,13 +114,27 @@ main:
         # 8 chars:
             # Guardar solicitud.carnet
             # Hacer estudiante.numSolicitudes++
+            # estudiantes[“18-10892”].numSolicitudes += 1
+
     # 7 chars:
             # Guardar solicitud.codigo
             # Hacer estudiante.creditosInscribiendo++
 
         # <estructura Solicitud>.append(solicitud)
 
+        # syscall 9 (19 bytes) [verificar]
+        # sw $[carnet] ($v0)
+        # sw $[código] 9($v0)
+        # sw $[corrección] 17($v0)
+        # sw $[operación] 18($v0)
+
     # Procesar vainas
+
+    # for estudiante in <dict Estudiantes>
+    #     $t0 = calcularCreditoSocial(estudiante)
+    #     <PriorityQueue>.append(estudiante, $t0)
+
+    # Se va haciendo pop y actualizando las materias
 
     # Escribir archivo tentativo
 
@@ -110,7 +142,7 @@ main:
 
     # Procesar vainas
 
-    # Escribir archivo definitivo
+    # Escribir archivo definitivo 
 
 
 fin:
