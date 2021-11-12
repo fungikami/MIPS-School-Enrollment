@@ -5,8 +5,8 @@
 
         .data
 
-arcEst:	.asciiz "ejemplo-Estudiantes.txt"
-arcMat:	.asciiz "ejemplo-Materias.txt"	
+arcEst:	.asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:	.asciiz "ejemplo-Materias.txt"
 arcIns:	.asciiz "ejemplo-SolInscripcion.txt"
 arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
 arcTen: .asciiz "ejemplo-InsTentativa.txt"
@@ -26,9 +26,10 @@ main:
     li $v0 13
     la $a0 arcEst
     li $a1 0
-    syscall 
+    syscall # Retorna $v0
 
     bltz $v0 error
+    j fin
     
     # Leer archivo 
     move $a0 $v0
@@ -153,7 +154,6 @@ main:
     # Procesar vainas
 
     # Escribir archivo definitivo 
-
 
 error:
 	li $v0 4        
