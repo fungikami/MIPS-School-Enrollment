@@ -5,12 +5,12 @@
 
         .data
 
-arcEst:	.asciiz "caso1-Estudiantes.txt"
-arcMat:	.asciiz "caso1-Materias.txt"	
-arcIns:	.asciiz "caso1-SolInscripcion.txt"
-arcCor:	.asciiz "caso1-SolCorreccion.txt"
-arcTen: .asciiz "caso1-InsTentativa.txt"
-arcDef:	.asciiz "caso1-InsDefinitiva.txt"
+arcEst:	.asciiz "ejemplo-Estudiantes.txt"
+arcMat:	.asciiz "ejemplo-Materias.txt"	
+arcIns:	.asciiz "ejemplo-SolInscripcion.txt"
+arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
+arcTen: .asciiz "ejemplo-InsTentativa.txt"
+arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
 
         .text
 
