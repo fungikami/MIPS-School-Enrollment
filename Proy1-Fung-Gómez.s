@@ -13,6 +13,8 @@ arcTen: .asciiz "ejemplo-InsTentativa.txt"
 arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
 
 buffer: .space 1024
+error1: .asciiz "No se pudo abrir el archivo"
+
         .text
 
 # Planificación de registros
