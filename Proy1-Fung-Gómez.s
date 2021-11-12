@@ -12,6 +12,7 @@ arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
 arcTen: .asciiz "ejemplo-InsTentativa.txt"
 arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
 
+buffer: .space 1024
         .text
 
 # Planificación de registros
@@ -19,13 +20,20 @@ arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
 main:
 # ------------ ESTUDIANTES ---------------
 
-    # Abrir archivo
+    # Abrir (para leer) archivo
     li $v0 13
-    lw $a0 arcEst
+    la $a0 arcEst
     li $a1 0
-    syscall # Retorna $v0 (file descriptor)
+    syscall 
 
+    bltz $v0 error
+    
+    # Leer archivo 
     move $a0 $v0
+    li $v0 14
+    la $a1 buffer   
+    li $a2 1024     
+    syscall
 
     # Verificar $v0 < 0 (too malo)
     # Leer archivo ($v0=14) ($a0=$v0)
@@ -60,12 +68,12 @@ main:
     # ------------ MATERIAS ---------------
 
     # Abrir archivo
-    li $v0 13
-    lw $a0 arcInst
-    li $a1 0
-    syscall # Retorna $v0 (file descriptor)
+    # li $v0 13
+    # lw $a0 arcInst
+    # li $a1 0
+    # syscall # Retorna $v0 (file descriptor)
 
-    move $a0 $v0
+    # move $a0 $v0
 
     # Verificar $v0 < 0 (too malo)
     # Leer archivo ($v0=14) ($a0=$v0)
@@ -98,12 +106,12 @@ main:
     # ------------ SOLICITUDES ---------------
 
     # Abrir archivo
-    li $v0 13
-    lw $a0 arcSol
-    li $a1 0
-    syscall # Retorna $v0 (file descriptor)
+    # li $v0 13
+    # lw $a0 arcSol
+    # li $a1 0
+    # syscall # Retorna $v0 (file descriptor)
 
-    move $a0 $v0
+    # move $a0 $v0
 
     # Verificar $v0 < 0 (too malo)
     # Leer archivo ($v0=14) ($a0=$v0)
@@ -145,5 +153,11 @@ main:
     # Escribir archivo definitivo 
 
 
+error:
+	li $v0 4        
+    la $a0 error1
+    syscall
+
 fin:
-    # Abortar si no se pudo abrir el archivo
+    li $v0 10               
+    syscall
