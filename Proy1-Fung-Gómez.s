@@ -16,9 +16,6 @@ buffer: .space 1024
 error1: .asciiz "No se pudo abrir el archivo"
 
         .text
-
-# Planificación de registros
-
 main:
 # ------------ ESTUDIANTES ---------------
 
@@ -30,130 +27,127 @@ main:
 
     bltz $v0 error
     
+# Abrir archivo
+li $v0 13
+la $a0 arcEst
+li $a1 0
+syscall # Retorna $v0 (file descriptor)
+
+move $a0 $v0
+
+# Verificar $v0 < 0 (too malo)
+# Leer archivo ($v0=14) ($a0=$v0)
+# Verificar $v0 < 0 (too malo)
+
+# Crear <estructura Estudiantes>
+
+# Por cada línea:
+    # syscall 9 (42 bytes) [verificar]
+    # Crear estudiante
+    # 8 chars:
+        # Guardar estudiante.carnet
+        # sb $[carnet] ($v0)
+        # $v0++ $dirBuffer++
+    # $dirBuffer++ 
+    # do while != “”:
+        # Guardar estudiante.nombre
+        # sb $[nombre] ($v0)
+        # $v0++ $dirBuffer++
+    # 6 chars:
+        # Guardar estudiante.indice
+    # 3 chars:
+        # Guardar estudiante.creditosAprov
+
+   
     
-    # Leer archivo 
-    move $a0 $v0
-    li $v0 14
-    la $a1 buffer   
-    li $a2 1024     
-    syscall
+    # sw $[nombre] 9($v0)
+    # sw $[índice] 30($v0)
+    # sw $[credAprov] 38($v0)
 
-    # Verificar $v0 < 0 (too malo)
-    # Leer archivo ($v0=14) ($a0=$v0)
-    # Verificar $v0 < 0 (too malo)
+# ------------ MATERIAS ---------------
 
-    # Crear <estructura Estudiantes>
+# Abrir archivo
+li $v0 13
+la $a0 arcInst
+li $a1 0
+syscall # Retorna $v0 (file descriptor)
 
-    # Por cada línea:
-        # Crear estudiante
-        # 8 chars:
-            # Guardar estudiante.carnet
-        # do while != “”:
-            # Guardar estudiante.nombre
-        # 6 chars:
-            # Guardar estudiante.indice
-        # 3 chars:
-            # Guardar estudiante.creditosAprov
+move $a0 $v0
 
-        # syscall 9 (52 bytes) [verificar]
-        # sw $[carnet] ($v0)
-        # sw $[nombre] 9($v0)
-        # sw $[índice] 30($v0)
-        # sw $[credAprov] 38($v0)
-        # sw $zero 42($v0)
-        # sw $zero 46($v0)
-        # sw $zero 54($v0)
-        
+# Verificar $v0 < 0 (too malo)
+# Leer archivo ($v0=14) ($a0=$v0)
+# Verificar $v0 < 0 (too malo)
 
-
-        # <dict de Estudiantes>.hash(estudiante)
-
-    # ------------ MATERIAS ---------------
-
-    # Abrir archivo
-    # li $v0 13
-    # lw $a0 arcInst
-    # li $a1 0
-    # syscall # Retorna $v0 (file descriptor)
-
-    # move $a0 $v0
-
-    # Verificar $v0 < 0 (too malo)
-    # Leer archivo ($v0=14) ($a0=$v0)
-    # Verificar $v0 < 0 (too malo)
-
-    # Por cada línea:
-        # Crear materia
-        # 7 chars:
-            # Guardar materia.código
-        # do while != “”:
-            # Guardar materia.nombre
-        # 1 chars:
-            # Guardar materia.créditos
-        # 3 chars:
-            # Guardar materia.cupos
-        # 3 chars:
-            # Guardar materia.miniCréditos
-
-
-        # syscall 9 (51 bytes) [verificar]
-        # sw $[código] ($v0)
-        # sw $[nombre] 8($v0)
-        # sw $[créditos] 39($v0)
-        # sw $[cupos] 43($v0)
-        # sw $[miniCréditos] 47($v0)
-        # sw $[cabezaLista] 51($v0)
-        
-        # <dict de Materias>.hash(materia)
-
-    # ------------ SOLICITUDES ---------------
-
-    # Abrir archivo
-    # li $v0 13
-    # lw $a0 arcSol
-    # li $a1 0
-    # syscall # Retorna $v0 (file descriptor)
-
-    # move $a0 $v0
-
-    # Verificar $v0 < 0 (too malo)
-    # Leer archivo ($v0=14) ($a0=$v0)
-    # Verificar $v0 < 0 (too malo)
-
-    # Por cada línea:
-        # Crear solicitud
-        # 8 chars:
-            # Guardar solicitud.carnet
-            # Hacer estudiante.numSolicitudes++
-            # estudiantes[“18-10892”].numSolicitudes += 1
-
+# Por cada línea:
+    # Crear materia
     # 7 chars:
-            # Guardar solicitud.codigo
-            # Hacer estudiante.creditosInscribiendo++
+        # Guardar materia.código
+    # do while != “”:
+        # Guardar materia.nombre
+    # 1 chars:
+        # Guardar materia.créditos
+    # 3 chars:
+        # Guardar materia.cupos
+    # 3 chars:
+        # Guardar materia.miniCréditos
 
-        # <estructura Solicitud>.append(solicitud)
 
-        # syscall 9 (19 bytes) [verificar]
-        # sw $[carnet] ($v0)
-        # sw $[código] 9($v0)
-        # sw $[corrección] 17($v0)
-        # sw $[operación] 18($v0)
+    # syscall 9 (51 bytes) [verificar]
+    # sw $[código] ($v0)
+    # sw $[nombre] 8($v0)
+    # sw $[créditos] 39($v0)
+    # sw $[cupos] 43($v0)
+    # sw $[miniCréditos] 47($v0)
+    # sw $[cabezaLista] 51($v0)
+    
+    # <dict de Materias>.hash(materia)
 
-    # Procesar vainas
+# ------------ SOLICITUDES ---------------
 
-    # for estudiante in <dict Estudiantes>
-    #     $t0 = calcularCreditoSocial(estudiante)
-    #     <PriorityQueue>.append(estudiante, $t0)
+# Abrir archivo
+li $v0 13
+la $a0 arcSol
+li $a1 0
+syscall # Retorna $v0 (file descriptor)
 
-    # Se va haciendo pop y actualizando las materias
+move $a0 $v0
 
-    # Escribir archivo tentativo
+# Verificar $v0 < 0 (too malo)
+# Leer archivo ($v0=14) ($a0=$v0)
+# Verificar $v0 < 0 (too malo)
 
-    # Abrir solicitudes de corrección
+# Por cada línea:
+    # Crear solicitud
+    # 8 chars:
+        # Guardar solicitud.carnet
 
-    # Procesar vainas
+   # 7 chars:
+        # Guardar solicitud.codigo
 
-    # Escribir archivo definitivo 
+    # <estructura Solicitud>.append(solicitud)
+
+    # syscall 9 (19 bytes) [verificar]
+    # sw $[carnet] ($v0)
+    # sw $[código] 9($v0)
+    # sw $[corrección] 17($v0)
+    # sw $[operación] 18($v0)
+
+# Procesar vainas inscripción
+
+# for solicitud in Solicitud
+#     Materias[solicitud.codigo].Estudiantes.append(estudiante)
+
+# Escribir archivo tentativo
+# Guardar en una lista a eliminar
+# Guardar en una lista a incluir
+# Se eliminan los de la lista a eliminar
+# Procesar vainas corrección
+# for solicitud in listaIncluir
+#    PriorityQueue.append(Estudiante[solicitud.estudiante], Estudiante[solicitud.estudiante].creditos)
+# 
+
+# Escribir archivo definitivo 
+ 
 
     j fin
 error:
