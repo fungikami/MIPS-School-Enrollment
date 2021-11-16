@@ -35,7 +35,7 @@ Nodo_crear:
     li $v0, 9
     syscall
 
-    bltz $v0, salir
+    bltz $v0, salir 
 
     # Inicializa el nodo
     sw $zero,  ($v0)
