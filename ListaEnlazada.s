@@ -20,6 +20,8 @@ ListaEnlazada_crear:
     li $v0, 9
     syscall
 
+    bltz $v0, salir
+
     # Inicializa la lista
     sw $zero,  ($v0)
     sw $zero, 4($v0)
