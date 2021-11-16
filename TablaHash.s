@@ -58,7 +58,8 @@ TablaHash_crear_fin:
 
 # Función de hash
 #   .
-# Entrada: $a0: clave.
+# Entrada: $a0: Tabla de Hash.
+#          $a1: Clave.
 #
 # Planificación de registros:
 TablaHash_funcion:
@@ -81,9 +82,9 @@ TablaHash_funcion:
 
 # Función insertar
 # Inserta un elemento con la clave y el valor dado en la tabla.
-# Entrada: $a0: tabla.
-#          $a1: clave del elemento a insertar.
-#          $sp: valor del elemento a insertar.
+# Entrada: $a0: Tabla de Hash.
+#          $a1: Clave del elemento a insertar.
+#          $sp: Valor del elemento a insertar.
 #
 # Planificación de registros:
 #
@@ -94,31 +95,32 @@ TablaHash_insertar:
     move $fp,    $sp
     addi $sp,    $sp, -8
 
-
     # Verifica si la clave ya existe (si $v0 = 0 ya existe)
-    jal TablaHash_existe
-    beqz $v0 TablaHash_insertar_fin
+    # jal TablaHash_existe
+    # beqz $v0 TablaHash_insertar_fin
 
-    # Funcion hash
+    # Funcion Hash
     jal TablaHash_funcion
 
     # Guardar dir de la tabla
     move $s0, $a0
 
     # Insertar
-    # $a0 = dirTabla + $v0*4
+    # $a0 = 4(dirTabla) + $v0*4
     # $a1 = $sp
     jal Lista_insertar
 
-    # Verificar si se logró agregar (?)
+    # Verificar si se logró agregar (???)
 
     # Aumentar el número de elementos
-
+    sw   $s1, ($s0)            
+    addi $s1,  $s1, 1
+    lw   $s1, ($s0) 
 
 TablaHash_insertar_fin:
     # Epílogo
     move $v0,    $s0
-    
+
     move $sp,    $fp
     lw   $fp,   ($sp)
     sw   $ra, -4($sp)
@@ -138,15 +140,27 @@ TablaHash_insertar_fin:
 TablaHash_eliminar:
     # Prólogo
     sw   $fp, ($sp)
+    sw   $ra, -4($sp)
     move $fp,  $sp
-    addi $sp,  $sp, -4
+    addi $sp,  $sp, -8
 
+    # Funcion Hash
+    jal TablaHash_funcion
 
+    # x = Buscar en la lista tabla[hash]
+
+    # Verificamos si se encuentra
+
+    # Eliminar x
+    # $a0 = 4(dirTabla) + $v0*4
+    # $a1 = x
+    jal Lista_insertar
     
 TablaHash_eliminar_fin:
     # Epílogo
     move $sp,    $fp
     lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
 
     jr $ra
 
@@ -161,8 +175,9 @@ TablaHash_eliminar_fin:
 TablaHash_buscar:
     # Prólogo
     sw   $fp, ($sp)
+    sw   $ra, -4($sp)
     move $fp,  $sp
-    addi $sp,  $sp, -4
+    addi $sp,  $sp, -8
 
 
 
@@ -170,6 +185,7 @@ TablaHash_buscar_fin:
     # Epílogo
     move $sp,    $fp
     lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
 
     jr $ra
 
@@ -183,4 +199,19 @@ TablaHash_buscar_fin:
 # Planificación de registros:
 # 
 TablaHash_existe:
+    # Prólogo
+    sw   $fp, ($sp)
+    sw   $ra, -4($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -8
 
+    jal TablaHash_funcion
+
+    # Buscar en tabla[hash] si la clave está en la lista
+
+    # Epílogo
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
+
+    jr $ra
