@@ -22,6 +22,11 @@
 # Planificación de registros:
 # $t0: Valor del nodo.
 Nodo_crear:
+    # Prologo
+	sw   $fp, ($sp)
+	move $fp, $sp
+	addi $sp, $sp, -4
+
     # Guarda el valor en la dirección de memoria del nodo.
     move $t0, $a0
 
@@ -34,6 +39,10 @@ Nodo_crear:
     sw $zero,  ($v0)
     sw $t0,   4($v0)
     sw $zero, 8($v0)
+
+    # Epílogo
+    move $sp,  $fp
+    lw $fp,   ($sp)
 
     # Retorna la dirección del nodo
     jr $ra
