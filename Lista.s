@@ -23,22 +23,21 @@ Lista_crear:
     addi $sp,  $sp, -4
 
     # Asigna memoria para la lista
-    li $a0, 12
+    li $a0, 8
     li $v0, 9
     syscall
 
     # Si no me dieron memoria
     bltz $v0, Lista_crear_salir
 
-    # Crear nodos
+    # Crear centinela de la lista
+    move $a0, $zero
     jal Nodo_crear
-    move
-    jal Nodo_crear
+    move $t0, $v0
 
     # Inicializa la lista
-    sw $zero,  ($v0)
-    sw $zero, 4($v0)
-    sw $zero, 8($v0)
+    sw   $t0, ($v0)
+    li 4($v0), 0
 
 Lista_crear_salir:
     # Epílogo

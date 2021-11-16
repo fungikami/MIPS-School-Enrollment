@@ -38,9 +38,9 @@ Nodo_crear:
     bltz $v0, salir 
 
     # Inicializa el nodo
-    sw $zero,  ($v0)
-    sw $t0,   4($v0)
-    sw $zero, 8($v0)
+    sw $v0,  ($v0)
+    sw $t0, 4($v0)
+    sw $v0, 8($v0)
 
     # Epílogo
     move $sp,  $fp
