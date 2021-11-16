@@ -35,6 +35,8 @@ Nodo_crear:
     li $v0, 9
     syscall
 
+    bltz $v0 salir
+
     # Inicializa el nodo
     sw $zero,  ($v0)
     sw $t0,   4($v0)
@@ -42,7 +44,7 @@ Nodo_crear:
 
     # Epílogo
     move $sp,  $fp
-    lw $fp,   ($sp)
+    lw   $fp, ($sp)
 
     # Retorna la dirección del nodo
     jr $ra
