@@ -43,7 +43,11 @@ Nodo_crear:
     sw $zero, 8($v0)
 
     # Epílogo
+<<<<<<< HEAD
+    move $sp, $fp
+=======
     move $sp,  $fp
+>>>>>>> f022f1e18742a44526ab4cb570ee81ad3fb18270
     lw   $fp, ($sp)
 
     # Retorna la dirección del nodo
