@@ -22,7 +22,7 @@
 # Planificación de registros:
 # $t0: Valor del nodo.
 Nodo_crear:
-    # Prologo
+    # Prólogo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -35,13 +35,19 @@ Nodo_crear:
     li $v0, 9
     syscall
 
+    bltz $v0, salir
+
     # Inicializa el nodo
     sw $zero,  ($v0)
     sw $t0,   4($v0)
     sw $zero, 8($v0)
 
     # Epílogo
+<<<<<<< HEAD
     move $sp, $fp
+=======
+    move $sp,  $fp
+>>>>>>> f022f1e18742a44526ab4cb570ee81ad3fb18270
     lw   $fp, ($sp)
 
     # Retorna la dirección del nodo
