@@ -41,7 +41,7 @@ TablaHash_crear:
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
 
-    # Inicializo la tabla de hash con zero
+    # Inicializo la tabla de hash con zero o con listas (???)
     sw $zero, ($s2)
 
     addi $s2, $s2, 4
@@ -89,18 +89,39 @@ TablaHash_funcion:
 #
 TablaHash_insertar:
     # Prólogo
-    sw   $fp, ($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -4
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -8
 
-    # Verifica si la clave ya existe
 
-    # 
+    # Verifica si la clave ya existe (si $v0 = 0 ya existe)
+    jal TablaHash_existe
+    beqz $v0 TablaHash_insertar_fin
+
+    # Funcion hash
+    jal TablaHash_funcion
+
+    # Guardar dir de la tabla
+    move $s0, $a0
+
+    # Insertar
+    # $a0 = dirTabla + $v0*4
+    # $a1 = $sp
+    jal Lista_insertar
+
+    # Verificar si se logró agregar (?)
+
+    # Aumentar el número de elementos
+
 
 TablaHash_insertar_fin:
     # Epílogo
+    move $v0,    $s0
+    
     move $sp,    $fp
     lw   $fp,   ($sp)
+    sw   $ra, -4($sp)
 
     jr $ra
 

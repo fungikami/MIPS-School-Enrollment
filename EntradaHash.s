@@ -23,11 +23,11 @@
 # $s1: Dirección de la entrada de hash
 EntradaHash_crear:
     # Prólogo
-    sw   $fp, ($sp)
-    sw   $s0, -4($sp)
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
     sw   $s1, -8($sp)
-    move $fp, $sp
-    addi $sp, $sp, -12
+    move $fp,    $sp
+    addi $sp,    $sp, -12
 
     # Guarda la clave
     move $s0, $a0
@@ -54,7 +54,9 @@ EntradaHash_crear_fin:
     # Epílogo
     move $v0, $s1
 
-    move $sp,  $fp
-    lw   $fp, ($sp)
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    sw   $s1, -8($sp)
 
     jr $ra
