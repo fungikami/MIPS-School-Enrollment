@@ -19,6 +19,14 @@ error1: .asciiz "No se pudo abrir el archivo"
 main:
 # ------------ ESTUDIANTES ---------------
 
+    # Abrir (para leer) archivo
+    li $v0 13
+    la $a0 arcEst
+    li $a1 0
+    syscall # Retorna $v0
+
+    bltz $v0 error
+    
 # Abrir archivo
 li $v0 13
 la $a0 arcEst
@@ -141,6 +149,7 @@ move $a0 $v0
 # Escribir archivo definitivo 
  
 
+    j fin
 error:
 	li $v0 4        
     la $a0 error1
