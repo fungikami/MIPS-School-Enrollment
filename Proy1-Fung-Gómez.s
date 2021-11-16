@@ -29,7 +29,7 @@ main:
     syscall # Retorna $v0
 
     bltz $v0 error
-    j fin
+    
     
     # Leer archivo 
     move $a0 $v0
@@ -155,6 +155,7 @@ main:
 
     # Escribir archivo definitivo 
 
+    j fin
 error:
 	li $v0 4        
     la $a0 error1
