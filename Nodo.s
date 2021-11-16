@@ -41,8 +41,8 @@ Nodo_crear:
     sw $zero, 8($v0)
 
     # Epílogo
-    move $sp,  $fp
-    lw $fp,   ($sp)
+    move $sp, $fp
+    lw   $fp, ($sp)
 
     # Retorna la dirección del nodo
     jr $ra
