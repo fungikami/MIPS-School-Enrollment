@@ -79,11 +79,15 @@ Lista_insertar:
     # Crear nodo
     move $a0, $a1
     jal Nodo_crear
+    # $v0 es el nodo
 
     # Actualizar cabeza y nodo
-    
-
-
+    lw $t0,  ($s0)      # centinela
+    lw $t1,  ($t0)      # centinela.prev
+    sw $t1,  ($v0)      # x.prev = centinela.prev
+    sw $t0, 8($v0)      # x.next = centinela
+    sw $v0, 8($t1)      # centinela.prev.next = x
+    sw $v0,  ($t0)      # centinela.prev = x
 
 Lista_insertar_salir:
     # Epílogo
