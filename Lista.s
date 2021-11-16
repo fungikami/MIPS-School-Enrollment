@@ -18,9 +18,10 @@
 # 
 Lista_crear:
     # Prólogo
-    sw   $fp, ($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -4
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -8
 
     # Asigna memoria para la lista
     li $a0, 8
@@ -30,19 +31,25 @@ Lista_crear:
     # Si no me dieron memoria
     bltz $v0, Lista_crear_salir
 
+    # Memoria asignada en t0
+    move $t0, $v0
+
     # Crear centinela de la lista
     move $a0, $zero
     jal Nodo_crear
-    move $t0, $v0
+    move $t1, $v0
 
     # Inicializa la lista
-    sw   $t0, ($v0)
-    li 4($v0), 0
+    sw   $t1, ($t0)
+    li 4($t0), 0
 
+    move $v0, $t0
+    
 Lista_crear_salir:
     # Epílogo
-    move $sp,  $fp
-    lw   $fp, ($sp)
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
 
     # Retorna la dirección del nodo
     jr $ra
