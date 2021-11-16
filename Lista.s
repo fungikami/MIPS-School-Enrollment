@@ -18,9 +18,9 @@
 # 
 Lista_crear:
     # Prólogo
-	sw   $fp, ($sp)
-	move $fp,  $sp
-	addi $sp,  $sp, -4
+    sw   $fp, ($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -4
 
     # Asigna memoria para la lista
     li $a0, 12
