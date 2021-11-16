@@ -1,11 +1,11 @@
-# Nodo
+# Nodo.s
 #
 # Estructura de datos que implementa un elemento
 # de la lista.
 # 
-# anterior:  Dirección del nodo anterior.
-# valor:     Valor del nodo.
-# siguiente: Dirección del nodo siguiente.
+# anterior:  dir. del nodo anterior.
+# valor:     valor del nodo
+# siguiente: dir. del nodo siguiente.
 # 
 # Autores: Ka Fung & Christopher Gómez
 # Fecha: 25-nov-2021
@@ -16,18 +16,21 @@
 
 # Función crear
 # Crea un nodo con el valor dado.
-# Entrada: Valor del nodo.
-# Salida:  Dirección del nodo creado.
-#
+# Entrada:   $a0: valor del nodo.
+# Salida:    $v0: nodo (negativo si no se pudo crear).
+#          ($v0): anterior 
+#         4($v0): valor
+#         8($v0): siguiente
+# 
 # Planificación de registros:
-# $t0: Valor del nodo.
+# $t0: Valor del nodo. 
 Nodo_crear:
     # Prólogo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
 
-    # Guarda el valor en la dirección de memoria del nodo.
+    # Guarda el valor en la dir. de memoria del nodo.
     move $t0, $a0
 
     # Asigna memoria para el nodo.
@@ -35,16 +38,16 @@ Nodo_crear:
     li $v0, 9
     syscall
 
-    bltz $v0, salir 
+    bltz $v0, Nodo_crear_fin
 
     # Inicializa el nodo
-    sw $v0,  ($v0)
-    sw $t0, 4($v0)
-    sw $v0, 8($v0)
-
+    sw $zero,  ($v0)
+    sw $t0,   4($v0)
+    sw $zero, 8($v0)
+    
+Nodo_crear_fin:
     # Epílogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
-    # Retorna la dirección del nodo
     jr $ra
