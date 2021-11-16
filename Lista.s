@@ -38,10 +38,9 @@ Lista_crear:
     # Crear centinela de la lista
     move $a0, $zero
     jal Nodo_crear
-    move $t0, $v0
 
     # Inicializa la lista
-    sw   $t0, ($s0)
+    sw   $v0, ($s0)
     li 4($s0), 0
 
     move $v0, $s0
@@ -76,16 +75,14 @@ Lista_insertar:
 
     # Guardar los argumentos
     move $s0, $a0
-    move $s1, $a1
 
     # Crear nodo
-    move $a0, $s0
-    move $a1, $s1
+    move $a0, $a1
     jal Nodo_crear
-    move $t0, $v0
 
     # Actualizar cabeza y nodo
     
+
 
 
 Lista_insertar_salir:
