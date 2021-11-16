@@ -30,6 +30,11 @@ Lista_crear:
     # Si no me dieron memoria
     bltz $v0, Lista_crear_salir
 
+    # Crear nodos
+    jal Nodo_crear
+    move
+    jal Nodo_crear
+
     # Inicializa la lista
     sw $zero,  ($v0)
     sw $zero, 4($v0)
@@ -44,7 +49,7 @@ Lista_crear_salir:
     jr $ra
 
 
-# Función crear
+# Función insertar
 # Crea una lista enlazada.
 # Entrada: .
 # Salida:  Dirección de la lista enlazada creada.
