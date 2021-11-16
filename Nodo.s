@@ -17,7 +17,7 @@
 # Función crear
 # Crea un nodo con el valor dado.
 # Entrada: Valor del nodo.
-# Salida:  Dirección del nodo creado.
+# Salida:  Dirección del nodo creado (-1 si hubo un error).
 #
 # Planificación de registros:
 # $t0: Valor del nodo.
@@ -35,15 +35,16 @@ Nodo_crear:
     li $v0, 9
     syscall
 
-    bltz $v0, salir 
+    bltz $v0, Nodo_crear_fin
 
     # Inicializa el nodo
     sw $zero,  ($v0)
     sw $t0,   4($v0)
     sw $zero, 8($v0)
 
+Nodo_crear_fin:
     # Epílogo
-    move $sp,  $fp
+    move $sp, $fp
     lw   $fp, ($sp)
 
     # Retorna la dirección del nodo
