@@ -63,7 +63,8 @@ Lista_crear_salir:
 # Salida:  Dirección de la lista enlazada creada.
 #
 # Planificación de registros:
-# 
+# $s0 Dirección de la lista
+# $s1 Valor del nodo
 Lista_insertar:
     # Prólogo
     sw   $fp,    ($sp)
@@ -78,11 +79,14 @@ Lista_insertar:
     move $s1, $a1
 
     # Crear nodo
-    move $a0, $s1
+    move $a0, $s0
+    move $a1, $s1
     jal Nodo_crear
     move $t0, $v0
 
+    # Actualizar cabeza y nodo
     
+
 
 Lista_insertar_salir:
     # Epílogo
