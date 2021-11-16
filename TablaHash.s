@@ -139,10 +139,10 @@ TablaHash_insertar_fin:
 #
 TablaHash_eliminar:
     # Prólogo
-    sw   $fp, ($sp)
+    sw   $fp,   ($sp)
     sw   $ra, -4($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -8
+    move $fp,    $sp
+    addi $sp,    $sp, -8
 
     # Funcion Hash
     jal TablaHash_funcion
@@ -174,12 +174,15 @@ TablaHash_eliminar_fin:
 # 
 TablaHash_buscar:
     # Prólogo
-    sw   $fp, ($sp)
+    sw   $fp,   ($sp)
     sw   $ra, -4($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -8
+    move $fp,    $sp
+    addi $sp,    $sp, -8
 
+    # Funcion Hash
+    jal TablaHash_funcion
 
+    # Buscar en la lista tabla[hash]
 
 TablaHash_buscar_fin:
     # Epílogo
@@ -200,10 +203,10 @@ TablaHash_buscar_fin:
 # 
 TablaHash_existe:
     # Prólogo
-    sw   $fp, ($sp)
+    sw   $fp,   ($sp)
     sw   $ra, -4($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -8
+    move $fp,    $sp
+    addi $sp,    $sp, -8
 
     jal TablaHash_funcion
 
