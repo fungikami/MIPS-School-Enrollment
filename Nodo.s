@@ -8,5 +8,5 @@
         .data
 
         .text
-nodo_init:
+Nodo_crear:
 
