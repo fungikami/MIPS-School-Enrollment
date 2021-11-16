@@ -22,7 +22,7 @@
 # Planificación de registros:
 # $t0: Valor del nodo.
 Nodo_crear:
-    # Prologo
+    # Prólogo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
