@@ -10,33 +10,44 @@
         .text
 
 # Función crear
-# Crea una tabla de hash de tamanio    .
+# Crea una tabla de hash de tamaño    .
+# Entrada:   $a0: Tamaño de la tabla.
 # Salida:    $v0: Tabla de hash (negativo si no se pudo crear).
 #          ($v0): Número de elementos.
-#         4($v0): Cabeza de la tabla de hash.
+#         4($v0): Número de buckets
+#         8($v0): Cabeza de la tabla de hash.
 #
 # Planificación de registros:
-# $s0: Tamanio de la tabla de hash
-#
+# $s0: Tamaño de la tabla de hash
+# $s1: Dirección de retorno
+
 TablaHash_crear:
     # Prólogo
     sw   $fp, ($sp)
     move $fp,  $sp
     addi $sp,  $sp, -4
 
-    # Tamanio de la tabla de hash.
-    li $s0, 20
+    # Tamaño de la tabla de hash.
+    move $s0, $a0
 
-    # Reservo memoria para el número de elem y tabla
-    li $a0, 84  # 4 + 4*20
+    # Reservo memoria para el numElem, numBuckets, cabeza de tabla
+    li $a0, 12 
     li $v0, 9
     syscall
 
     bltz $v0, TablaHash_crear_fin 
 
     # Inicializo numero de elementos
-    sw $zero, ($v0)
-    la $s2,    $v0
+    sw $zero,  ($v0)
+    sw $s0,   4($v0)
+    
+    move $s1, $v0
+
+    # Reservo memoria para la tabla
+    li $a0, 12 
+    li $v0, 9
+    syscall
+
 
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
