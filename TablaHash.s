@@ -41,7 +41,7 @@ TablaHash_crear:
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
 
-    # Inicializo la tabla de hash con zero o con listas (???)
+    # Inicializo la tabla de hash con zero o con listas (?)
     sw $zero, ($s2)
 
     addi $s2, $s2, 4
@@ -62,6 +62,7 @@ TablaHash_crear_fin:
 #          $a1: Clave.
 #
 # Planificación de registros:
+# 
 TablaHash_funcion:
     # Prólogo
     sw   $fp, ($sp)
@@ -69,11 +70,13 @@ TablaHash_funcion:
     addi $sp,  $sp, -4
 
     # Calcula hash
-    li, $s0, 1
+    lw   $s0, ($a0)
+	div  $a1,  $s0		# hi = modulo = clave % tamañoTabla
+    mfhi $s1            # hi = modulo
+
+    multi $v0, $s1, 4   # modulo * 4
 
     # Epílogo
-    move $v0, $s0
-
     move $sp,    $fp
     lw   $fp,   ($sp)
 
@@ -106,7 +109,7 @@ TablaHash_insertar:
     move $s0, $a0
 
     # Insertar
-    # $a0 = 4(dirTabla) + $v0*4
+    # $a0 = 4(dirTabla) + $v0
     # $a1 = $sp
     jal Lista_insertar
 
@@ -152,7 +155,7 @@ TablaHash_eliminar:
     # Verificamos si se encuentra
 
     # Eliminar x
-    # $a0 = 4(dirTabla) + $v0*4
+    # $a0 = 4(dirTabla) + $v0
     # $a1 = x
     jal Lista_insertar
     
