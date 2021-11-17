@@ -137,7 +137,7 @@ TablaHash_hash_loop_fin:
 #          $sp: Valor del elemento a insertar.
 #
 # Planificación de registros:
-#
+# 
 TablaHash_insertar:
     # Prólogo
     sw   $fp,   ($sp)
