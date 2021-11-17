@@ -81,9 +81,6 @@ TablaHash_crear_fin:
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
-    lw   $s0,  -8($s0)
-    lw   $s1, -12($s0)
-    lw   $s2, -16($s0)
 
     jr $ra
 
@@ -93,27 +90,26 @@ TablaHash_crear_fin:
 #          $a1: Clave (String).
 #          
 # Planificación de registros:
-# $s0: acc
-# $s1: Clave[i]
-# $s2: Numero de buckets
-# $s3: Hash
+# $t0: acc
+# $t1: Clave[i]
+# $t2: Numero de buckets
 TablaHash_hash:
     # Prólogo
-    sw   $fp, ($sp)
-    move $fp,  $sp
+    sw   $fp,    ($sp)
+    move $fp,     $sp
     addi $sp,  $sp, -4
 
     # acc
-    li $s0, $zero    
+    li $t0, $zero    
 
 TablaHash_hash_loop:
-    lb $s1, ($a1)
+    lb $t1, ($a1)
 
-    bneq $s1, $zero, TablaHash_hash_loop_fin
+    beqz $t1, TablaHash_hash_loop_fin
 
     # acc += clave[i] << 3
-    add $s0, $s0, $s1
-    rol $s0, $s0, 3
+    add $t0, $t0, $t1
+    rol $t0, $t0, 3
 
     addi $a1, $a1, 1
 
@@ -121,15 +117,15 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
-    lw   $s2, 4($a0)
-	div  $s0,   $s2		# hi = modulo = clave % tamañoTabla
-    mfhi $s3            # hi = modulo
+    lw  $t2, 4($a0)         # numBuckets
+    abs $t0,   $t0          # |acc|
+    rem $t0,   $t0, $t2		# hi = modulo = acc % numBuckets
 
-    multi $v0, $s3, 4   # modulo * 4
+    multi $v0, $t0, 4       # modulo * 4
 
     # Epílogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
+    move $sp,     $fp
+    lw   $fp,    ($sp)
 
     jr $ra
     
