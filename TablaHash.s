@@ -26,9 +26,10 @@ TablaHash_crear:
     sw   $fp,    ($sp)
     sw   $ra,  -4($sp)
     sw   $s0,  -8($s0)
-    sw   $s0, -12($s0)
+    sw   $s1, -12($s0)
+    sw   $s2, -16($s0)
     move $fp,     $sp
-    addi $sp,     $sp, -16
+    addi $sp,     $sp, -20
 
     # Tamaño de la tabla de hash.
     move $s0, $a0
@@ -81,7 +82,8 @@ TablaHash_crear_fin:
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
     lw   $s0,  -8($s0)
-    lw   $s0, -12($s0)
+    lw   $s1, -12($s0)
+    lw   $s2, -16($s0)
 
     jr $ra
 
