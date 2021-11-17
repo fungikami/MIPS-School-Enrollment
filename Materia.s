@@ -68,4 +68,3 @@ Materia_crear_fin:
     lw   $fp, ($sp)
 
     jr $ra
-
