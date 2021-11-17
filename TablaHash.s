@@ -20,12 +20,15 @@
 # Planificación de registros:
 # $s0: Tamaño de la tabla de hash
 # $s1: Dirección de retorno
-
+# $s2: Dirección de una lista de la tabla
 TablaHash_crear:
     # Prólogo
-    sw   $fp, ($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -4
+    sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($s0)
+    sw   $s0, -12($s0)
+    move $fp,     $sp
+    addi $sp,     $sp, -16
 
     # Tamaño de la tabla de hash.
     move $s0, $a0
@@ -52,14 +55,20 @@ TablaHash_crear:
     bltz $v0, TablaHash_crear_fin 
 
     # Guardo dirección de la tabla en el retorno
-    sw $v0, 8($s1)
-
+    sw   $v0, 8($s1)
+    move $s2, $v0
 
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
 
-    # Inicializo la tabla de hash con zero o con listas (?)
-    sw $zero, ($s2)
+    # Inicializo la tabla de hash con listas vacías
+    jal Lista_crear
+
+    # Verificar si no se creó la lista
+    bltz $v0, TablaHash_crear_fin  
+
+    # Guardo dirección de la lista en la tabla
+    sw $v0, ($s2)
 
     addi $s2, $s2, 4
     addi $s0, $s0, -1
@@ -68,8 +77,11 @@ TablaHash_crear_loop:
 
 TablaHash_crear_fin:
     # Epílogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($s0)
+    lw   $s0, -12($s0)
 
     jr $ra
 
