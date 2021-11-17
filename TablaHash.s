@@ -41,6 +41,7 @@ TablaHash_crear:
     sw $zero,  ($v0)
     sw $s0,   4($v0)
     
+    # Dirección de retorno
     move $s1, $v0
 
     # Reservo memoria para la tabla
