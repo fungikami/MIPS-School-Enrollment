@@ -37,17 +37,22 @@ TablaHash_crear:
 
     bltz $v0, TablaHash_crear_fin 
 
+    # Dirección de retorno
+    move $s1, $v0
+
     # Inicializo numero de elementos
     sw $zero,  ($v0)
     sw $s0,   4($v0)
     
-    # Dirección de retorno
-    move $s1, $v0
-
     # Reservo memoria para la tabla
-    li $a0, 12 
-    li $v0, 9
+    sll $a0, $s0, 2
+    li  $v0,  9
     syscall
+
+    bltz $v0, TablaHash_crear_fin 
+
+    # Guardo dirección tabla en el retorno
+    sw $v0, 8($s1)
 
 
 TablaHash_crear_loop:
