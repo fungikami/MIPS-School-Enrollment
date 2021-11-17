@@ -1,13 +1,16 @@
 # Materia.s
 #
 # Estructura de datos que implementa el TAD
-# Estudiante.
+# Materia.
 # 
-# carné:    String con el carné del estudiante.
-# nombre:   String con el nombre del estudiante.
-# indice:   String con el índice del estudiante.
-# creditos: Entero con la cantidad de creditos
-#           aprobados.
+# código:      String con el código de la materia.
+# nombre:      String con el nombre de la materia.
+# créditos:    Entero con los créditos que vale la materia.
+# cupos:       Entero con el los cupos restantes de la materia.
+# minCreditos: Entero con el mínimo de creditos aprobados
+#              necesarios para inscribir la materia.
+# estudiantes: Lista de Pares <Estudiante, Operacion> que 
+#              solicitaron inscripción a la materia.
 # 
 # Autores: Ka Fung & Christopher Gómez
 # Fecha: 25-nov-2021
@@ -17,16 +20,20 @@
         .text
 
 # Función crear
-# Crea un Estudiante con los parámetros dados.
-# Entrada:   $a0: carné
+# Crea un Materia con los parámetros dados.
+# Entrada:   $a0: código
 #            $a1: nombre.
-#            $a2: indice.
-#            $a3: creditos.
-# Salida:    $v0: Estudiante (negativo si no se pudo crear).
-#          ($v0): carné. 
+#            $a2: creditos.
+#            $a3: cupos.
+#         4($fp): minCreditos.
+#         8($fp): estudiantes.
+# Salida:    $v0: Materia (negativo si no se pudo crear).
+#          ($v0): código.
 #         4($v0): nombre.
-#         8($v0): indice.
-#        12($v0): creditos.
+#         8($v0): creditos.
+#        12($v0): cupos.
+#        16($v0): minCreditos.
+#        20($v0): estudiantes.
 #
 # Planificación de registros:
 # $t0: carné del estudiante.
@@ -39,22 +46,26 @@ Estudiante_crear:
     # Guarda el carné.
     move $t0, $a0
 
-    # Asigna memoria para el Estudiante.
-    li $a0, 16
+    # Asigna memoria para el Materia.
+    li $a0, 24
     li $v0, 9
     syscall
 
-    bltz $v0, Estudiante_crear_fin
+    bltz $v0, Materia_crear_fin
 
-    # Inicializa el Estudiante.
+    # Inicializa la Materia.
     sw $t0    ($v0)
     sw $a1,  4($v0)
     sw $a2,  8($v0)
     sw $a3, 12($v0)
-    
-Estudiante_crear_fin:
+    # Ver como cargar otros dos
+    sw $a0, 16($v0)
+    sw $a1, 20($v0)
+
+Materia_crear_fin:
     # Epílogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
-    jr $Materia
+    jr $ra
+
