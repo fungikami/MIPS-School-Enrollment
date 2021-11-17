@@ -23,7 +23,7 @@
 #         8($v0): siguiente
 # 
 # Planificación de registros:
-# $t0: Valor del nodo. 
+# $t0: Valor del nodo.
 Nodo_crear:
     # Prólogo
 	sw   $fp, ($sp)

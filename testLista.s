@@ -131,4 +131,3 @@ main_fin:
     syscall
 
 .include "Lista.s"
-.include "Nodo.s"
