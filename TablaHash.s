@@ -90,22 +90,42 @@ TablaHash_crear_fin:
 # Función de hash
 #   .
 # Entrada: $a0: Tabla de Hash.
-#          $a1: Clave.
-#
+#          $a1: Clave (String).
+#          
 # Planificación de registros:
-# 
-TablaHash_funcion:
+# $s0: acc
+# $s1: Clave[i]
+# $s2: Numero de buckets
+# $s3: Hash
+TablaHash_hash:
     # Prólogo
     sw   $fp, ($sp)
     move $fp,  $sp
     addi $sp,  $sp, -4
 
-    # Calcula hash
-    lw   $s0, ($a0)
-	div  $a1,  $s0		# hi = modulo = clave % tamañoTabla
-    mfhi $s1            # hi = modulo
+    # acc
+    li $s0, $zero    
 
-    multi $v0, $s1, 4   # modulo * 4
+TablaHash_hash_loop:
+    lb $s1, ($a1)
+
+    bneq $s1, $zero, TablaHash_hash_loop_fin
+
+    # acc += clave[i] << 3
+    add $s0, $s0, $s1
+    rol $s0, $s0, 3
+
+    addi $a1, $a1, 1
+
+    b TablaHash_hash_loop
+
+TablaHash_hash_loop_fin:
+    # Calcula hash
+    lw   $s2, 4($a0)
+	div  $s0,   $s2		# hi = modulo = clave % tamañoTabla
+    mfhi $s3            # hi = modulo
+
+    multi $v0, $s3, 4   # modulo * 4
 
     # Epílogo
     move $sp,    $fp
@@ -134,7 +154,7 @@ TablaHash_insertar:
     # beqz $v0 TablaHash_insertar_fin
 
     # Funcion Hash
-    jal TablaHash_funcion
+    jal TablaHash_hash
 
     # Guardar dir de la tabla
     move $s0, $a0
@@ -179,7 +199,7 @@ TablaHash_eliminar:
     addi $sp,    $sp, -8
 
     # Funcion Hash
-    jal TablaHash_funcion
+    jal TablaHash_hash
 
     # x = Buscar en la lista tabla[hash]
 
@@ -214,7 +234,7 @@ TablaHash_buscar:
     addi $sp,    $sp, -8
 
     # Funcion Hash
-    jal TablaHash_funcion
+    jal TablaHash_hash
 
     # Buscar en la lista tabla[hash]
 
@@ -242,7 +262,7 @@ TablaHash_existe:
     move $fp,    $sp
     addi $sp,    $sp, -8
 
-    jal TablaHash_funcion
+    jal TablaHash_hash
 
     # Buscar en tabla[hash] si la clave está en la lista
 
