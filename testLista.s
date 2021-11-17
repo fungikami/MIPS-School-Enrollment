@@ -1,32 +1,44 @@
 .data
 
 newl:   .asciiz "\n"
-msg:    .asciiz "Primero de la lista: "
+ult:    .asciiz "Ultimo de la lista: "
+prim:   .asciiz "Primero de la lista: "
 
 .text
 
 main:
 
-    jal Lista_crear # Sv0 = Lista
+    # Crear lista
+    jal  Lista_crear
+    bltz $v0, main_fin # verifica que fino
+    move $s0, $v0      # $s0 = Lista
 
-    bltz $v0, main_fin
-
-    li  $a0, 1
+    # Insertar en orden [4, 1, 3, 2]
+    move $a0, $s0
+    li  $a1, 4
     jal Lista_insertar
 
-    li  $a0, 4
-    jal Lista_insertar
+    move $a0, $s0
+    li   $a1, 1
+    jal  Lista_insertar
     
-    li  $a0, 3
-    jal Lista_insertar
-    
-    li  $a0, 2
+    move $a0, $s0
+    li  $a1, 3
     jal Lista_insertar
 
-    jal Lista_primero
+    move $a0, $s0
+    li  $a1, 2
+    jal Lista_insertar
+
+    # -----------------------------------
+
+    # Imprimir ultimo
+    move $a0, $s0
+    jal  Lista_ultimo
+    move $t0, $v0
 
     li $v0, 4
-    la $a0, msg
+    la $a0, ult
     syscall
 
     li $v0, 4
@@ -34,7 +46,84 @@ main:
     syscall
 
     li $v0, 1
-    li $a0, 5
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    # Imprimir primero
+    move $a0, $s0
+    jal  Lista_primero
+    move $t0, $v0
+
+    li $v0, 4
+    la $a0, prim
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    # ---------------------------
+    # Sacar primero
+    move $a0, $s0
+    jal Lista_eliminarPrimero
+
+     # Imprimir primero
+    move $a0, $s0
+    jal  Lista_primero
+    move $t0, $v0
+
+    li $v0, 4
+    la $a0, prim
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    # ---------------------------
+    # Sacar ultimo
+    move $a0, $s0
+    jal Lista_eliminarUltimo
+
+    # Imprimir ultimo
+    move $a0, $s0
+    jal  Lista_ultimo
+    move $t0, $v0
+
+    li $v0, 4
+    la $a0, ult
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
     syscall
 
 main_fin:
@@ -42,3 +131,4 @@ main_fin:
     syscall
 
 .include "Lista.s"
+.include "Nodo.s"

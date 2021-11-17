@@ -22,6 +22,7 @@
 # Planificación de registros:
 # $s0: dir. de la lista a retornar
 Lista_crear:
+
     # Prólogo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
@@ -41,11 +42,15 @@ Lista_crear:
     move $s0, $v0
 
     # Crear centinela de la lista
-
-    lw $v0, 4($v0)
     move $a0, $zero
+    jal  Nodo_crear
+
     # Si hubo error en la creación del nodo
     bltz $v0, Lista_crear_fin
+
+    # La centinela se apunta a si misma
+    sw $v0,  ($v0)
+    sw $v0, 8($v0)
 
     # Inicializa la lista
     sw $v0,    ($s0) # nodo cabeza
@@ -86,9 +91,9 @@ Lista_insertar:
     move $s0, $a0
 
     # Crear nodo x a insertar
-
-    lw $v0, 4($v0)
     move $a0, $a1
+    jal Nodo_crear
+
     # Si hubo error en la creación del nodo
     bltz $v0, Lista_crear_fin
 
@@ -160,7 +165,6 @@ Lista_eliminar_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $ra,  -4($sp)
 
     jr $ra
 
@@ -173,11 +177,11 @@ Lista_eliminarPrimero:
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -4
+    addi $sp,    $sp, -8
 
     # Cargar centinela.siguiente
-    lw $a0,  ($a0)
-    lw $a0, 8($a0)
+    lw $a1,  ($a0)
+    lw $a1, 8($a1)
 
     jal Lista_eliminar
 
@@ -197,11 +201,11 @@ Lista_eliminarUltimo:
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -4
+    addi $sp,    $sp, -8
 
     # Cargar centinela.anterior
-    lw $a0, ($a0)
-    lw $a0, ($a0)
+    lw $a1, ($a0)
+    lw $a1, ($a1)
 
     jal Lista_eliminar
 
@@ -216,16 +220,19 @@ Lista_eliminarUltimo:
 # Obtiene el contenido del primer elemento de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: valor del primer elemento de la lista.
+# 
+# Planificación de registros:
+# $t0: tamaño de la lista
 Lista_primero:
     # Prólogo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
 
     li $v0, -1
     # Si la lista está vacía
-    beqz $t3, Lista_primero_fin
+    lw $t0, 4($a0)
+    beqz $t0, Lista_primero_fin
     
     # Cargar centinela.siguiente
     lw $a0, ($a0)
@@ -237,7 +244,6 @@ Lista_primero_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $ra,  -4($sp)
 
     jr $ra
 
@@ -245,16 +251,19 @@ Lista_primero_fin:
 # Obtiene el contenido del último elemento de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: valor del primer elemento de la lista.
+# 
+# Planificación de registros:
+# $t0: tamaño de la lista
 Lista_ultimo:
     # Prólogo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
 
     li $v0, -1
     # Si la lista está vacía
-    beqz $t3, Lista_ultimo_fin
+    lw $t0, 4($a0)
+    beqz $t0, Lista_primero_fin
     
     # Cargar centinela.anterior
     lw $a0, ($a0)
@@ -266,6 +275,5 @@ Lista_ultimo_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $ra,  -4($sp)
 
     jr $ra
