@@ -3,9 +3,9 @@
 # Estructura de datos que implementa un elemento
 # de la lista.
 # 
-# anterior:  dir. del nodo anterior.
+# anterior:  nodo anterior.
 # valor:     valor del nodo
-# siguiente: dir. del nodo siguiente.
+# siguiente: nodo siguiente.
 # 
 # Autores: Ka Fung & Christopher Gómez
 # Fecha: 25-nov-2021
