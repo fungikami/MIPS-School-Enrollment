@@ -19,134 +19,142 @@ error1: .asciiz "No se pudo abrir el archivo"
 main:
 # ------------ ESTUDIANTES ---------------
 
-    # Abrir (para leer) archivo
-    li $v0 13
-    la $a0 arcEst
-    li $a1 0
-    syscall # Retorna $v0
-
-    bltz $v0 error
-    
 # Abrir archivo
-li $v0 13
-la $a0 arcEst
-li $a1 0
-syscall # Retorna $v0 (file descriptor)
 
-move $a0 $v0
-
-# Verificar $v0 < 0 (too malo)
+# Verificar v0 
 # Leer archivo ($v0=14) ($a0=$v0)
-# Verificar $v0 < 0 (too malo)
+# Verificar v0 
 
-# Crear <estructura Estudiantes>
+# <TablaHash Estudiantes>.crear()
 
 # Por cada línea:
-    # syscall 9 (42 bytes) [verificar]
-    # Crear estudiante
+    # syscall 9 (16 bytes) [verificar]
     # 8 chars:
-        # Guardar estudiante.carnet
-        # sb $[carnet] ($v0)
-        # $v0++ $dirBuffer++
-    # $dirBuffer++ 
+        # Guardar carnet
     # do while != “”:
-        # Guardar estudiante.nombre
-        # sb $[nombre] ($v0)
-        # $v0++ $dirBuffer++
+        # Guardar nombre
     # 6 chars:
-        # Guardar estudiante.indice
+        # Guardar indice
     # 3 chars:
-        # Guardar estudiante.creditosAprov
-
-   
-    
-    # sw $[nombre] 9($v0)
-    # sw $[índice] 30($v0)
-    # sw $[credAprov] 38($v0)
-
+        # Guardar creditosAprob
+    # Crear estudiante(carnet, nombre, indice, creditos Aprob)
+    # <TablaHash Estudiantes>.insertar(carnet, Estudiante)
+	
 # ------------ MATERIAS ---------------
 
 # Abrir archivo
-li $v0 13
-la $a0 arcInst
-li $a1 0
-syscall # Retorna $v0 (file descriptor)
 
-move $a0 $v0
-
-# Verificar $v0 < 0 (too malo)
+# Verificar v0
 # Leer archivo ($v0=14) ($a0=$v0)
-# Verificar $v0 < 0 (too malo)
+# Verificar v0 
+
+# <TablaHash Materias>.crear()
 
 # Por cada línea:
+    # syscall 9 (24 bytes) [verificar]
     # Crear materia
     # 7 chars:
-        # Guardar materia.código
+        # Guardar código
     # do while != “”:
-        # Guardar materia.nombre
+        # Guardar nombre
     # 1 chars:
-        # Guardar materia.créditos
+        # Guardar créditos
     # 3 chars:
-        # Guardar materia.cupos
+        # Guardar cupos
     # 3 chars:
-        # Guardar materia.miniCréditos
+        # Guardar minimoCréditos
+    # Crear Materia(código, nombre, créditos, cupos, minimoCreditos, <Lista Estudiantes>.crear())
+    # <TablaHash Materias>.insertar(código, Materia)
 
-
-    # syscall 9 (51 bytes) [verificar]
-    # sw $[código] ($v0)
-    # sw $[nombre] 8($v0)
-    # sw $[créditos] 39($v0)
-    # sw $[cupos] 43($v0)
-    # sw $[miniCréditos] 47($v0)
-    # sw $[cabezaLista] 51($v0)
-    
-    # <dict de Materias>.hash(materia)
 
 # ------------ SOLICITUDES ---------------
 
 # Abrir archivo
-li $v0 13
-la $a0 arcSol
-li $a1 0
-syscall # Retorna $v0 (file descriptor)
 
-move $a0 $v0
-
-# Verificar $v0 < 0 (too malo)
+# Verificar $v0
 # Leer archivo ($v0=14) ($a0=$v0)
-# Verificar $v0 < 0 (too malo)
+# Verificar $v0
+
+# <Lista Solicitudes>.crear()
 
 # Por cada línea:
+    # syscall 9 (9 bytes) [verificar]
     # Crear solicitud
     # 8 chars:
-        # Guardar solicitud.carnet
-
+        # Guardar carnet
+        #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
    # 7 chars:
-        # Guardar solicitud.codigo
+        # Guardar codigo
+        # Materia = <TablaHash Materias>.buscar([código])
+   # Crear Solicitud(Estudiante, Materia, ‘S’)
+   # <Lista Solicitudes>.insertar(Solicitud)
 
-    # <estructura Solicitud>.append(solicitud)
+# ---------------- INSCRIPCIÓN ------------------
 
-    # syscall 9 (19 bytes) [verificar]
-    # sw $[carnet] ($v0)
-    # sw $[código] 9($v0)
-    # sw $[corrección] 17($v0)
-    # sw $[operación] 18($v0)
+# for solicitud in <Lista Solicitudes>
+#     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
+#     solicitud.Materia.cupo--
 
-# Procesar vainas inscripción
+# ------------- ARCHIVO TENTATIVO --------------------
+# for Materia in <TablaHash Materias>
+# 	print Materia
+#	for Estudiante in Materia.Estudiantes
+#		print Estudiante.primero
 
-# for solicitud in Solicitud
-#     Materias[solicitud.codigo].Estudiantes.append(estudiante)
 
-# Escribir archivo tentativo
-# Guardar en una lista a eliminar
-# Guardar en una lista a incluir
-# Se eliminan los de la lista a eliminar
-# Procesar vainas corrección
-# for solicitud in listaIncluir
-#    PriorityQueue.append(Estudiante[solicitud.estudiante], Estudiante[solicitud.estudiante].creditos)
-# 
+# -------- SOLICITUDES CORRECCIÓN---------------
+# Abrir archivo
 
-# Escribir archivo definitivo 
+# Verificar $v0
+# Leer archivo ($v0=14) ($a0=$v0)
+# Verificar $v0
+
+# <Lista Solicitudes>.crear()
+
+# Por cada línea:
+    # syscall 9 (9 bytes) [verificar]
+    # Crear solicitud
+    # 8 chars:
+        # Guardar carnet
+        #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
+   # 7 chars:
+        # Guardar codigo
+        # Materia = <TablaHash Materias>.buscar([código])
+   # 1 char:
+       # Guardar operación
+   # Crear Solicitud(Estudiante, Materia, op)
+   # <Lista Solicitudes>.insertar(Solicitud)
+
+
+# ---------------- CORRECCIÓN ------------------
+# <ColaDePrioridad(min) Inscribir>.crear()
+
+# for solicitud in <Lista Solicitudes>
+#     Si solicitud.op == ‘E’
+#	for par in solicitud.Materias.Estudiantes
+#		Si par.primero == solicitud.Estudiante
+#			par.segundo = ‘E’
+#			break
+# 	Materia.cupos++
+#
+#     Si solicitud.op == ‘I’
+#	prioridad = solicitud.Estudiante.créditosAprob
+#	<ColaDePrioridad Inscribir>.encolar(Pair<solicitud, prioridad>)
+
+#    while !<ColaDePrioridad Inscribir>.estaVacia()
+#	solicitud = <ColaDePrioridad Inscribir>.pop()
+#	
+#	if solicitud.Materia.cupos > 0
+#		solicitud.Materia.Estudiantes.insertar(Pair<Estudiante, Op.>)
+#		solicitud.Materia.cupos--
+
+# check every subject have more than -1 kupos
+
+# ------------- ARCHIVO DEFINITIVO --------------------
+# for Materia in <TablaHash Materias>
+# 	print Materia
+#	for Estudiante in Materia.Estudiantes
+#		print Estudiante.first (print Estudiante.second)
  
 
     j fin
