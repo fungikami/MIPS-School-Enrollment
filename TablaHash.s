@@ -51,7 +51,7 @@ TablaHash_crear:
 
     bltz $v0, TablaHash_crear_fin 
 
-    # Guardo dirección tabla en el retorno
+    # Guardo dirección de la tabla en el retorno
     sw $v0, 8($s1)
 
 
