@@ -221,20 +221,22 @@ TablaHash_buscar:
     add $t0,   $t0, $v0      
     lw  $t0,  ($t0) 
 
-    lw $t1,  ($t0)       # Cabeza de la lista
+    # Cabeza de la lista
+    lw $t1, ($t0)       
 
 TablaHash_buscar_loop:
-    lw $t2,  ($t1)       # Nodo de la lista
-    lw $t3, 4($t2)       # Valor del nodo
-    lw $t4,  ($t3)       # Clave del nodo
+    lw $t2, 4($t1)       # Valor del nodo
+    lw $t3, ($t2)        # Clave del nodo
 
     # Mientras que nodo != 0 
-    beqz $t2, TablaHash_buscar_fin
+    beqz $t1, TablaHash_buscar_fin
 
     # Mientras que nodo.clave != clave
-    beq $t4, $a1, TablaHash_buscar_fin
+    beq $t3, $a1, TablaHash_buscar_fin
 
-    addi $t0, $t0, 4 
+    # Actualizamos al Nodo.next
+    lw $t4, 8($t1)      
+    lw $t1, ($t4)
 
     b TablaHash_buscar_loop
 
