@@ -23,7 +23,6 @@
 # Crea un Materia con los parametros dados.
 # Entrada:   $a0: codigo
 #            $a1: nombre.
-#            $a2: creditos.
 #            $a3: cupos.
 #         4($fp): minCreditos.
 # Salida:    $v0: Materia (negativo si no se pudo crear).
@@ -129,12 +128,66 @@ Materia_disminuirCupo:
 # Agrega un estudiante a la lista de estudiantes de la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Estudiante.
-#            $a2: Operacion.
 # 
-# Planificacion de registros:
-# $t0: Cupos de la materia.
+# Planificación de registros:
+# $s0: Materia.
 Materia_agregarEstudiante:
-    # Prologo
-    sw   $fp, ($sp)
-    move $fp, $sp
-    addi $sp, $sp, -4
+    # Prólogo
+    sw   $fp,   ($sp)
+    move $fp,    $sp
+    sw   $ra, -4($sp)
+    sw   $s0, -8($sp)
+    addi $sp,    $sp, -12
+
+    # Guarda la materia
+    move $s0, $a0
+
+    # Crea el Par(Estudiante, Op.)
+    move $a0,  $a1
+    jal  Par_crear
+
+    # Verifica la creación del Par.
+    bgtz $v0, Materia_agregarEstudiante_fin
+    move $a1, $v0
+
+    # Agrega el Par a la lista de estudiantes.
+    move $a0,    $s0
+    lw   $a0, 20($a0)
+    jal Lista_agregar
+
+    # Aumenta por uno el número de cupos.
+    lw   $t0, 12($s0)
+    addi $t0,    $t0, 1
+    sw   $t0, 12($s0)
+
+Materia_agregarEstudiante_fin:
+    # Epílogo
+    move $sp,  $fp
+    lw   $fp, ($sp)
+    lw   $ra, -4($sp)
+    lw   $s0, -8($sp)
+
+    jr $ra
+
+# Función eliminarEstudiante
+# Marca un estudiante de la lista de estudiantes de la materia 
+# como eliminado.
+# Entrada:   $a0: Materia.
+#            $a1: Estudiante.
+# 
+# Planificación de registros:
+# $s0: Materia.
+Materia_eliminarEstudiante:
+    # Prólogo
+    sw   $fp,   ($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -4
+
+    # for par in Materia.estudiantes
+    #   if par.primero = Estudiante
+    #       par.segundo = 'E'
+
+    # Disminuye por uno el número de cupos.
+    lw   $t0, 12($s0)
+    addi $t0,    $t0, -1
+    sw   $t0, 12($s0)
