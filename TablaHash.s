@@ -116,7 +116,7 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
-    mult $t0, $t0, 31
+    mult $t0, $t0, 31       # acc *= 31
     lw  $t2, 4($a0)         # numBuckets
     rem $t0,   $t0, $t2		# acc %= numBuckets
 
