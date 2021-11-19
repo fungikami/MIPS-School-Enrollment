@@ -124,7 +124,6 @@ Materia_disminuirCupo:
 # 
 # Planificación de registros:
 # $s0: Materia.
-# $s1: Par(Estudiante, Op.).
 Materia_agregarEstudiante:
     # Prólogo
     sw   $fp, ($sp)
@@ -138,9 +137,9 @@ Materia_agregarEstudiante:
     move $a0, $a1
     move $a1, $a2
     jal  Par_crear
-    move $s1, $v0
+    move $a1, $v0
 
     # Agrega el Par a la lista de estudiantes.
-    lw $t0, 20($s0)
-
-    jal 
+    move $a0, $s0
+    lw   $a0, 20($a0)
+    jal Lista_agregar
