@@ -107,9 +107,8 @@ TablaHash_hash_loop:
 
     beqz $t1, TablaHash_hash_loop_fin
 
-    # acc += 31*acc + clave[i] 
-    mult $t0, $t0, 31
-    add  $t0, $t0, $t1
+    mult $t0, $t0, 31       # acc *= 31
+    add  $t0, $t0, $t1      # acc += clave[i] 
 
     addi $a1, $a1, 1
 
