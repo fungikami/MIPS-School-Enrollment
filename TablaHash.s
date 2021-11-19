@@ -201,7 +201,7 @@ TablaHash_insertar_fin:
 # Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
-# Salida:  $v0: valor de EntradaHash
+# Salida:  $v0: valor de EntradaHash.
 # 
 # Planificación de registros:
 # $t0: Lista
@@ -230,13 +230,13 @@ TablaHash_obtenerValor_loop:
     lw $t2, 4($t1) # Valor del nodo
     lw $t3,  ($t2) # Clave del nodo
 
-    # Mientras que nodo != null 
+    # Mientras que Nodo != null 
     beqz $t1, TablaHash_obtenerValor_loop_fin
 
-    # Mientras que nodo.clave != clave
+    # Mientras que Nodo.clave != clave
     beq $t3, $a1, TablaHash_obtenerValor_loop_fin
 
-    # Actualizamos al Nodo.next
+    # Actualizamos al Nodo.siguiente
     lw $t4, 8($t1)      
     lw $t1,  ($t4)
 
