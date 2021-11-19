@@ -107,9 +107,9 @@ TablaHash_hash_loop:
 
     beqz $t1, TablaHash_hash_loop_fin
 
-    # acc += clave[i] << 3
-    add $t0, $t0, $t1
-    rol $t0, $t0, 3
+    # acc += 31*acc + clave[i] 
+    mult $t0, $t0, 31
+    add  $t0, $t0, $t1
 
     addi $a1, $a1, 1
 
@@ -118,7 +118,6 @@ TablaHash_hash_loop:
 TablaHash_hash_loop_fin:
     # Calcula hash
     lw  $t2, 4($a0)         # numBuckets
-    abs $t0,   $t0          # |acc|
     rem $t0,   $t0, $t2		# hi = modulo = acc % numBuckets
 
     multi $v0, $t0, 4       # modulo * 4
@@ -144,10 +143,6 @@ TablaHash_insertar:
     sw   $ra, -4($sp)
     move $fp,    $sp
     addi $sp,    $sp, -8
-
-    # Verifica si la clave ya existe (si $v0 = 0 ya existe)
-    # jal TablaHash_existe
-    # beqz $v0 TablaHash_insertar_fin
 
     # Funcion Hash
     jal TablaHash_hash
