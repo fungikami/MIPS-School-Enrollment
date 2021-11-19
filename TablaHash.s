@@ -206,9 +206,10 @@ TablaHash_insertar_fin:
 # 
 # Planificacion de registros:
 # $t0: Lista
-# $t1: cabeza de Lista
-# $t2: valor de Nodo
-# $t3: clave de EntradaHash
+# $t1: centinela de Lista
+# $t2: nodo de Lista
+# $t3: valor de Nodo
+# $t4: clave de EntradaHash
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,   ($sp)
@@ -223,22 +224,22 @@ TablaHash_obtenerValor:
     add $t0,   $t0, $v0      
     lw  $t0,  ($t0) 
 
-    # Cabeza de la lista
-    lw $t1, ($t0)       
+    lw $t1,  ($t0)  # Centinela de la lista
+    lw $t2, 8($t1)  # Primer nodo de la lista    
 
 TablaHash_obtenerValor_loop:
-    lw $t2, 4($t1) # Valor del nodo
-    lw $t3,  ($t2) # Clave del nodo
+    lw $t3, 4($t2)  # Valor del nodo
+    lw $t4,  ($t3)  # Clave del nodo
 
-    # Mientras que Nodo != null 
-    beqz $t1, TablaHash_obtenerValor_loop_fin
+    # Mientras que Nodo != centinela 
+    beq $t2, $t1, TablaHash_obtenerValor_loop_fin
 
     # Mientras que Nodo.clave != clave
-    beq $t3, $a1, TablaHash_obtenerValor_loop_fin
+    beq $t4, $a1, TablaHash_obtenerValor_loop_fin
 
     # Actualizamos al Nodo.siguiente
-    lw $t4, 8($t1)      
-    lw $t1,  ($t4)
+    lw $t5, 8($t2)      
+    lw $t2,  ($t5)
 
     b TablaHash_obtenerValor_loop
 

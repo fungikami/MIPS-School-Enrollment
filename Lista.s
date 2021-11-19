@@ -16,7 +16,7 @@
 # Funcion crear
 # Crea una lista circular doblemente enlazada vacia.
 # Salida:    $v0: lista (negativo si no se pudo crear).
-#          ($v0): cabeza
+#          ($v0): centinela
 #         4($v0): tamanio
 #
 # Planificacion de registros:
@@ -40,11 +40,12 @@ Lista_crear:
     # Memoria asignada en $s0
     move $s0, $v0
 
-    # Crear centinela de la lista
-    move $a0, $zero
-    jal  Nodo_crear
+    # Reserva memoria para la centinela de la lista
+    li $a0, 12
+    li $v0, 9
+    syscall
 
-    # Si hubo error en la creacion del nodo
+    # Si hubo error en la creacion del centinela
     bltz $v0, Lista_crear_fin
 
     # La centinela se apunta a si misma
@@ -72,6 +73,7 @@ Lista_crear_fin:
 # Inserta un elemento con el valor dado en la lista.
 # Entrada: $a0: lista.
 #          $a1: valor del elemento a insertar.
+# Salida: 
 #
 # Planificacion de registros:
 # $s0: lista
@@ -89,14 +91,18 @@ Lista_insertar:
     # Guardar la lista en $s0
     move $s0, $a0
 
-    # Crear nodo x a insertar
-    move $a0, $a1
-    jal Nodo_crear
+    # Reserva memoria para el nodo
+    li $a0, 12
+    li $v0, 9
+    syscall
 
     # Si hubo error en la creacion del nodo
     bltz $v0, Lista_crear_fin
 
-    # Actualizar cabeza y x
+    # Inicializa el valor del nodo
+    sw $a1, 4($v0)
+
+    # Actualiza cabeza y nodo x creado
     lw $t0,  ($s0)
     lw $t1,  ($t0)
     sw $t1,  ($v0) # x.anterior = centinela.anterior
@@ -104,7 +110,7 @@ Lista_insertar:
     sw $v0, 8($t1) # centinela.anterior.siguiente = x
     sw $v0,  ($t0) # centinela.anterior = x
 
-    # Actualizar tamanio
+    # Actualiza tamanio de la lista
     lw   $t2, 4($s0)
     addi $t2,   $t2, 1
     sw   $t2, 4($s0)
