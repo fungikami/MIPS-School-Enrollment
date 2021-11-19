@@ -43,7 +43,7 @@ Estudiante_crear:
 	move $fp, $sp
 	addi $sp, $sp, -4
 
-    # Guarda el carné.
+    # Guarda el valor de $a0 temporalmente.
     move $t0, $a0
 
     # Asigna memoria para el Materia.

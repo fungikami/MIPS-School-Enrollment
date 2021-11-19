@@ -17,7 +17,7 @@
 # Función crear
 # Crea un nodo con el valor dado.
 # Entrada:   $a0: valor del nodo.
-# Salida:    $v0: nodo (negativo si no se pudo crear).
+# Salida:    $v0: Nodo (negativo si no se pudo crear).
 #          ($v0): anterior 
 #         4($v0): valor
 #         8($v0): siguiente
@@ -30,7 +30,7 @@ Nodo_crear:
 	move $fp, $sp
 	addi $sp, $sp, -4
 
-    # Guarda el valor en la dir. de memoria del nodo.
+    # Guarda el valor de $a0 temporalmente.
     move $t0, $a0
 
     # Asigna memoria para el nodo.

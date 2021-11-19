@@ -16,25 +16,26 @@
 
 # Función crear
 # Crea una solicitud con los parámetros dados.
-# Entrada:   $a0: estudiante.
-#            $a1: materia.
-# Salida:    $v0: Estudiante (negativo si no se pudo crear).
+# Entrada:   $a0: Estudiante.
+#            $a1: Materia.
+# Salida:    $v0: Solicitud (negativo si no se pudo crear).
 #          ($v0): estudiante.
 #         4($v0): materia.
+#         8($v0): operacion.
 #
 # Planificación de registros:
-# $t0: estudiante.
+# $t0: Estudiante.
 Solicitud_crear:
     # Prólogo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
 
-    # Guarda el carné.
+    # Guarda el Estudiante.
     move $t0, $a0
 
     # Asigna memoria para el Estudiante.
-    li $a0, 8
+    li $a0, 9
     li $v0, 9
     syscall
 
@@ -43,6 +44,7 @@ Solicitud_crear:
     # Inicializa la solicitud.
     sw $t0    ($v0)
     sw $a1,  4($v0)
+    sb $a2,  8($v0)
     
 Solicitud_crear_fin:
     # Epílogo
