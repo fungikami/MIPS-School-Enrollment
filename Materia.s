@@ -126,9 +126,11 @@ Materia_disminuirCupo:
 # $s0: Materia.
 Materia_agregarEstudiante:
     # Prólogo
-    sw   $fp, ($sp)
-    move $fp, $sp
-    addi $sp, $sp, -4
+    sw   $fp,   ($sp)
+    move $fp,    $sp
+    sw   $ra, -4($sp)
+    sw   $s0, -8($sp)
+    addi $sp,    $sp, -12
 
     # Guarda la materia
     move $s0, $a0
@@ -143,13 +145,20 @@ Materia_agregarEstudiante:
     move $a1, $v0
 
     # Agrega el Par a la lista de estudiantes.
-    move $a0, $s0
+    move $a0,    $s0
     lw   $a0, 20($a0)
     jal Lista_agregar
+
+    # Aumenta por uno el número de cupos.
+    lw   $t0, 12($s0)
+    addi $t0,    $t0, 1
+    sw   $t0, 12($s0)
 
 Materia_agregarEstudiante_fin:
     # Epílogo
     move $sp,  $fp
     lw   $fp, ($sp)
+    lw   $ra, -4($sp)
+    lw   $s0, -8($sp)
 
     jr $ra
