@@ -115,3 +115,17 @@ Materia_disminuirCupo:
     lw   $fp, ($sp)
 
     jr $ra
+
+# Función agregarEstudiante
+# Agrega un estudiante a la lista de estudiantes de la materia.
+# Entrada:   $a0: Materia.
+#            $a1: Estudiante.
+#            $a2: Operación.
+# 
+# Planificación de registros:
+# $t0: Cupos de la materia.
+Materia_agregarEstudiante:
+    # Prólogo
+    sw   $fp, ($sp)
+    move $fp, $sp
+    addi $sp, $sp, -4
