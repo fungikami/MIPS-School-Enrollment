@@ -37,7 +37,7 @@
 #
 # Planificación de registros:
 # $t0: carné del estudiante.
-Estudiante_crear:
+Materia_crear:
     # Prólogo
 	sw   $fp, ($sp)
 	move $fp, $sp
@@ -63,6 +63,29 @@ Estudiante_crear:
     sw $a1, 20($v0)
 
 Materia_crear_fin:
+    # Epílogo
+    move $sp,  $fp
+    lw   $fp, ($sp)
+
+    jr $ra
+
+# Función aumentarCupo
+# Suma un al numero de cupos de la materia.
+# Entrada:   $a0: Materia.
+#
+# Planificación de registros:
+# $t0: Cupos de la materia.
+Materia_aumentarCupo:
+    # Prólogo
+	sw   $fp, ($sp)
+	move $fp, $sp
+	addi $sp, $sp, -4
+
+    # Carga los cupos de la materia.
+    lw   $t0, 12($a0)
+    addi $t0, $t0,    1
+    sw   $t0, 12($a0)
+
     # Epílogo
     move $sp,  $fp
     lw   $fp, ($sp)
