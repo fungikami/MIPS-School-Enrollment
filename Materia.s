@@ -190,7 +190,7 @@ Materia_eliminarEstudiante:
     #   if par.primero = Estudiante
     #       par.segundo = 'E'
 
-    # Disminuye por uno el número de cupos.
+    # Aumenta por uno el número de cupos.
     lw   $t0, 12($s0)
     addi $t0,    $t0, -1
     sw   $t0, 12($s0)
