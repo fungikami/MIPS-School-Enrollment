@@ -10,15 +10,15 @@
         .text
 
 # Funcion crear
-# Crea una tabla de hash de tamaño    .
-# Entrada:   $a0: Tamaño de la tabla.
+# Crea una tabla de hash dado el tamanio.
+# Entrada:   $a0: Tamanio de la tabla.
 # Salida:    $v0: Tabla de hash (negativo si no se pudo crear).
 #          ($v0): Numero de elementos.
 #         4($v0): Numero de buckets
 #         8($v0): Cabeza de la tabla de hash.
 #
 # Planificacion de registros:
-# $s0: Tamaño de la tabla de hash
+# $s0: Tamanio de la tabla de hash
 # $s1: Direccion de retorno
 # $s2: Direccion de una lista de la tabla
 TablaHash_crear:
@@ -30,7 +30,7 @@ TablaHash_crear:
     move $fp,     $sp
     addi $sp,     $sp, -16
 
-    # Tamaño de la tabla de hash.
+    # Tamanio de la tabla de hash.
     move $s0, $a0
 
     # Reservo memoria para el numElem, numBuckets, cabeza de tabla
@@ -143,7 +143,7 @@ TablaHash_hash_loop_fin:
 # Planificacion de registros:
 # $s0: TablaHash
 # $s1: Clave
-# $s2: EntradaHash
+# $s2: entrada de hash
 # $t0: Numero de elementos de la tabla
 TablaHash_insertar:
     # Prologo
@@ -155,18 +155,21 @@ TablaHash_insertar:
     move $fp,    $sp
     addi $sp,    $sp, -20
 
-    # Guarda TablaHash y clave
+    # Guarda TablaHash
     move $s0, $a0
-    move $s1, $a1
 
-    # Crea EntradaHash
-    move $a0, $a1
-    move $a1, $a2
-    jal EntradaHash
+    # Reserva memoria para crear entrada de hash
+    li $a0, 8
+    li $v0, 9
+    syscall
 
     bltz $v0, TablaHash_insertar_fin
 
-    # Guarda EntradaHash
+    # Inicializa entrada de hash
+    sw $a1,  ($v0)  # Clave
+    sw $a2, 4($v0)  # Valor
+
+    # Guarda entrada de hash
     move $s2, $v0
 
     # Calcula la funcion de hash
@@ -202,14 +205,14 @@ TablaHash_insertar_fin:
 # Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
-# Salida:  $v0: valor de EntradaHash.
+# Salida:  $v0: valor de entrada de hash.
 # 
 # Planificacion de registros:
 # $t0: Lista
 # $t1: centinela de Lista
 # $t2: nodo de Lista
 # $t3: valor de Nodo
-# $t4: clave de EntradaHash
+# $t4: clave de entrada de hash
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,   ($sp)
@@ -255,7 +258,6 @@ TablaHash_obtenerValor_loop_fin:
 
     jr $ra
 
-.include "EntradaHash.s"
 .include "Lista.s"
 
 # Funcion eliminar

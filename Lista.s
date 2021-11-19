@@ -91,7 +91,7 @@ Lista_insertar:
     # Guardar la lista en $s0
     move $s0, $a0
 
-    # Reserva memoria para el nodo
+    # Reserva memoria para crear el nodo
     li $a0, 12
     li $v0, 9
     syscall
@@ -282,5 +282,3 @@ Lista_ultimo_fin:
     lw   $fp,    ($sp)
 
     jr $ra
-
-.include "Nodo.s"
