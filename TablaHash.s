@@ -198,10 +198,10 @@ TablaHash_insertar_fin:
 
 
 # Función buscar
-# Busca un elemento de la tabla dado la clave.
+# Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
 #          $a1: clave a buscar.
-# Salida:  
+# Salida:  $v0: valor de EntradaHash
 # 
 # Planificación de registros:
 # $t0: Lista
