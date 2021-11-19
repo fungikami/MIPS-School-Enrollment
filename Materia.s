@@ -137,10 +137,10 @@ Materia_agregarEstudiante:
     # Crea el Par(Estudiante, Op.)
     move $a0, $a1
     move $a1, $a2
-    jal Par_crear
-
+    jal  Par_crear
+    move $s1, $v0
 
     # Agrega el Par a la lista de estudiantes.
-    move $a0, $s0
-    lw   $t0, 20($a0)
-    sw   $v0, ($t0)
+    lw $t0, 20($s0)
+
+    jal 
