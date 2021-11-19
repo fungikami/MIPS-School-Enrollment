@@ -34,7 +34,7 @@ Solicitud_crear:
     # Guarda el Estudiante.
     move $t0, $a0
 
-    # Asigna memoria para el Estudiante.
+    # Asigna memoria para el Solicitud.
     li $a0, 9
     li $v0, 9
     syscall
