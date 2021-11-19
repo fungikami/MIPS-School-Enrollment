@@ -85,8 +85,11 @@ TablaHash_crear_fin:
     jr $ra
 
 # Función de hash
-# I.
-# Entrada: $a0: Tabla de Hash.
+# Implementación de la función de hash para String
+# basada en la función de hash de Java.
+# Fuente:
+# https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html
+# Entrada: $a0: TablaHash.
 #          $a1: Clave (String).
 #          
 # Planificación de registros:
@@ -132,7 +135,7 @@ TablaHash_hash_loop_fin:
 
 # Función insertar
 # Inserta un elemento con la clave y el valor dado en la tabla.
-# Entrada: $a0: Tabla de Hash.
+# Entrada: $a0: TablaHash.
 #          $a1: Clave del elemento a insertar.
 #          $a2: Valor del elemento a insertar.
 #
@@ -168,8 +171,8 @@ TablaHash_insertar:
 
     # Busca la lista a insertar
     add $a0, $s0, 8     
-    add $a0, $a0, $v0   # $a0 = 8(dirTabla) + $v0
-    lw  $a0, ($a0)      # Dir de la lista
+    add $a0, $a0, $v0       # $a0 = 8(dirTabla) + $v0
+    lw  $a0, ($a0)          # Dir de la lista
 
     # Inserta en la lista
     move $a1, $s2
@@ -195,7 +198,7 @@ TablaHash_insertar_fin:
 
 # Función eliminar
 # Elimina un elemento de la tabla dado la clave.
-# Entrada: $a0: tabla.
+# Entrada: $a0: TablaHash.
 #          $a1: clave a eliminar.
 # Salida:  
 # 
@@ -231,7 +234,7 @@ TablaHash_eliminar_fin:
 
 # Función buscar
 # Busca un elemento de la tabla dado la clave.
-# Entrada: $a0: tabla.
+# Entrada: $a0: TablaHash.
 #          $a1: clave a buscar.
 # Salida:  
 # 
@@ -260,7 +263,7 @@ TablaHash_buscar_fin:
 
 # Función existe
 # Verifica si una clave existe en la tabla.
-# Entrada: $a0: tabla.
+# Entrada: $a0: TablaHash.
 #          $a1: clave a verificar si existe.
 # Salida:  
 # 
