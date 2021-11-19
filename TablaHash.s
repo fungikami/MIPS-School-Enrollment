@@ -197,10 +197,10 @@ TablaHash_insertar_fin:
     jr $ra
 
 
-# Función buscar
+# Función obtenerValor
 # Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
-#          $a1: clave a buscar.
+#          $a1: clave a obtener valor.
 # Salida:  $v0: valor de EntradaHash
 # 
 # Planificación de registros:
