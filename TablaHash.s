@@ -85,7 +85,7 @@ TablaHash_crear_fin:
     jr $ra
 
 # Función de hash
-#   .
+# I.
 # Entrada: $a0: Tabla de Hash.
 #          $a1: Clave (String).
 #          
@@ -117,14 +117,16 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
+    mult $t0, $t0, 31
     lw  $t2, 4($a0)         # numBuckets
-    rem $t0,   $t0, $t2		# hi = modulo = acc % numBuckets
+    rem $t0,   $t0, $t2		# acc %= numBuckets
 
-    multi $v0, $t0, 4       # modulo * 4
+    # Retorna acc * 4
+    mult $v0, $t0, 4        # acc *= 4
 
     # Epílogo
-    move $sp,     $fp
-    lw   $fp,    ($sp)
+    move $sp,  $fp
+    lw   $fp, ($sp)
 
     jr $ra
     
