@@ -2,27 +2,27 @@
 #
 # Estructura de datos que implementa una tabla de Hash.
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
+# Funcion crear
 # Crea una tabla de hash de tamaño    .
 # Entrada:   $a0: Tamaño de la tabla.
 # Salida:    $v0: Tabla de hash (negativo si no se pudo crear).
-#          ($v0): Número de elementos.
-#         4($v0): Número de buckets
+#          ($v0): Numero de elementos.
+#         4($v0): Numero de buckets
 #         8($v0): Cabeza de la tabla de hash.
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: Tamaño de la tabla de hash
-# $s1: Dirección de retorno
-# $s2: Dirección de una lista de la tabla
+# $s1: Direccion de retorno
+# $s2: Direccion de una lista de la tabla
 TablaHash_crear:
-    # Prólogo
+    # Prologo
     sw   $fp,    ($sp)
     sw   $s0,  -4($s0)
     sw   $s1,  -8($s0)
@@ -40,7 +40,7 @@ TablaHash_crear:
 
     bltz $v0, TablaHash_crear_fin 
 
-    # Dirección de retorno
+    # Direccion de retorno
     move $s1, $v0
 
     # Inicializo numero de elementos
@@ -54,20 +54,20 @@ TablaHash_crear:
 
     bltz $v0, TablaHash_crear_fin 
 
-    # Guardo dirección de la tabla en el retorno
+    # Guardo direccion de la tabla en el retorno
     sw   $v0, 8($s1)
     move $s2, $v0
 
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
 
-    # Inicializo la tabla de hash con listas vacías
+    # Inicializo la tabla de hash con listas vacias
     jal Lista_crear
 
-    # Verificar si no se creó la lista
+    # Verificar si no se creo la lista
     bltz $v0, TablaHash_crear_fin  
 
-    # Guardo dirección de la lista en la tabla
+    # Guardo direccion de la lista en la tabla
     sw $v0, ($s2)
 
     addi $s2, $s2, 4
@@ -76,7 +76,7 @@ TablaHash_crear_loop:
     b TablaHash_crear_loop
 
 TablaHash_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $s0,  -4($s0)
@@ -85,20 +85,20 @@ TablaHash_crear_fin:
 
     jr $ra
 
-# Función de hash
-# Implementación de la función de hash para String
-# basada en la función de hash de Java.
+# Funcion de hash
+# Implementacion de la funcion de hash para String
+# basada en la funcion de hash de Java.
 # Fuente:
 # https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html
 # Entrada: $a0: TablaHash.
 #          $a1: Clave (String).
 #          
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: acc
 # $t1: Clave[i]
 # $t2: Numero de buckets
 TablaHash_hash:
-    # Prólogo
+    # Prologo
     sw   $fp,    ($sp)
     move $fp,     $sp
     addi $sp,  $sp, -4
@@ -127,26 +127,26 @@ TablaHash_hash_loop_fin:
     # Retorna acc * 4
     mult $v0, $t0, 4        # acc *= 4
 
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
     jr $ra
     
 
-# Función insertar
+# Funcion insertar
 # Inserta un elemento con la clave y el valor dado en la tabla.
 # Entrada: $a0: TablaHash.
 #          $a1: Clave del elemento a insertar.
 #          $a2: Valor del elemento a insertar.
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: TablaHash
 # $s1: Clave
 # $s2: EntradaHash
-# $t0: Número de elementos de la tabla
+# $t0: Numero de elementos de la tabla
 TablaHash_insertar:
-    # Prólogo
+    # Prologo
     sw   $fp,    ($sp)
     sw   $ra,  -4($sp)
     sw   $s0,  -8($s0)
@@ -169,7 +169,7 @@ TablaHash_insertar:
     # Guarda EntradaHash
     move $s2, $v0
 
-    # Calcula la función de hash
+    # Calcula la funcion de hash
     jal TablaHash_hash
 
     # Busca la lista a insertar
@@ -181,13 +181,13 @@ TablaHash_insertar:
     move $a1, $s2
     jal Lista_insertar
 
-    # Aumenta el número de elementos de la tabla
+    # Aumenta el numero de elementos de la tabla
     sw   $t0, ($s0)            
     addi $t0,  $t0, 1
     lw   $t0, ($s0) 
 
 TablaHash_insertar_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
@@ -198,24 +198,24 @@ TablaHash_insertar_fin:
     jr $ra
 
 
-# Función obtenerValor
+# Funcion obtenerValor
 # Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
 # Salida:  $v0: valor de EntradaHash.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Lista
 # $t1: cabeza de Lista
 # $t2: valor de Nodo
 # $t3: clave de EntradaHash
 TablaHash_obtenerValor:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -8
 
-    # Calcula la función de hash
+    # Calcula la funcion de hash
     jal TablaHash_hash
 
     # Busca la lista a insertar
@@ -248,7 +248,7 @@ TablaHash_obtenerValor_loop_fin:
     # Retorna valor de la entrada de hash
     lw $v0, 4($t2)
 
-    # Epílogo
+    # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
 
@@ -257,10 +257,10 @@ TablaHash_obtenerValor_loop_fin:
 .include "EntradaHash.s"
 .include "Lista.s"
 
-# Función eliminar
+# Funcion eliminar
 # TODO
 # TablaHash_eliminar:
 
-# Función existe
+# Funcion existe
 # TODO
 # TablaHash_existe:

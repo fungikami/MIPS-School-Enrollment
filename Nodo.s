@@ -7,14 +7,14 @@
 # valor:     valor del nodo
 # siguiente: nodo siguiente.
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
+# Funcion crear
 # Crea un nodo con el valor dado.
 # Entrada:   $a0: valor del nodo.
 # Salida:    $v0: Nodo (negativo si no se pudo crear).
@@ -22,10 +22,10 @@
 #         4($v0): valor
 #         8($v0): siguiente
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Valor del nodo.
 Nodo_crear:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -46,7 +46,7 @@ Nodo_crear:
     sw $zero, 8($v0)
     
 Nodo_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp, $fp
     lw   $fp, ($sp)
 

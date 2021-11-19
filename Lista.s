@@ -4,26 +4,25 @@
 # con centinela.
 # 
 # cabeza: nodo centinela
-# tamaño: número de elementos de la lista
+# tamanio: numero de elementos de la lista
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
-# Crea una lista circular doblemente enlazada vacía.
+# Funcion crear
+# Crea una lista circular doblemente enlazada vacia.
 # Salida:    $v0: lista (negativo si no se pudo crear).
 #          ($v0): cabeza
-#         4($v0): tamaño
+#         4($v0): tamanio
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: dir. de la lista a retornar
 Lista_crear:
-
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     sw   $s0, -8($sp)
@@ -45,7 +44,7 @@ Lista_crear:
     move $a0, $zero
     jal  Nodo_crear
 
-    # Si hubo error en la creación del nodo
+    # Si hubo error en la creacion del nodo
     bltz $v0, Lista_crear_fin
 
     # La centinela se apunta a si misma
@@ -54,13 +53,13 @@ Lista_crear:
 
     # Inicializa la lista
     sw $v0,    ($s0) # nodo cabeza
-    sw $zero, 4($s0) # tamaño 0
+    sw $zero, 4($s0) # tamanio 0
 
-    # Retorna la dirección de la lista
+    # Retorna la direccion de la lista
     move $v0, $s0
     
 Lista_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
     lw   $ra, -4($sp)
@@ -69,18 +68,18 @@ Lista_crear_fin:
     jr $ra
 
 
-# Función insertar
+# Funcion insertar
 # Inserta un elemento con el valor dado en la lista.
 # Entrada: $a0: lista.
 #          $a1: valor del elemento a insertar.
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: lista
 # $t0: centinela de la lista
 # $t1: centinela.anterior
-# $t2: tamaño de la lista
+# $t2: tamanio de la lista
 Lista_insertar:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     sw   $s0, -8($sp)
@@ -94,7 +93,7 @@ Lista_insertar:
     move $a0, $a1
     jal Nodo_crear
 
-    # Si hubo error en la creación del nodo
+    # Si hubo error en la creacion del nodo
     bltz $v0, Lista_crear_fin
 
     # Actualizar cabeza y x
@@ -105,13 +104,13 @@ Lista_insertar:
     sw $v0, 8($t1) # centinela.anterior.siguiente = x
     sw $v0,  ($t0) # centinela.anterior = x
 
-    # Actualizar tamaño
+    # Actualizar tamanio
     lw   $t2, 4($s0)
     addi $t2,   $t2, 1
     sw   $t2, 4($s0)
 
 Lista_insertar_fin:
-    # Epílogo
+    # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
     lw   $ra, -4($sp)
@@ -119,28 +118,28 @@ Lista_insertar_fin:
 
     jr $ra
 
-# Función eliminar
+# Funcion eliminar
 # Elimina el nodo x dado de la lista.
 # Entrada: $a0: lista.
 #          $a1: nodo x a eliminar.
 # Salida:  $v0: [0 si se pudo eliminar | 1 de otra manera]
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: centinela de la lista
 # $t1: x.anterior
 # $t2: x.siguiente
-# $t3: tamaño de la lista
+# $t3: tamanio de la lista
 Lista_eliminar:
-    # Prólogo
+    # Prologo
     sw   $fp, ($sp)
     move $fp,  $sp
     addi $sp,  $sp, -4
 
-    # Cargar tamaño de la lista
+    # Cargar tamanio de la lista
     lw   $t3, 4($a0)
 
     li $v0, 0
-    # Si la lista está vacía
+    # Si la lista esta vacia
     beqz $t3, Lista_eliminar_fin
     
     # Cargar centinela
@@ -154,7 +153,7 @@ Lista_eliminar:
     sw $t2, 8($t1) # x.anterior.siguiente = x.siguiente
     sw $t1,  ($t2) # x.siguiente.anterior = x.anterior
 
-    # Actualizar tamaño
+    # Actualizar tamanio
     addi $t3,   $t3, -1
     sw   $t3, 4($a0)
 
@@ -162,18 +161,18 @@ Lista_eliminar:
     li $v0, 1
 
 Lista_eliminar_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
 
     jr $ra
 
-# Función eliminarPrimero
+# Funcion eliminarPrimero
 # Elimina el primer nodo de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: [0 si se pudo eliminar | 1 de otra manera]
 Lista_eliminarPrimero:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     move $fp,    $sp
@@ -185,19 +184,19 @@ Lista_eliminarPrimero:
 
     jal Lista_eliminar
 
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
 
     jr $ra
 
-# Función eliminarUltimo
+# Funcion eliminarUltimo
 # Elimina el ultimo nodo de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: [0 si se pudo eliminar | 1 de otra manera]
 Lista_eliminarUltimo:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     move $fp,    $sp
@@ -209,28 +208,28 @@ Lista_eliminarUltimo:
 
     jal Lista_eliminar
 
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
 
     jr $ra
 
-# Función primero.
+# Funcion primero.
 # Obtiene el contenido del primer elemento de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: valor del primer elemento de la lista.
 # 
-# Planificación de registros:
-# $t0: tamaño de la lista
+# Planificacion de registros:
+# $t0: tamanio de la lista
 Lista_primero:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
 
     li $v0, -1
-    # Si la lista está vacía
+    # Si la lista esta vacia
     lw $t0, 4($a0)
     beqz $t0, Lista_primero_fin
     
@@ -241,27 +240,27 @@ Lista_primero:
     lw $v0, 4($v0)
 
 Lista_primero_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
 
     jr $ra
 
-# Función ultimo.
-# Obtiene el contenido del último elemento de la lista.
+# Funcion ultimo.
+# Obtiene el contenido del ultimo elemento de la lista.
 # Entrada: $a0: lista.
 # Salida:  $v0: valor del primer elemento de la lista.
 # 
-# Planificación de registros:
-# $t0: tamaño de la lista
+# Planificacion de registros:
+# $t0: tamanio de la lista
 Lista_ultimo:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
 
     li $v0, -1
-    # Si la lista está vacía
+    # Si la lista esta vacia
     lw $t0, 4($a0)
     beqz $t0, Lista_primero_fin
     
@@ -272,7 +271,7 @@ Lista_ultimo:
     lw $v0, 4($v0)
 
 Lista_ultimo_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
 

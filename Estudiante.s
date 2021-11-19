@@ -3,35 +3,35 @@
 # Estructura de datos que implementa el TAD
 # Estudiante.
 # 
-# carné:    String con el carné del estudiante.
+# carnet:   String con el carnet del estudiante.
 # nombre:   String con el nombre del estudiante.
-# indice:   String con el índice del estudiante.
+# indice:   String con el indice del estudiante.
 # creditos: Entero con la cantidad de creditos
 #           aprobados.
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
-# Crea un Estudiante con los parámetros dados.
-# Entrada:   $a0: carné
+# Funcion crear
+# Crea un Estudiante con los parametros dados.
+# Entrada:   $a0: carne
 #            $a1: nombre.
 #            $a2: indice.
 #            $a3: creditos.
 # Salida:    $v0: Estudiante (negativo si no se pudo crear).
-#          ($v0): carné. 
+#          ($v0): carne. 
 #         4($v0): nombre.
 #         8($v0): indice.
 #        12($v0): creditos.
 #
-# Planificación de registros:
-# $t0: carné del estudiante.
+# Planificacion de registros:
+# $t0: carne del estudiante.
 Estudiante_crear:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -53,7 +53,7 @@ Estudiante_crear:
     sw $a3, 12($v0)
     
 Estudiante_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 

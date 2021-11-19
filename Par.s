@@ -5,14 +5,14 @@
 # primero: primer elemento del par
 # segundo: segundo elemento del par
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
+# Funcion crear
 # Crea un par con los elementos dados.
 # Entrada:   $a0: primer elemento del par.
 #            $a1: segundo elemento del par.
@@ -20,10 +20,10 @@
 #          ($v0): primero 
 #         4($v0): segundo
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: primero
 Par_crear:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -43,7 +43,7 @@ Par_crear:
     sw $a1, 4($v0)
     
 Par_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 

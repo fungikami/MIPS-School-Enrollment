@@ -3,42 +3,42 @@
 # Estructura de datos que implementa el TAD
 # Materia.
 # 
-# código:      String con el código de la materia.
+# codigo:      String con el codigo de la materia.
 # nombre:      String con el nombre de la materia.
-# créditos:    Entero con los créditos que vale la materia.
+# creditos:    Entero con los creditos que vale la materia.
 # cupos:       Entero con el los cupos restantes de la materia.
-# minCreditos: Entero con el mínimo de creditos aprobados
+# minCreditos: Entero con el minimo de creditos aprobados
 #              necesarios para inscribir la materia.
 # estudiantes: Lista de Pares <Estudiante, Operacion> que 
-#              solicitaron inscripción a la materia.
+#              solicitaron inscripcion a la materia.
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
-# Crea un Materia con los parámetros dados.
-# Entrada:   $a0: código
+# Funcion crear
+# Crea un Materia con los parametros dados.
+# Entrada:   $a0: codigo
 #            $a1: nombre.
 #            $a2: creditos.
 #            $a3: cupos.
 #         4($fp): minCreditos.
 #         8($fp): estudiantes.
 # Salida:    $v0: Materia (negativo si no se pudo crear).
-#          ($v0): código.
+#          ($v0): codigo.
 #         4($v0): nombre.
 #         8($v0): creditos.
 #        12($v0): cupos.
 #        16($v0): minCreditos.
 #        20($v0): estudiantes.
 #
-# Planificación de registros:
-# $t0: carné del estudiante.
+# Planificacion de registros:
+# $t0: carne del estudiante.
 Materia_crear:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -63,20 +63,20 @@ Materia_crear:
     sw $a1, 20($v0)
 
 Materia_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
     jr $ra
 
-# Función aumentarCupo
+# Funcion aumentarCupo
 # Suma uno al numero de cupos de la materia.
 # Entrada:   $a0: Materia.
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Cupos de la materia.
 Materia_aumentarCupo:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -86,21 +86,21 @@ Materia_aumentarCupo:
     addi $t0, $t0,    1
     sw   $t0, 12($a0)
 
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
     jr $ra
 
 
-# Función disminuirCupo
+# Funcion disminuirCupo
 # Resta uno al numero de cupos de la materia.
 # Entrada:   $a0: Materia.
 #
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Cupos de la materia.
 Materia_disminuirCupo:
-    # Prólogo
+    # Prologo
 	sw   $fp, ($sp)
 	move $fp, $sp
 	addi $sp, $sp, -4
@@ -110,22 +110,22 @@ Materia_disminuirCupo:
     addi $t0, $t0,    -1
     sw   $t0, 12($a0)
 
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
     jr $ra
 
-# Función agregarEstudiante
+# Funcion agregarEstudiante
 # Agrega un estudiante a la lista de estudiantes de la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Estudiante.
-#            $a2: Operación.
+#            $a2: Operacion.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Cupos de la materia.
 Materia_agregarEstudiante:
-    # Prólogo
+    # Prologo
     sw   $fp, ($sp)
     move $fp, $sp
     addi $sp, $sp, -4

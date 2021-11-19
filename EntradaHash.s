@@ -3,14 +3,14 @@
 # Estructura de datos que implementa una 
 # entrada de la tabla de Hash.
 # 
-# Autores: Ka Fung & Christopher Gómez
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
 
         .text
 
-# Función crear
+# Funcion crear
 # Crea una entrada de hash con la clave y el nodo dado.
 # Entrada:   $a0: Clave de la entrada de hash.
 #            $a1: Valor de la entrada de hash.
@@ -18,10 +18,10 @@
 #          ($v0): Clave 
 #         4($v0): Valor
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Clave de la entrada.
 EntradaHash_crear:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
@@ -41,7 +41,7 @@ EntradaHash_crear:
     sw $a1, 4($v0)
 
 EntradaHash_crear_fin:
-    # Epílogo
+    # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
 
