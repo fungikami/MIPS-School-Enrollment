@@ -206,7 +206,9 @@ TablaHash_insertar_fin:
 # Planificación de registros:
 # $t0: Lista
 # $t1: cabeza de Lista
-TablaHash_buscar:
+# $t2: valor de Nodo
+# $t3: clave de EntradaHash
+TablaHash_obtenerValor:
     # Prólogo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
@@ -224,23 +226,28 @@ TablaHash_buscar:
     # Cabeza de la lista
     lw $t1, ($t0)       
 
-TablaHash_buscar_loop:
-    lw $t2, 4($t1)       # Valor del nodo
-    lw $t3, ($t2)        # Clave del nodo
+TablaHash_obtenerValor_loop:
+    lw $t2, 4($t1) # Valor del nodo
+    lw $t3,  ($t2) # Clave del nodo
 
-    # Mientras que nodo != 0 
-    beqz $t1, TablaHash_buscar_fin
+    # Mientras que nodo != null 
+    beqz $t1, TablaHash_obtenerValor_loop_fin
 
     # Mientras que nodo.clave != clave
-    beq $t3, $a1, TablaHash_buscar_fin
+    beq $t3, $a1, TablaHash_obtenerValor_loop_fin
 
     # Actualizamos al Nodo.next
     lw $t4, 8($t1)      
-    lw $t1, ($t4)
+    lw $t1,  ($t4)
 
-    b TablaHash_buscar_loop
+    b TablaHash_obtenerValor_loop
 
-TablaHash_buscar_fin:
+TablaHash_obtenerValor_loop_fin:
+    lw $t2, 4($t1) # Valor del nodo
+
+    # Retorna valor de la entrada de hash
+    lw $v0, 4($t2)
+
     # Epílogo
     move $sp,    $fp
     lw   $fp,   ($sp)

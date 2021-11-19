@@ -16,7 +16,7 @@
 #            $a1: Valor de la entrada de hash.
 # Salida:    $v0: Entrada de Hash (negativo si no se pudo crear).
 #          ($v0): Clave 
-#         4($v0): Nodo
+#         4($v0): Valor
 # 
 # Planificación de registros:
 # $t0: Clave de la entrada.
@@ -31,7 +31,7 @@ EntradaHash_crear:
     # Guarda la clave
     move $t0, $a0
 
-    # Reserva memoria para la clave y el nodo.
+    # Reserva memoria para la clave y el valor.
     li $a0, 8
     li $v0, 9
     syscall
