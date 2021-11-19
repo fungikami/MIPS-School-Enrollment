@@ -150,9 +150,8 @@ TablaHash_insertar:
     sw   $s0,  -8($s0)
     sw   $s1, -12($s0)
     sw   $s2, -16($s0)
-    sw   $s3, -20($s0)
     move $fp,    $sp
-    addi $sp,    $sp, -24
+    addi $sp,    $sp, -20
 
     # Guarda dir de la tabla y clave
     move $s0, $a0
@@ -163,6 +162,8 @@ TablaHash_insertar:
     move $a1, $a2
     jal EntradaHash
 
+    bltz $v0, TablaHash_insertar_fin
+
     # Guarda dir de la entrada de Hash
     move $s2, $v0
 
@@ -170,18 +171,18 @@ TablaHash_insertar:
     jal TablaHash_hash
 
     # Busca la lista a insertar
-    add $a0, $s0, 8     
-    add $a0, $a0, $v0       # $a0 = 8(dirTabla) + $v0
-    lw  $a0, ($a0)          # Dir de la lista
+    lw  $a0, 8($s0)    
+    add $a0,   $a0, $v0      # $a0 = 8(dirTabla) + $v0
+    lw  $a0,  ($a0)          # Dir de la lista
 
     # Inserta en la lista
     move $a1, $s2
     jal Lista_insertar
 
     # Aumenta el número de elementos de la tabla
-    sw   $s3, ($s0)            
-    addi $s3,  $s3, 1
-    lw   $s3, ($s0) 
+    sw   $t0, ($s0)            
+    addi $t0,  $t0, 1
+    lw   $t0, ($s0) 
 
 TablaHash_insertar_fin:
     # Epílogo
@@ -191,7 +192,6 @@ TablaHash_insertar_fin:
     lw   $s0,  -8($s0)
     lw   $s1, -12($s0)
     lw   $s2, -16($s0)
-    lw   $s3, -20($s0)
 
     jr $ra
 
