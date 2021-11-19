@@ -153,21 +153,21 @@ TablaHash_insertar:
     move $fp,    $sp
     addi $sp,    $sp, -20
 
-    # Guarda dir de la tabla y clave
+    # Guarda TablaHash y clave
     move $s0, $a0
     move $s1, $a1
 
-    # Crea entrada de Hash
+    # Crea EntradaHash
     move $a0, $a1
     move $a1, $a2
     jal EntradaHash
 
     bltz $v0, TablaHash_insertar_fin
 
-    # Guarda dir de la entrada de Hash
+    # Guarda EntradaHash
     move $s2, $v0
 
-    # Calcula la función de Hash
+    # Calcula la función de hash
     jal TablaHash_hash
 
     # Busca la lista a insertar
