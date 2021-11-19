@@ -137,9 +137,19 @@ Materia_agregarEstudiante:
     move $a0, $a1
     move $a1, $a2
     jal  Par_crear
+
+    # Verifica la creación del Par.
+    bgtz $v0, Materia_agregarEstudiante_fin
     move $a1, $v0
 
     # Agrega el Par a la lista de estudiantes.
     move $a0, $s0
     lw   $a0, 20($a0)
     jal Lista_agregar
+
+Materia_agregarEstudiante_fin:
+    # Epílogo
+    move $sp,  $fp
+    lw   $fp, ($sp)
+
+    jr $ra
