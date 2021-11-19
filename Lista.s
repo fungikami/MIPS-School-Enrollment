@@ -20,12 +20,10 @@
 #         4($v0): tamanio
 #
 # Planificacion de registros:
-# $s0: dir. de la lista a retornar
+# $t0: dir. de la lista a retornar
 Lista_crear:
     # Prologo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $s0, -8($sp)
     move $fp,    $sp
     addi $sp,    $sp, -12
 
@@ -37,8 +35,8 @@ Lista_crear:
     # Si no me dieron memoria
     bltz $v0, Lista_crear_fin
 
-    # Memoria asignada en $s0
-    move $s0, $v0
+    # Memoria asignada en $t0
+    move $t0, $v0
 
     # Reserva memoria para la centinela de la lista
     li $a0, 12
@@ -53,21 +51,18 @@ Lista_crear:
     sw $v0, 8($v0)
 
     # Inicializa la lista
-    sw $v0,    ($s0) # nodo cabeza
-    sw $zero, 4($s0) # tamanio 0
+    sw $v0,    ($t0) # nodo cabeza
+    sw $zero, 4($t0) # tamanio 0
 
     # Retorna la direccion de la lista
-    move $v0, $s0
+    move $v0, $t0
     
 Lista_crear_fin:
     # Epilogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-    lw   $s0, -8($sp)
+    move $sp,  $fp
+    lw   $fp, ($sp)
 
     jr $ra
-
 
 # Funcion insertar
 # Inserta un elemento con el valor dado en la lista.
@@ -76,20 +71,18 @@ Lista_crear_fin:
 # Salida: 
 #
 # Planificacion de registros:
-# $s0: lista
 # $t0: centinela de la lista
 # $t1: centinela.anterior
 # $t2: tamanio de la lista
+# $t3: lista
 Lista_insertar:
     # Prologo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $s0, -8($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -12
+    addi $sp,    $sp, -4
 
-    # Guardar la lista en $s0
-    move $s0, $a0
+    # Guardar la lista en $t3
+    move $t3, $a0
 
     # Reserva memoria para el nodo
     li $a0, 12
@@ -103,7 +96,7 @@ Lista_insertar:
     sw $a1, 4($v0)
 
     # Actualiza cabeza y nodo x creado
-    lw $t0,  ($s0)
+    lw $t0,  ($t3)
     lw $t1,  ($t0)
     sw $t1,  ($v0) # x.anterior = centinela.anterior
     sw $t0, 8($v0) # x.siguiente = centinela
@@ -111,16 +104,14 @@ Lista_insertar:
     sw $v0,  ($t0) # centinela.anterior = x
 
     # Actualiza tamanio de la lista
-    lw   $t2, 4($s0)
+    lw   $t2, 4($t3)
     addi $t2,   $t2, 1
-    sw   $t2, 4($s0)
+    sw   $t2, 4($t3)
 
 Lista_insertar_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-    lw   $s0, -8($sp)
 
     jr $ra
 
