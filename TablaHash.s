@@ -133,42 +133,61 @@ TablaHash_hash_loop_fin:
 # Inserta un elemento con la clave y el valor dado en la tabla.
 # Entrada: $a0: Tabla de Hash.
 #          $a1: Clave del elemento a insertar.
-#          $sp: Valor del elemento a insertar.
+#          $a2: Valor del elemento a insertar.
 #
 # Planificación de registros:
-# 
+# $s0: Dirección de la tabla
+# $s1: Clave
+# $s2: Dirección de la entrada de hash
 TablaHash_insertar:
     # Prólogo
-    sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
+    sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($s0)
+    sw   $s1, -12($s0)
+    sw   $s2, -16($s0)
+    sw   $s3, -20($s0)
     move $fp,    $sp
-    addi $sp,    $sp, -8
+    addi $sp,    $sp, -24
 
-    # Funcion Hash
+    # Guarda dir de la tabla y clave
+    move $s0, $a0
+    move $s1, $a1
+
+    # Crea entrada de Hash
+    move $a0, $a1
+    move $a1, $a2
+    jal EntradaHash
+
+    # Guarda dir de la entrada de Hash
+    move $s2, $v0
+
+    # Calcula la función de Hash
     jal TablaHash_hash
 
-    # Guardar dir de la tabla
-    move $s0, $a0
+    # Busca la lista a insertar
+    add $a0, $s0, 8     
+    add $a0, $a0, $v0   # $a0 = 8(dirTabla) + $v0
+    lw  $a0, ($a0)      # Dir de la lista
 
-    # Insertar
-    # $a0 = 4(dirTabla) + $v0
-    # $a1 = $sp
+    # Inserta en la lista
+    move $a1, $s2
     jal Lista_insertar
 
-    # Verificar si se logró agregar (???)
-
-    # Aumentar el número de elementos
-    sw   $s1, ($s0)            
-    addi $s1,  $s1, 1
-    lw   $s1, ($s0) 
+    # Aumenta el número de elementos de la tabla
+    sw   $s3, ($s0)            
+    addi $s3,  $s3, 1
+    lw   $s3, ($s0) 
 
 TablaHash_insertar_fin:
     # Epílogo
-    move $v0,    $s0
-
-    move $sp,    $fp
-    lw   $fp,   ($sp)
-    sw   $ra, -4($sp)
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($s0)
+    lw   $s1, -12($s0)
+    lw   $s2, -16($s0)
+    lw   $s3, -20($s0)
 
     jr $ra
 
