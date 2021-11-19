@@ -36,7 +36,7 @@ Par_crear:
     li $v0, 9
     syscall
 
-    bltz $v0, Nodo_crear_fin
+    bltz $v0, Par_crear_fin
 
     # Inicializa el par
     sw $t0,  ($v0)
