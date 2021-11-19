@@ -56,7 +56,7 @@ Lista_crear:
     sw $v0,    ($s0) # nodo cabeza
     sw $zero, 4($s0) # tamaño 0
 
-    # Retorna la dir. del nodo
+    # Retorna la dirección de la lista
     move $v0, $s0
     
 Lista_crear_fin:
