@@ -23,10 +23,8 @@
 EntradaHash_crear:
     # Prólogo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $t0, -8($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -12
+    addi $sp,    $sp, -4
 
     # Guarda la clave
     move $t0, $a0
@@ -46,7 +44,5 @@ EntradaHash_crear_fin:
     # Epílogo
     move $sp,    $fp
     lw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $t0, -8($sp)
 
     jr $ra

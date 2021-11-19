@@ -24,12 +24,11 @@
 TablaHash_crear:
     # Prólogo
     sw   $fp,    ($sp)
-    sw   $ra,  -4($sp)
-    sw   $s0,  -8($s0)
-    sw   $s1, -12($s0)
-    sw   $s2, -16($s0)
+    sw   $s0,  -4($s0)
+    sw   $s1,  -8($s0)
+    sw   $s2, -12($s0)
     move $fp,     $sp
-    addi $sp,     $sp, -20
+    addi $sp,     $sp, -16
 
     # Tamaño de la tabla de hash.
     move $s0, $a0
@@ -80,7 +79,9 @@ TablaHash_crear_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $ra,  -4($sp)
+    lw   $s0,  -4($s0)
+    lw   $s1,  -8($s0)
+    lw   $s2, -12($s0)
 
     jr $ra
 
@@ -211,7 +212,6 @@ TablaHash_insertar_fin:
 TablaHash_obtenerValor:
     # Prólogo
     sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
     move $fp,    $sp
     addi $sp,    $sp, -8
 
@@ -251,7 +251,6 @@ TablaHash_obtenerValor_loop_fin:
     # Epílogo
     move $sp,    $fp
     lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
 
     jr $ra
 
