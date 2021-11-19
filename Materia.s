@@ -70,7 +70,7 @@ Materia_crear_fin:
     jr $ra
 
 # Función aumentarCupo
-# Suma un al numero de cupos de la materia.
+# Suma uno al numero de cupos de la materia.
 # Entrada:   $a0: Materia.
 #
 # Planificación de registros:
@@ -84,6 +84,30 @@ Materia_aumentarCupo:
     # Carga los cupos de la materia.
     lw   $t0, 12($a0)
     addi $t0, $t0,    1
+    sw   $t0, 12($a0)
+
+    # Epílogo
+    move $sp,  $fp
+    lw   $fp, ($sp)
+
+    jr $ra
+
+
+# Función disminuirCupo
+# Resta uno al numero de cupos de la materia.
+# Entrada:   $a0: Materia.
+#
+# Planificación de registros:
+# $t0: Cupos de la materia.
+Materia_disminuirCupo:
+    # Prólogo
+	sw   $fp, ($sp)
+	move $fp, $sp
+	addi $sp, $sp, -4
+
+    # Carga los cupos de la materia.
+    lw   $t0, 12($a0)
+    addi $t0, $t0,    -1
     sw   $t0, 12($a0)
 
     # Epílogo
