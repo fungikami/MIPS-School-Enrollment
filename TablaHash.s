@@ -140,9 +140,10 @@ TablaHash_hash_loop_fin:
 #          $a2: Valor del elemento a insertar.
 #
 # Planificación de registros:
-# $s0: Dirección de la tabla
+# $s0: TablaHash
 # $s1: Clave
-# $s2: Dirección de la entrada de hash
+# $s2: EntradaHash
+# $t0: Número de elementos de la tabla
 TablaHash_insertar:
     # Prólogo
     sw   $fp,    ($sp)
@@ -172,8 +173,8 @@ TablaHash_insertar:
 
     # Busca la lista a insertar
     lw  $a0, 8($s0)    
-    add $a0,   $a0, $v0      # $a0 = 8(dirTabla) + $v0
-    lw  $a0,  ($a0)          # Dir de la lista
+    add $a0,   $a0, $v0      
+    lw  $a0,  ($a0)         
 
     # Inserta en la lista
     move $a1, $s2
@@ -196,42 +197,6 @@ TablaHash_insertar_fin:
     jr $ra
 
 
-# Función eliminar
-# Elimina un elemento de la tabla dado la clave.
-# Entrada: $a0: TablaHash.
-#          $a1: clave a eliminar.
-# Salida:  
-# 
-# Planificación de registros:
-#
-#
-TablaHash_eliminar:
-    # Prólogo
-    sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    move $fp,    $sp
-    addi $sp,    $sp, -8
-
-    # Funcion Hash
-    jal TablaHash_hash
-
-    # x = Buscar en la lista tabla[hash]
-
-    # Verificamos si se encuentra
-
-    # Eliminar x
-    # $a0 = 4(dirTabla) + $v0
-    # $a1 = x
-    jal Lista_insertar
-    
-TablaHash_eliminar_fin:
-    # Epílogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-
-    jr $ra
-
 # Función buscar
 # Busca un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
@@ -239,7 +204,8 @@ TablaHash_eliminar_fin:
 # Salida:  
 # 
 # Planificación de registros:
-# 
+# $t0: Lista
+# $t1: cabeza de Lista
 TablaHash_buscar:
     # Prólogo
     sw   $fp,   ($sp)
@@ -247,10 +213,30 @@ TablaHash_buscar:
     move $fp,    $sp
     addi $sp,    $sp, -8
 
-    # Funcion Hash
+    # Calcula la función de hash
     jal TablaHash_hash
 
-    # Buscar en la lista tabla[hash]
+    # Busca la lista a insertar
+    lw  $t0, 8($s0)    
+    add $t0,   $t0, $v0      
+    lw  $t0,  ($t0) 
+
+    lw $t1,  ($t0)       # Cabeza de la lista
+
+TablaHash_buscar_loop:
+    lw $t2,  ($t1)       # Nodo de la lista
+    lw $t3, 4($t2)       # Valor del nodo
+    lw $t4,  ($t3)       # Clave del nodo
+
+    # Mientras que nodo != 0 
+    beqz $t2, TablaHash_buscar_fin
+
+    # Mientras que nodo.clave != clave
+    beq $t4, $a1, TablaHash_buscar_fin
+
+    addi $t0, $t0, 4 
+
+    b TablaHash_buscar_loop
 
 TablaHash_buscar_fin:
     # Epílogo
@@ -261,28 +247,10 @@ TablaHash_buscar_fin:
     jr $ra
 
 
+# Función eliminar
+# TODO
+# TablaHash_eliminar:
+
 # Función existe
-# Verifica si una clave existe en la tabla.
-# Entrada: $a0: TablaHash.
-#          $a1: clave a verificar si existe.
-# Salida:  
-# 
-# Planificación de registros:
-# 
-TablaHash_existe:
-    # Prólogo
-    sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    move $fp,    $sp
-    addi $sp,    $sp, -8
-
-    jal TablaHash_hash
-
-    # Buscar en tabla[hash] si la clave está en la lista
-
-    # Epílogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-
-    jr $ra
+# TODO
+# TablaHash_existe:
