@@ -78,6 +78,7 @@ for_linea:
         
         # Si es una comilla, termina el carnet
         beq $t2, 34 for_carnet_fin
+        beqz $t2, fin
         
         sb $t2, ($v0)
 
@@ -212,9 +213,10 @@ for_linea:
     # Guardar el estudiante en la tabla
     jal TablaHash_insertar
     
-    bnez $t2, for_linea
-    bne $t2, 10, for_linea
-    bne $t2, 32, for_linea
+    bnez $t2, for_linea     # Nulo
+    bne $t2, 10, for_linea  # Salto de linea
+    bne $t2, 11, for_linea  # Tab vertical
+    bne $t2, 32, for_linea  # Espacio en blanco
 
 # Por cada linea:
     # syscall 9 (16 bytes) [verificar]
