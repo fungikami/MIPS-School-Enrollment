@@ -230,17 +230,17 @@ main:
         # Guardar el estudiante en la tabla
         jal TablaHash_insertar
         
-        bnez $t2, for_linea     # Nulo
-        bne $t2, 10, for_linea  # Salto de linea
-        bne $t2, 11, for_linea  # Tab vertical
-        bne $t2, 32, for_linea  # Espacio en blanco
+        bnez $t2, for_leer_estudiantes     # Nulo
+        bne $t2, 10, for_leer_estudiantes  # Salto de linea
+        bne $t2, 11, for_leer_estudiantes  # Tab vertical
+        bne $t2, 32, for_leer_estudiantes  # Espacio en blanco
 
     fin_leer_estudiantes:
         move $a0, $t7
         move $a1, $s7
         jal TablaHash_obtenerValor
         
-        lw $a0, 4($v0)    
+        lw $a0, 4($v0)
         li $v0, 4
         syscall
 
@@ -428,10 +428,10 @@ main:
         # # Guardar la materia en la tabla
         # jal TablaHash_insertar
         
-        # bnez $t2, for_linea     # Nulo
-        # bne $t2, 10, for_linea  # Salto de linea
-        # bne $t2, 11, for_linea  # Tab vertical
-        # bne $t2, 32, for_linea  # Espacio en blanco
+        # bnez $t2, for_leer_estudiantes     # Nulo
+        # bne $t2, 10, for_leer_estudiantes  # Salto de linea
+        # bne $t2, 11, for_leer_estudiantes  # Tab vertical
+        # bne $t2, 32, for_leer_estudiantes  # Espacio en blanco
 
     fin_leer_materias:
         # move $a0, $t7
