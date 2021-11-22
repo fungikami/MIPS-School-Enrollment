@@ -1,6 +1,13 @@
 # TablaHash
 #
-# Estructura de datos que implementa una tabla de Hash.
+# Estructura de datos que implementa una tabla de Hash con 
+# claves representadas como cadenas de caracteres y valores
+# de tipo genérico. Solamente soporta la operación de agregar.
+# De tamaño estático.
+# 
+# numElems: Número de elementos en la tabla de Hash
+# numBuckets: Número de buckets
+# tabla: Cabeza del arreglo que contiene la tabla de Hash.
 # 
 # Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
@@ -13,9 +20,9 @@
 # Crea una tabla de hash dado el tamanio.
 # Entrada:   $a0: Tamanio de la tabla.
 # Salida:    $v0: Tabla de hash (negativo si no se pudo crear).
-#          ($v0): Numero de elementos.
-#         4($v0): Numero de buckets
-#         8($v0): Cabeza de la tabla de hash.
+#          ($v0): numElems
+#         4($v0): numBuckets
+#         8($v0): tabla
 #
 # Planificacion de registros:
 # $s0: Tamanio de la tabla de hash
@@ -59,22 +66,22 @@ TablaHash_crear:
     sw   $v0, 8($s1)
     move $s2,   $v0
 
-TablaHash_crear_loop:
-    beqz $s0, TablaHash_crear_fin
+    TablaHash_crear_loop:
+        beqz $s0, TablaHash_crear_fin
 
-    # Inicializo la tabla de hash con listas vacias
-    jal Lista_crear
+        # Inicializo la tabla de hash con listas vacias
+        jal Lista_crear
 
-    # Verificar si no se creo la lista
-    bltz $v0, TablaHash_crear_fin  
+        # Verificar si no se creo la lista
+        bltz $v0, TablaHash_crear_fin  
 
-    # Guardo direccion de la lista en la tabla
-    sw $v0, ($s2)
+        # Guardo direccion de la lista en la tabla
+        sw $v0, ($s2)
 
-    addi $s2, $s2, 4
-    addi $s0, $s0, -1
+        addi $s2, $s2, 4
+        addi $s0, $s0, -1
 
-    b TablaHash_crear_loop
+        b TablaHash_crear_loop
 
 TablaHash_crear_fin:
     # Epilogo
@@ -110,17 +117,17 @@ TablaHash_hash:
     # acc
     move $t0, $zero    
 
-TablaHash_hash_loop:
-    lb $t1, ($a1)
+    TablaHash_hash_loop:
+        lb $t1, ($a1)
 
-    beqz $t1, TablaHash_hash_loop_fin
+        beqz $t1, TablaHash_hash_loop_fin
 
-    mul $t0, $t0, 31       # acc *= 31
-    add $t0, $t0, $t1      # acc += clave[i] 
+        mul $t0, $t0, 31       # acc *= 31
+        add $t0, $t0, $t1      # acc += clave[i] 
 
-    addi $a1, $a1, 1
+        addi $a1, $a1, 1
 
-    b TablaHash_hash_loop
+        b TablaHash_hash_loop
 
 TablaHash_hash_loop_fin:
     # Calcula hash
@@ -217,18 +224,20 @@ TablaHash_insertar_fin:
 # Planificacion de registros:
 # $s0: TablaHash
 # $s1: Clave a buscar
+# $s2: nodo de Lista
+# $s3: centinela de Lista
 # $t0: Lista
-# $t1: centinela de Lista
-# $t2: nodo de Lista
 # $t3: valor de Nodo
-# $t4: clave de entrada de hash
 TablaHash_obtenerValor:
     # Prologo
-    sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $s0, -8($sp)
-    move $fp,    $sp
-    addi $sp,    $sp, -12
+    sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -16($sp)
+    sw   $s3, -20($sp)
+    move $fp,     $sp
+    addi $sp,     $sp, -24
     
     move $s0, $a0
     move $s1, $a1
@@ -241,26 +250,28 @@ TablaHash_obtenerValor:
     add $t0,   $t0, $v0    
     lw  $t0,  ($t0)  
 
-    lw $t1,  ($t0)  # Centinela de la lista
-    lw $t2, 8($t1)  # Primer nodo de la lista
+    lw $s3,  ($t0)  # Centinela de la lista
+    lw $s2, 8($s3)  # Primer nodo de la lista
 
-TablaHash_obtenerValor_loop:
-    # while Nodo != centinela 
-    beq $t2, $t1, TablaHash_obtenerValor_loop_fin
+    TablaHash_obtenerValor_loop:
+        # while Nodo != centinela 
+        beq $s2, $s3, TablaHash_obtenerValor_loop_fin
 
-    lw $t3, 4($t2)  # Valor del nodo
-    lw $t4,  ($t3)  # Clave del nodo
+        lw   $t3, 4($s2)  # Valor del nodo
+        lw   $a0,  ($t3)  # Clave del nodo
+        move $a1,   $s1   # Clave proporcionada a la función
 
-    # while Nodo.clave != clave
-    beq $t4, $s1, TablaHash_obtenerValor_loop_fin
-    
-    # Actualizamos al Nodo.siguiente
-    lw $t2, 8($t2) # Había un sw 4sum reasom
-    
-    b TablaHash_obtenerValor_loop
+        jal TablaHash_compararStrings
+        # while Nodo.clave != clave
+        beqz $v0, TablaHash_obtenerValor_loop_fin
+        
+        # Actualizamos al Nodo.siguiente
+        lw $s2, 8($s2) # Había un sw 4sum reasom
+        
+        b TablaHash_obtenerValor_loop
 
 TablaHash_obtenerValor_loop_fin:
-    lw $t3,   4($t2) # Valor del nodo
+    lw $t3,   4($s2) # Valor del nodo
     beqz $t3, TablaHash_obtenerValor_fin # Si no encontró el valor retorna 0
 
     # Retorna valor de la entrada de hash
@@ -268,10 +279,56 @@ TablaHash_obtenerValor_loop_fin:
 
 TablaHash_obtenerValor_fin:
     # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -16($sp)
+    lw   $s3, -20($sp)
+
+    jr $ra
+
+# Funcion compararStrings
+# Evalúa la igualdad de dos strings dadas
+# Entrada: $a0: TablaHash.
+#          $a1: clave a obtener valor.
+# Salida:  $v0: valor de entrada de hash.
+# 
+# Planificacion de registros:
+# $s0: TablaHash
+# $s1: Clave a buscar
+# $s2: nodo de Lista
+# $s3: centinela de Lista
+# $t0: Lista
+# $t3: valor de Nodo
+TablaHash_compararStrings:
+    # Prologo
+    sw   $fp,   ($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -4
+
+    move $v0, $zero
+
+    TablaHash_compararStrings_loop:
+        lb $t0, ($a0)
+        lb $t1, ($a1)
+
+        bne $t0,  $t1, TablaHash_compararStrings_retornar_falso
+        beqz $t1, TablaHash_compararStrings_fin
+
+        add $a0, $a0, 1
+        add $a1, $a1, 1
+
+        j TablaHash_compararStrings_loop
+
+TablaHash_compararStrings_retornar_falso:
+    add $v0, $v0, -1
+
+TablaHash_compararStrings_fin:
+    # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-    lw   $s0, -8($sp)
 
     jr $ra
 

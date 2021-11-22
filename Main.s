@@ -14,7 +14,7 @@ arcDef:     .asciiz "ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 1
 
-estudianteABuscar: .asciiz "18-13087" # Indice de 4.2827
+buscarEst: .asciiz "15-47895" # Indice de 4.2827
 
 buffer:     .space 1048576 # 1Mb
 bufferNull: .ascii "\0"
@@ -36,19 +36,6 @@ main:
     # $t6: Contador
 
     # ------------ ESTUDIANTES ---------------
-
-    # Por cada línea:
-    # syscall 9 (16 bytes) [verificar]
-    # 8 chars:
-        # Guardar carnet
-    # do while != “”:
-        # Guardar nombre
-    # 6 chars:
-        # Guardar indice
-    # 3 chars:
-        # Guardar creditosAprob
-    # Crear estudiante(carnet, nombre, indice, creditos Aprob)
-    # <TablaHash Estudiantes>.insertar(carnet, Estudiante)
 
     # Abrir archivo
     li $v0, 13
@@ -219,6 +206,8 @@ main:
 
         # Crear Estudiante
         move $a0, $t1
+        move $s7, $t1  # Borrar
+        
         move $a1, $t3
         move $a2, $t4
         move $a3, $t5
@@ -238,7 +227,7 @@ main:
 
     fin_leer_estudiantes:
         move $a0, $t7
-        la   $a1, estudianteABuscar
+        la $a1, buscarEst
         jal TablaHash_obtenerValor
         
         lw $a0, 8($v0)
