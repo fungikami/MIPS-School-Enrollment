@@ -242,29 +242,31 @@ TablaHash_obtenerValor:
     lw  $t0,  ($t0)  
 
     lw $t1,  ($t0)  # Centinela de la lista
-    lw $t2, 8($t1)  # Primer nodo de la lista    
+    lw $t2, 8($t1)  # Primer nodo de la lista
 
 TablaHash_obtenerValor_loop:
-    lw $t3, 4($t2)  # Valor del nodo
-    lw $t4,  ($t3)  # Clave del nodo
-
     # while Nodo != centinela 
     beq $t2, $t1, TablaHash_obtenerValor_loop_fin
 
+    lw $t3, 4($t2)  # Valor del nodo
+    lw $t4,  ($t3)  # Clave del nodo
+
     # while Nodo.clave != clave
     beq $t4, $s1, TablaHash_obtenerValor_loop_fin
-
+    
     # Actualizamos al Nodo.siguiente
-    sw $t2, 8($t2)
+    lw $t2, 8($t2) # Había un sw 4sum reasom
     
     b TablaHash_obtenerValor_loop
 
 TablaHash_obtenerValor_loop_fin:
-    lw $t3, 4($t2) # Valor del nodo
+    lw $t3,   4($t2) # Valor del nodo
+    beqz $t3, TablaHash_obtenerValor_fin # Si no encontró el valor retorna 0
 
     # Retorna valor de la entrada de hash
     lw $v0, 4($t3)
 
+TablaHash_obtenerValor_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)

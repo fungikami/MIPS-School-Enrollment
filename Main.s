@@ -5,17 +5,21 @@
 
         .data
 
-arcEst:	.asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:	.asciiz "ejemplo-Materias.txt"
-arcIns:	.asciiz "ejemplo-SolInscripcion.txt"
-arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
-arcTen: .asciiz "ejemplo-InsTentativa.txt"
-arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
+arcEst:     .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:     .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:     .asciiz "ejemplo-SolInscripcion.txt"
+arcCor:     .asciiz "ejemplo-SolCorreccion.txt"
+arcTen:     .asciiz "ejemplo-InsTentativa.txt"
+arcDef:     .asciiz "ejemplo-InsDefinitiva.txt"
 
-buffer: .space 1048576 # 1Mb
-bufferNull: "\0"
-error1: .asciiz "Ha ocurrido un error."
-newl:   .asciiz "\n"
+tamanioTablaHash:   .word 1
+
+estudianteABuscar: .asciiz "18-13087" # Indice de 4.2827
+
+buffer:     .space 1048576 # 1Mb
+bufferNull: .ascii "\0"
+error1:     .asciiz "Ha ocurrido un error."
+newl:       .asciiz "\n"
 
         .text
 main:
@@ -68,7 +72,7 @@ main:
     syscall
 
     # <TablaHash Estudiantes>.crear()
-    li $t7, 101
+    lw $t7, tamanioTablaHash
     move $a0, $t7
     jal TablaHash_crear
 
@@ -81,6 +85,7 @@ main:
         li $v0, 9
         li $a0, 9
         syscall
+
 
         bltz $v0, error
         move $t1, $v0
@@ -108,7 +113,7 @@ main:
         li $v0, 9
         li $a0, 21
         syscall
-
+        
         bltz $v0, error
         move $t3, $v0
         
@@ -178,7 +183,6 @@ main:
         
         add $s1, $s1, 1 # Salta \n
 
-
         # li $v0, 4
         # move $a0, $t1
         # syscall
@@ -215,9 +219,6 @@ main:
 
         # Crear Estudiante
         move $a0, $t1
-
-        move $s7, $t1 # Borrar
-
         move $a1, $t3
         move $a2, $t4
         move $a3, $t5
@@ -237,15 +238,13 @@ main:
 
     fin_leer_estudiantes:
         move $a0, $t7
-        move $a1, $s7
+        la   $a1, estudianteABuscar
         jal TablaHash_obtenerValor
         
-        lw $a0, 4($v0)
+        lw $a0, 8($v0)
         li $v0, 4
         syscall
 
-
-        
     # ------------ MATERIAS ---------------
 
     # Por cada linea:
@@ -536,6 +535,9 @@ main:
 
 error:
 
+    li $v0, 4
+    la $a0, error1
+    syscall
 
 fin:
 
