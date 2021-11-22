@@ -104,14 +104,14 @@ TablaHash_hash:
     addi $sp,  $sp, -4
 
     # acc
-    li $t0, $zero    
+    move $t0, $zero    
 
 TablaHash_hash_loop:
     lb $t1, ($a1)
 
     beqz $t1, TablaHash_hash_loop_fin
 
-    mult $t0, $t0, 31       # acc *= 31
+    mul $t0, $t0, 31       # acc *= 31
     add  $t0, $t0, $t1      # acc += clave[i] 
 
     addi $a1, $a1, 1
@@ -120,12 +120,12 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
-    mult $t0, $t0, 31       # acc *= 31
+    mul $t0, $t0, 31       # acc *= 31
     lw  $t2, 4($a0)         # numBuckets
     rem $t0,   $t0, $t2		# acc %= numBuckets
 
     # Retorna acc * 4
-    mult $v0, $t0, 4        # acc *= 4
+    mul $v0, $t0, 4        # acc *= 4
 
     # Epilogo
     move $sp,  $fp

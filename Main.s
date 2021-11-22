@@ -55,8 +55,9 @@ li $v0, 16
 syscall
 
 # <TablaHash Estudiantes>.crear()
-# move $a0
-# jal TablaHash_crear
+li $t7, 100
+move $a0, $t7
+jal TablaHash_crear
 
 la $t0, buffer
 for_linea:
@@ -65,7 +66,7 @@ for_linea:
     li $v0, 9
     li $a0, 9
     syscall
-    
+
     bltz $v0, error
     move $t1, $v0
 
@@ -351,5 +352,6 @@ fin:
     li $v0, 10               
     syscall
 
-#.include "Lista.s"
-#.include "TablaHash.s"
+.include "Estudiante.s"
+.include "TablaHash.s"
+.include "Lista.s"
