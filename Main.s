@@ -5,7 +5,7 @@
 
         .data
 
-arcEst:	.asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcEst:	.asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
 arcMat:	.asciiz "ejemplo-Materias.txt"
 arcIns:	.asciiz "ejemplo-SolInscripcion.txt"
 arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
@@ -165,6 +165,7 @@ main:
         
         add $s1, $s1, 1 # Salta \n
 
+
         # li $v0, 4
         # move $a0, $t1
         # syscall
@@ -228,7 +229,7 @@ main:
         jal TablaHash_obtenerValor
         
         lw $a0, 4($v0)    
-        lw $v0, 4
+        li $v0, 4
         syscall
 
 

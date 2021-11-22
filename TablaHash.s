@@ -225,20 +225,21 @@ TablaHash_insertar_fin:
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,   ($sp)
-    sw   $s0, -4($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -8
+    sw   $ra, -4($sp)
+    sw   $s0, -8($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -12
     
     move $s0, $a0
     move $s1, $a1
 
     # Calcula la funcion de hash
     jal TablaHash_hash
-
+    
     # Busca la lista a insertar
-    lw  $t0, 8($s0)    
-    add $t0,   $t0, $v0      
-    lw  $t0,  ($t0) 
+    lw  $t0, 8($s0)   
+    add $t0,   $t0, $v0    
+    lw  $t0,  ($t0)  
 
     lw $t1,  ($t0)  # Centinela de la lista
     lw $t2, 8($t1)  # Primer nodo de la lista    
@@ -255,19 +256,20 @@ TablaHash_obtenerValor_loop:
 
     # Actualizamos al Nodo.siguiente
     sw $t2, 8($t2)
-
+    
     b TablaHash_obtenerValor_loop
 
 TablaHash_obtenerValor_loop_fin:
-    lw $t2, 4($t1) # Valor del nodo
+    lw $t3, 4($t2) # Valor del nodo
 
     # Retorna valor de la entrada de hash
-    lw $v0, 4($t2)
+    lw $v0, 4($t3)
 
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
-    lw   $s0, -4($sp)
+    lw   $ra, -4($sp)
+    lw   $s0, -8($sp)
 
     jr $ra
 
