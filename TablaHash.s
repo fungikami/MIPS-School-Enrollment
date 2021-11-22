@@ -247,10 +247,10 @@ TablaHash_obtenerValor_loop:
     lw $t3, 4($t2)  # Valor del nodo
     lw $t4,  ($t3)  # Clave del nodo
 
-    # Mientras que Nodo != centinela 
+    # while Nodo != centinela 
     beq $t2, $t1, TablaHash_obtenerValor_loop_fin
 
-    # Mientras que Nodo.clave != clave
+    # while Nodo.clave != clave
     beq $t4, $s1, TablaHash_obtenerValor_loop_fin
 
     # Actualizamos al Nodo.siguiente
