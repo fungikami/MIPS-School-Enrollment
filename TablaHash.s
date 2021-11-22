@@ -78,6 +78,8 @@ TablaHash_crear_loop:
 
 TablaHash_crear_fin:
     # Epilogo
+    move $v0, $s1
+    
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
@@ -101,9 +103,9 @@ TablaHash_crear_fin:
 # $t2: Numero de buckets
 TablaHash_hash:
     # Prologo
-    sw   $fp, ($sp)
-    move $fp,  $sp
-    addi $sp,  $sp, -4
+    sw   $fp,    ($sp)
+    move $fp,     $sp
+    addi $sp,     $sp, -4
 
     # acc
     move $t0, $zero    
@@ -122,16 +124,18 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
-    mul $t0,   $t0, 31       # acc *= 31
-    lw  $t2, 4($a0)         # numBuckets
-    rem $t0,   $t0, $t2		# acc %= numBuckets
+    mul  $t0,   $t0, 31    # acc *= 31
+    abs  $t0,   $t0        # acc = |acc|
+    lw   $t2, 4($a0)       # numBuckets
+    div  $t0,   $t2		   # acc %= numBuckets
+    mfhi $t0
 
     # Retorna acc * 4
     mul $v0, $t0, 4        # acc *= 4
 
     # Epilogo
     move $sp,  $fp
-    lw   $fp, ($sp)
+    lw   $fp,   ($sp)
 
     jr $ra
     
@@ -175,12 +179,13 @@ TablaHash_insertar:
     move $s2, $v0
 
     # Calcula la funcion de hash
-    jal TablaHash_hash
+    move $a0, $s0
+    jal  TablaHash_hash
 
     # Busca la lista a insertar
     lw  $a0, 8($s0)    
     add $a0,   $a0, $v0      
-    lw  $a0,  ($a0)         
+    lw  $a0,  ($a0)    
 
     # Inserta en la lista
     move $a1, $s2

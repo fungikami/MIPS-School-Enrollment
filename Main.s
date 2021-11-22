@@ -22,8 +22,8 @@ main:
 
 # Planificacion de registros:
 # $s0: Archivo (identificador)
-# 
-# $t0: Direccion del buffer
+# $s1: Direccion del buffer
+#  
 # $t1: Direccion carnet
 # $t2: Caracter actual
 # $t3: Direccion del nombre
@@ -61,7 +61,7 @@ jal TablaHash_crear
 
 move $t7, $v0
 
-la $t0, buffer
+la $s1, buffer
 for_linea:
 
     # Reservar la memoria para el carnet
@@ -74,7 +74,7 @@ for_linea:
 
     # Guarda el carnet
     for_carnet:
-        lb $t2, ($t0)
+        lb $t2, ($s1)
         
         # Si es una comilla, termina el carnet
         beq $t2, 34 for_carnet_fin
@@ -82,13 +82,13 @@ for_linea:
         sb $t2, ($v0)
 
         add $v0, $v0, 1
-        add $t0, $t0, 1
+        add $s1, $s1, 1
 
         b for_carnet
     
     for_carnet_fin:
         sb $zero, ($v0)
-        add $t0, $t0, 1 # Saltar comilla
+        add $s1, $s1, 1 # Saltar comilla
     
     # Reservar la memoria para el nombre
     li $v0, 9
@@ -100,7 +100,7 @@ for_linea:
     
     # Guarda el nombre
     for_nombre:
-        lb $t2, ($t0)
+        lb $t2, ($s1)
 
         # Si es una comilla, termina el nombre
         beq $t2, 34 for_nombre_fin
@@ -108,13 +108,13 @@ for_linea:
         sb $t2, ($v0)
         
         add $v0, $v0, 1
-        add $t0, $t0, 1
+        add $s1, $s1, 1
 
         b for_nombre
 
     for_nombre_fin:
         sb $zero, ($v0)
-        add $t0, $t0, 1 # Saltar comilla
+        add $s1, $s1, 1 # Saltar comilla
 
     # Reservar la memoria para el indice
     li $v0, 9
@@ -127,11 +127,11 @@ for_linea:
     # Guarda el indice
     li $t6, 6
     for_indice:
-        lb $t2, ($t0)
+        lb $t2, ($s1)
         sb $t2, ($v0)
 
         add $v0, $v0,  1
-        add $t0, $t0,  1
+        add $s1, $s1,  1
         add $t6, $t6, -1
 
         bnez $t6, for_indice
@@ -150,11 +150,11 @@ for_linea:
     # Guarda los creditos
     li $t6, 3
     for_creditos:
-        lb $t2, ($t0)
+        lb $t2, ($s1)
         sb $t2, ($v0)
 
         add $v0, $v0,  1
-        add $t0, $t0,  1
+        add $s1, $s1,  1
         add $t6, $t6, -1
 
         bnez $t6, for_creditos
@@ -162,7 +162,7 @@ for_linea:
     for_creditos_fin:
         sb $zero, ($v0)
     
-    add $t0, $t0, 1 # Salta \n
+    add $s1, $s1, 1 # Salta \n
 
     li $v0, 4
     move $a0, $t1
@@ -196,7 +196,7 @@ for_linea:
     la $a0, newl
     syscall
     
-    lb $t2, ($t0)
+    lb $t2, ($s1)
 
     # Crear Estudiante
     move $a0, $t1
@@ -213,6 +213,8 @@ for_linea:
     jal TablaHash_insertar
     
     bnez $t2, for_linea
+    bne $t2, 10, for_linea
+    bne $t2, 32, for_linea
 
 # Por cada linea:
     # syscall 9 (16 bytes) [verificar]
