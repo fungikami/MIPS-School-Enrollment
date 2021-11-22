@@ -18,18 +18,18 @@
 
 # Funcion crear
 # Crea un Estudiante con los parametros dados.
-# Entrada:   $a0: carne
+# Entrada:   $a0: carnet.
 #            $a1: nombre.
 #            $a2: indice.
 #            $a3: creditos.
 # Salida:    $v0: Estudiante (negativo si no se pudo crear).
-#          ($v0): carne. 
+#          ($v0): carnet. 
 #         4($v0): nombre.
 #         8($v0): indice.
 #        12($v0): creditos.
 #
 # Planificacion de registros:
-# $t0: carne del estudiante.
+# $t0: carnet del estudiante.
 Estudiante_crear:
     # Prologo
 	sw   $fp, ($sp)

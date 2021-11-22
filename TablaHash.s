@@ -258,8 +258,6 @@ TablaHash_obtenerValor_loop_fin:
 
     jr $ra
 
-.include "Lista.s"
-
 # Funcion eliminar
 # TODO
 # TablaHash_eliminar:
