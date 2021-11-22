@@ -203,7 +203,7 @@ main:
         move $a0, $t1
 
         move $s7, $t1 # Borrar
-        
+
         move $a1, $t3
         move $a2, $t4
         move $a3, $t5
@@ -224,7 +224,7 @@ main:
 
     fin_leer_estudiantes:
         move $a0, $t7
-        lw   $a1, ($s7)
+        move $a1, $s7
         jal TablaHash_obtenerValor
         
         lw $a0, 4($v0)    

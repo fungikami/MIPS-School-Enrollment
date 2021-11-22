@@ -135,7 +135,7 @@ TablaHash_hash_loop_fin:
 
     # Epilogo
     move $sp,  $fp
-    lw   $fp,   ($sp)
+    lw   $fp, ($sp)
 
     jr $ra
     
@@ -183,9 +183,9 @@ TablaHash_insertar:
     jal  TablaHash_hash
 
     # Busca la lista a insertar
-    lw  $a0, 8($s0)    
-    add $a0,   $a0, $v0      
-    lw  $a0,  ($a0)    
+    lw  $a0, 8($s0)
+    add $a0,   $a0, $v0
+    lw  $a0,  ($a0)
 
     # Inserta en la lista
     move $a1, $s2
@@ -223,8 +223,11 @@ TablaHash_insertar_fin:
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,   ($sp)
-    move $fp,    $sp
-    addi $sp,    $sp, -8
+    sw   $s0, -4($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -8
+    
+    move $s0, $a0
 
     # Calcula la funcion de hash
     jal TablaHash_hash
@@ -262,6 +265,7 @@ TablaHash_obtenerValor_loop_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
+    lw   $s0, -4($sp)
 
     jr $ra
 
