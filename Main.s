@@ -12,7 +12,7 @@ arcCor:	.asciiz "ejemplo-SolCorreccion.txt"
 arcTen: .asciiz "ejemplo-InsTentativa.txt"
 arcDef:	.asciiz "ejemplo-InsDefinitiva.txt"
 
-buffer: .space 1024
+buffer: .space 1048576 # 1Mb
 bufferNull: "\0"
 error1: .asciiz "Ha ocurrido un error."
 newl:   .asciiz "\n"
@@ -20,333 +20,347 @@ newl:   .asciiz "\n"
         .text
 main:
 
-# Planificacion de registros:
-# $s0: Archivo (identificador)
-# $s1: Direccion del buffer
-#  
-# $t1: Direccion carnet
-# $t2: Caracter actual
-# $t3: Direccion del nombre
-# $t4: Direccion del indice
-# $t5: Direccion del credito
-# $t6: Contador
+    # Planificacion de registros:
+    # $s0: Archivo (identificador)
+    # $s1: Direccion del buffer
+    #  
+    # $t1: Direccion carnet
+    # $t2: Caracter actual
+    # $t3: Direccion del nombre
+    # $t4: Direccion del indice
+    # $t5: Direccion del credito
+    # $t6: Contador
 
-# ------------ ESTUDIANTES ---------------
+    # ------------ ESTUDIANTES ---------------
 
-# Abrir archivo
-li $v0, 13
-la $a0, arcEst
-li $a1, 0 # 0 para leer
-syscall
-
-bltz $v0, error
-move $a0, $v0
-
-# Leer archivo ($v0=14) ($a0=$v0)
-li $v0, 14
-la $a1, buffer
-li $a2, 1024
-syscall
-
-bltz $v0, error
-
-# Cerrar el archivo
-li $v0, 16
-syscall
-
-# <TablaHash Estudiantes>.crear()
-li $t7, 101
-move $a0, $t7
-jal TablaHash_crear
-
-move $t7, $v0
-
-la $s1, buffer
-for_linea:
-
-    # Reservar la memoria para el carnet
-    li $v0, 9
-    li $a0, 9
+    # Abrir archivo
+    li $v0, 13
+    la $a0, arcEst
+    li $a1, 0 # 0 para leer
     syscall
 
     bltz $v0, error
-    move $t1, $v0
+    move $a0, $v0
 
-    # Guarda el carnet
-    for_carnet:
-        lb $t2, ($s1)
+    # Leer archivo ($v0=14) ($a0=$v0)
+    li $v0, 14
+    la $a1, buffer
+    li $a2, 1024
+    syscall
+
+    bltz $v0, error
+
+    # Cerrar el archivo
+    li $v0, 16
+    syscall
+
+    # <TablaHash Estudiantes>.crear()
+    li $t7, 101
+    move $a0, $t7
+    jal TablaHash_crear
+
+    move $t7, $v0
+
+    la $s1, buffer
+    for_linea:
+
+        # Reservar la memoria para el carnet
+        li $v0, 9
+        li $a0, 9
+        syscall
+
+        bltz $v0, error
+        move $t1, $v0
+
+        # Guarda el carnet
+        for_carnet:
+            lb $t2, ($s1)
+            
+            # Si es una comilla, termina el carnet
+            beq $t2, 34 for_carnet_fin
+            beqz $t2, fin_leer_estudiantes # Si es un null terminator termina de leer
+            
+            sb $t2, ($v0)
+
+            add $v0, $v0, 1
+            add $s1, $s1, 1
+
+            b for_carnet
         
-        # Si es una comilla, termina el carnet
-        beq $t2, 34 for_carnet_fin
-        beqz $t2, fin
+        for_carnet_fin:
+            sb $zero, ($v0)
+            add $s1, $s1, 1 # Saltar comilla
         
-        sb $t2, ($v0)
+        # Reservar la memoria para el nombre
+        li $v0, 9
+        li $a0, 21
+        syscall
 
-        add $v0, $v0, 1
-        add $s1, $s1, 1
-
-        b for_carnet
-    
-    for_carnet_fin:
-        sb $zero, ($v0)
-        add $s1, $s1, 1 # Saltar comilla
-    
-    # Reservar la memoria para el nombre
-    li $v0, 9
-    li $a0, 21
-    syscall
-
-    bltz $v0, error
-    move $t3, $v0
-    
-    # Guarda el nombre
-    for_nombre:
-        lb $t2, ($s1)
-
-        # Si es una comilla, termina el nombre
-        beq $t2, 34 for_nombre_fin
-
-        sb $t2, ($v0)
+        bltz $v0, error
+        move $t3, $v0
         
-        add $v0, $v0, 1
-        add $s1, $s1, 1
+        # Guarda el nombre
+        for_nombre:
+            lb $t2, ($s1)
 
-        b for_nombre
+            # Si es una comilla, termina el nombre
+            beq $t2, 34 for_nombre_fin
 
-    for_nombre_fin:
-        sb $zero, ($v0)
-        add $s1, $s1, 1 # Saltar comilla
+            sb $t2, ($v0)
+            
+            add $v0, $v0, 1
+            add $s1, $s1, 1
 
-    # Reservar la memoria para el indice
-    li $v0, 9
-    li $a0, 7
-    syscall
+            b for_nombre
 
-    bltz $v0, error
-    move $t4, $v0
+        for_nombre_fin:
+            sb $zero, ($v0)
+            add $s1, $s1, 1 # Saltar comilla
 
-    # Guarda el indice
-    li $t6, 6
-    for_indice:
+        # Reservar la memoria para el indice
+        li $v0, 9
+        li $a0, 7
+        syscall
+
+        bltz $v0, error
+        move $t4, $v0
+
+        # Guarda el indice
+        li $t6, 6
+        for_indice:
+            lb $t2, ($s1)
+            sb $t2, ($v0)
+
+            add $v0, $v0,  1
+            add $s1, $s1,  1
+            add $t6, $t6, -1
+
+            bnez $t6, for_indice
+
+        for_indice_fin:
+            sb $zero, ($v0)
+
+        # Reservar la memoria para los creditos
+        li $v0, 9
+        li $a0, 4
+        syscall
+
+        bltz $v0, error
+        move $t5, $v0
+
+        # Guarda los creditos
+        li $t6, 3
+        for_creditos:
+            lb $t2, ($s1)
+            sb $t2, ($v0)
+
+            add $v0, $v0,  1
+            add $s1, $s1,  1
+            add $t6, $t6, -1
+
+            bnez $t6, for_creditos
+
+        for_creditos_fin:
+            sb $zero, ($v0)
+        
+        add $s1, $s1, 1 # Salta \n
+
+        # li $v0, 4
+        # move $a0, $t1
+        # syscall
+
+        # li $v0, 4
+        # la $a0, newl
+        # syscall
+
+        # li $v0, 4
+        # move $a0, $t3
+        # syscall
+
+        # li $v0, 4
+        # la $a0, newl
+        # syscall
+
+        # li $v0, 4
+        # move $a0, $t4
+        # syscall
+
+        # li $v0, 4
+        # la $a0, newl
+        # syscall
+
+        # li $v0, 4
+        # move $a0, $t5
+        # syscall
+
+        # li $v0, 4
+        # la $a0, newl
+        # syscall
+        
         lb $t2, ($s1)
-        sb $t2, ($v0)
 
-        add $v0, $v0,  1
-        add $s1, $s1,  1
-        add $t6, $t6, -1
+        # Crear Estudiante
+        move $a0, $t1
 
-        bnez $t6, for_indice
+        move $s7, $t1 # Borrar
+        
+        move $a1, $t3
+        move $a2, $t4
+        move $a3, $t5
+        jal Estudiante_crear
 
-    for_indice_fin:
-        sb $zero, ($v0)
+        move $a0,  $t7  # Tabla
+        lw   $a1, ($v0) # Clave
+        move $a2,  $v0  # Valor
+        
+        # Guardar el estudiante en la tabla
+        jal TablaHash_insertar
+        
+        bnez $t2, for_linea     # Nulo
+        bne $t2, 10, for_linea  # Salto de linea
+        bne $t2, 11, for_linea  # Tab vertical
+        bne $t2, 32, for_linea  # Espacio en blanco
 
-    # Reservar la memoria para los creditos
-    li $v0, 9
-    li $a0, 4
-    syscall
 
-    bltz $v0, error
-    move $t5, $v0
+    fin_leer_estudiantes:
+        move $a0, $t7
+        lw   $a1, ($s7)
+        jal TablaHash_obtenerValor
+        
+        lw $a0, 4($v0)    
+        lw $v0, 4
+        syscall
 
-    # Guarda los creditos
-    li $t6, 3
-    for_creditos:
-        lb $t2, ($s1)
-        sb $t2, ($v0)
 
-        add $v0, $v0,  1
-        add $s1, $s1,  1
-        add $t6, $t6, -1
+    # Por cada linea:
+        # syscall 9 (16 bytes) [verificar]
+        # 8 chars:
+            # Guardar carnet
+        # do while != “”:
+            # Guardar nombre
+        # 6 chars:
+            # Guardar indice
+        # 3 chars:
+            # Guardar creditosAprob
+        # Crear estudiante(carnet, nombre, indice, creditos Aprob)
+        # <TablaHash Estudiantes>.insertar(carnet, Estudiante)
+        
+    # ------------ MATERIAS ---------------
 
-        bnez $t6, for_creditos
+    # Abrir archivo
 
-    for_creditos_fin:
-        sb $zero, ($v0)
-    
-    add $s1, $s1, 1 # Salta \n
+    # Verificar v0
+    # Leer archivo ($v0=14) ($a0=$v0)
+    # Verificar v0 
 
-    li $v0, 4
-    move $a0, $t1
-    syscall
+    # <TablaHash Materias>.crear()
 
-    li $v0, 4
-    la $a0, newl
-    syscall
+    # Por cada linea:
+        # syscall 9 (24 bytes) [verificar]
+        # Crear materia
+        # 7 chars:
+            # Guardar cedigo
+        # do while != “”:
+            # Guardar nombre
+        # 1 chars:
+            # Guardar creditos
+        # 3 chars:
+            # Guardar cupos
+        # 3 chars:
+            # Guardar minimoCreditos
+        # Crear Materia(cedigo, nombre, creditos, cupos, minimoCreditos, <Lista Estudiantes>.crear())
+        # <TablaHash Materias>.insertar(cedigo, Materia)
 
-    li $v0, 4
-    move $a0, $t3
-    syscall
 
-    li $v0, 4
-    la $a0, newl
-    syscall
+    # ------------ SOLICITUDES ---------------
 
-    li $v0, 4
-    move $a0, $t4
-    syscall
+    # Abrir archivo
 
-    li $v0, 4
-    la $a0, newl
-    syscall
+    # Verificar $v0
+    # Leer archivo ($v0=14) ($a0=$v0)
+    # Verificar $v0
 
-    li $v0, 4
-    move $a0, $t5
-    syscall
+    # <Lista Solicitudes>.crear()
 
-    li $v0, 4
-    la $a0, newl
-    syscall
-    
-    lb $t2, ($s1)
-
-    # Crear Estudiante
-    move $a0, $t1
-    move $a1, $t3
-    move $a2, $t4
-    move $a3, $t5
-    jal Estudiante_crear
-
-    move $a0,  $t7  # Tabla
-    lw   $a1, ($v0) # Clave
-    move $a2,  $v0  # Valor
-    
-    # Guardar el estudiante en la tabla
-    jal TablaHash_insertar
-    
-    bnez $t2, for_linea     # Nulo
-    bne $t2, 10, for_linea  # Salto de linea
-    bne $t2, 11, for_linea  # Tab vertical
-    bne $t2, 32, for_linea  # Espacio en blanco
-
-# Por cada linea:
-    # syscall 9 (16 bytes) [verificar]
-    # 8 chars:
-        # Guardar carnet
-    # do while != “”:
-        # Guardar nombre
-    # 6 chars:
-        # Guardar indice
-    # 3 chars:
-        # Guardar creditosAprob
-    # Crear estudiante(carnet, nombre, indice, creditos Aprob)
-    # <TablaHash Estudiantes>.insertar(carnet, Estudiante)
-	
-# ------------ MATERIAS ---------------
-
-# Abrir archivo
-
-# Verificar v0
-# Leer archivo ($v0=14) ($a0=$v0)
-# Verificar v0 
-
-# <TablaHash Materias>.crear()
-
-# Por cada linea:
-    # syscall 9 (24 bytes) [verificar]
-    # Crear materia
+    # Por cada linea:
+        # syscall 9 (9 bytes) [verificar]
+        # Crear solicitud
+        # 8 chars:
+            # Guardar carnet
+            #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
     # 7 chars:
-        # Guardar cedigo
-    # do while != “”:
-        # Guardar nombre
-    # 1 chars:
-        # Guardar creditos
-    # 3 chars:
-        # Guardar cupos
-    # 3 chars:
-        # Guardar minimoCreditos
-    # Crear Materia(cedigo, nombre, creditos, cupos, minimoCreditos, <Lista Estudiantes>.crear())
-    # <TablaHash Materias>.insertar(cedigo, Materia)
+            # Guardar codigo
+            # Materia = <TablaHash Materias>.buscar([cedigo])
+    # Crear Solicitud(Estudiante, Materia, ‘S’)
+    # <Lista Solicitudes>.insertar(Solicitud)
+
+    # ---------------- INSCRIPCIeN ------------------
+
+    # for solicitud in <Lista Solicitudes>
+    #     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
+    #     solicitud.Materia.cupo--
+
+    # ------------- ARCHIVO TENTATIVO --------------------
+    # for Materia in <TablaHash Materias>
+    # 	print Materia
+    #	for Estudiante in Materia.Estudiantes
+    #		print Estudiante.primero
 
 
-# ------------ SOLICITUDES ---------------
+    # -------- SOLICITUDES CORRECCIeN---------------
+    # Abrir archivo
 
-# Abrir archivo
+    # Verificar $v0
+    # Leer archivo ($v0=14) ($a0=$v0)
+    # Verificar $v0
 
-# Verificar $v0
-# Leer archivo ($v0=14) ($a0=$v0)
-# Verificar $v0
+    # <Lista Solicitudes>.crear()
 
-# <Lista Solicitudes>.crear()
-
-# Por cada linea:
-    # syscall 9 (9 bytes) [verificar]
-    # Crear solicitud
-    # 8 chars:
-        # Guardar carnet
-        #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
-   # 7 chars:
-        # Guardar codigo
-        # Materia = <TablaHash Materias>.buscar([cedigo])
-   # Crear Solicitud(Estudiante, Materia, ‘S’)
-   # <Lista Solicitudes>.insertar(Solicitud)
-
-# ---------------- INSCRIPCIeN ------------------
-
-# for solicitud in <Lista Solicitudes>
-#     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
-#     solicitud.Materia.cupo--
-
-# ------------- ARCHIVO TENTATIVO --------------------
-# for Materia in <TablaHash Materias>
-# 	print Materia
-#	for Estudiante in Materia.Estudiantes
-#		print Estudiante.primero
+    # Por cada linea:
+        # syscall 9 (9 bytes) [verificar]
+        # Crear solicitud
+        # 8 chars:
+            # Guardar carnet
+            #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
+    # 7 chars:
+            # Guardar codigo
+            # Materia = <TablaHash Materias>.buscar([cedigo])
+    # 1 char:
+        # Guardar operacien
+    # Crear Solicitud(Estudiante, Materia, op)
+    # <Lista Solicitudes>.insertar(Solicitud)
 
 
-# -------- SOLICITUDES CORRECCIeN---------------
-# Abrir archivo
+    # ---------------- CORRECCIeN ------------------
+    # <ColaDePrioridad(min) Inscribir>.crear()
 
-# Verificar $v0
-# Leer archivo ($v0=14) ($a0=$v0)
-# Verificar $v0
+    # for solicitud in <Lista Solicitudes>
+    #     Si solicitud.op == ‘E’
+    #	for par in solicitud.Materias.Estudiantes
+    #		Si par.primero == solicitud.Estudiante
+    #			par.segundo = ‘E’
+    #			break
+    # 	Materia.cupos++
+    #
+    #     Si solicitud.op == ‘I’
+    #	prioridad = solicitud.Estudiante.creditosAprob
+    #	<ColaDePrioridad Inscribir>.encolar(Pair<solicitud, prioridad>)
 
-# <Lista Solicitudes>.crear()
+    #    while !<ColaDePrioridad Inscribir>.estaVacia()
+    #	solicitud = <ColaDePrioridad Inscribir>.pop()
+    #	
+    #	if solicitud.Materia.cupos > 0
+    #		solicitud.Materia.Estudiantes.insertar(Pair<Estudiante, Op.>)
+    #		solicitud.Materia.cupos--
 
-# Por cada linea:
-    # syscall 9 (9 bytes) [verificar]
-    # Crear solicitud
-    # 8 chars:
-        # Guardar carnet
-        #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
-   # 7 chars:
-        # Guardar codigo
-        # Materia = <TablaHash Materias>.buscar([cedigo])
-   # 1 char:
-       # Guardar operacien
-   # Crear Solicitud(Estudiante, Materia, op)
-   # <Lista Solicitudes>.insertar(Solicitud)
+    # check every subject have more than -1 kupos
 
-
-# ---------------- CORRECCIeN ------------------
-# <ColaDePrioridad(min) Inscribir>.crear()
-
-# for solicitud in <Lista Solicitudes>
-#     Si solicitud.op == ‘E’
-#	for par in solicitud.Materias.Estudiantes
-#		Si par.primero == solicitud.Estudiante
-#			par.segundo = ‘E’
-#			break
-# 	Materia.cupos++
-#
-#     Si solicitud.op == ‘I’
-#	prioridad = solicitud.Estudiante.creditosAprob
-#	<ColaDePrioridad Inscribir>.encolar(Pair<solicitud, prioridad>)
-
-#    while !<ColaDePrioridad Inscribir>.estaVacia()
-#	solicitud = <ColaDePrioridad Inscribir>.pop()
-#	
-#	if solicitud.Materia.cupos > 0
-#		solicitud.Materia.Estudiantes.insertar(Pair<Estudiante, Op.>)
-#		solicitud.Materia.cupos--
-
-# check every subject have more than -1 kupos
-
-# ------------- ARCHIVO DEFINITIVO --------------------
-# for Materia in <TablaHash Materias>
-# 	print Materia
-#	for Estudiante in Materia.Estudiantes
-#		print Estudiante.first (print Estudiante.second)
-    
+    # ------------- ARCHIVO DEFINITIVO --------------------
+    # for Materia in <TablaHash Materias>
+    # 	print Materia
+    #	for Estudiante in Materia.Estudiantes
+    #		print Estudiante.first (print Estudiante.second)
+        
 
     j fin
 
