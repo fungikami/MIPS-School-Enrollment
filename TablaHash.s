@@ -215,6 +215,8 @@ TablaHash_insertar_fin:
 # Salida:  $v0: valor de entrada de hash.
 # 
 # Planificacion de registros:
+# $s0: TablaHash
+# $s1: Clave a buscar
 # $t0: Lista
 # $t1: centinela de Lista
 # $t2: nodo de Lista
@@ -228,6 +230,7 @@ TablaHash_obtenerValor:
     addi $sp,  $sp, -8
     
     move $s0, $a0
+    move $s1, $a1
 
     # Calcula la funcion de hash
     jal TablaHash_hash
@@ -248,11 +251,10 @@ TablaHash_obtenerValor_loop:
     beq $t2, $t1, TablaHash_obtenerValor_loop_fin
 
     # Mientras que Nodo.clave != clave
-    beq $t4, $a1, TablaHash_obtenerValor_loop_fin
+    beq $t4, $s1, TablaHash_obtenerValor_loop_fin
 
     # Actualizamos al Nodo.siguiente
-    lw $t5, 8($t2)      
-    lw $t2,  ($t5)
+    sw $t2, 8($t2)
 
     b TablaHash_obtenerValor_loop
 
