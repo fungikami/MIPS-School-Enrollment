@@ -24,11 +24,12 @@
 TablaHash_crear:
     # Prologo
     sw   $fp,    ($sp)
-    sw   $s0,  -4($s0)
-    sw   $s1,  -8($s0)
-    sw   $s2, -12($s0)
+    sw   $ra,  -4($sp)
+    sw   $s1,  -8($sp)
+    sw   $s2, -12($sp)
+    sw   $s0, -16($sp)
     move $fp,     $sp
-    addi $sp,     $sp, -16
+    addi $sp,     $sp, -20
 
     # Tamanio de la tabla de hash.
     move $s0, $a0
@@ -56,7 +57,7 @@ TablaHash_crear:
 
     # Guardo direccion de la tabla en el retorno
     sw   $v0, 8($s1)
-    move $s2, $v0
+    move $s2,   $v0
 
 TablaHash_crear_loop:
     beqz $s0, TablaHash_crear_fin
@@ -79,9 +80,10 @@ TablaHash_crear_fin:
     # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $s0,  -4($s0)
-    lw   $s1,  -8($s0)
-    lw   $s2, -12($s0)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -16($sp)
 
     jr $ra
 
@@ -99,8 +101,8 @@ TablaHash_crear_fin:
 # $t2: Numero de buckets
 TablaHash_hash:
     # Prologo
-    sw   $fp,    ($sp)
-    move $fp,     $sp
+    sw   $fp, ($sp)
+    move $fp,  $sp
     addi $sp,  $sp, -4
 
     # acc
@@ -112,7 +114,7 @@ TablaHash_hash_loop:
     beqz $t1, TablaHash_hash_loop_fin
 
     mul $t0, $t0, 31       # acc *= 31
-    add  $t0, $t0, $t1      # acc += clave[i] 
+    add $t0, $t0, $t1      # acc += clave[i] 
 
     addi $a1, $a1, 1
 
@@ -120,7 +122,7 @@ TablaHash_hash_loop:
 
 TablaHash_hash_loop_fin:
     # Calcula hash
-    mul $t0, $t0, 31       # acc *= 31
+    mul $t0,   $t0, 31       # acc *= 31
     lw  $t2, 4($a0)         # numBuckets
     rem $t0,   $t0, $t2		# acc %= numBuckets
 
@@ -149,11 +151,11 @@ TablaHash_insertar:
     # Prologo
     sw   $fp,    ($sp)
     sw   $ra,  -4($sp)
-    sw   $s0,  -8($s0)
-    sw   $s1, -12($s0)
-    sw   $s2, -16($s0)
-    move $fp,    $sp
-    addi $sp,    $sp, -20
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -16($sp)
+    move $fp,     $sp
+    addi $sp,     $sp, -20
 
     # Guarda TablaHash
     move $s0, $a0
@@ -194,9 +196,9 @@ TablaHash_insertar_fin:
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
-    lw   $s0,  -8($s0)
-    lw   $s1, -12($s0)
-    lw   $s2, -16($s0)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -16($sp)
 
     jr $ra
 

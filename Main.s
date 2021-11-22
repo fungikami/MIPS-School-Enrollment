@@ -55,9 +55,11 @@ li $v0, 16
 syscall
 
 # <TablaHash Estudiantes>.crear()
-li $t7, 100
+li $t7, 101
 move $a0, $t7
 jal TablaHash_crear
+
+move $t7, $v0
 
 la $t0, buffer
 for_linea:
@@ -203,7 +205,7 @@ for_linea:
     move $a3, $t5
     jal Estudiante_crear
 
-    # Tabla
+    move $a0,  $t7  # Tabla
     lw   $a1, ($v0) # Clave
     move $a2,  $v0  # Valor
     
