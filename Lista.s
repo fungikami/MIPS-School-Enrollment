@@ -127,18 +127,40 @@ Lista_insertar_fin:
 #
 # Planificacion de registros:
 # $s0: centinela de la lista
-# $s1: nodo actual
-# $t2: tamanio de la lista
-# $t3: lista
+# $s1: nodoAInsertar
+# $s2: Lista
+# $s3: nodoActual
+# $s4: valor del nodo a insertar
+# $s5: función de comparación
+# $t0: tamanio de la lista
+# $t1: nodoActual.siguiente
+# $t2: nodoActual.anterior
 Lista_insertarOrdenado:
     # Prologo
-    sw   $fp,   ($sp)
-    sw   $s0, -4($sp)
+    sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -14($sp)
+    sw   $s3, -16($sp)
+    sw   $s4, -20($sp)
+    sw   $s5, -20($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -8
+    addi $sp,    $sp, -28
 
-    # Guardar la lista en $t3
-    move $t3, $a0
+    # Si la lista esta vacia se usa el procedimiento insertar
+    lw   $t0, 4($a0)
+    bnez $t0, Lista_insertarOrdenado_no_vacia
+
+Lista_insertarOrdenado_usar_insertar:
+    jal Lista_insertar
+    b Lista_insertarOrdenado_fin
+
+Lista_insertarOrdenado_no_vacia:
+    # Guardar los argumentos
+    move $s2, $a0
+    move $s4, $a1
+    move $s5, $a2
 
     # Reserva memoria para crear el nodo
     li $a0, 12
@@ -148,50 +170,61 @@ Lista_insertarOrdenado:
     # Si hubo error en la creacion del nodo
     bltz $v0, Lista_insertarOrdenado_fin
 
-    # Inicializa el valor del nodo
-    sw $a1, 4($v0)
-
-    # Actualiza tamanio de la lista
-    lw   $t2, 4($t3)
-    addi $t2,   $t2, 1
-    sw   $t2, 4($t3)
+    # Guarda el nodo e inicializa su valor
+    move $s1,   $v0
+    sw   $a1, 4($s1)
 
     # Busca donde insertar el nodo
-    lw $s0,  ($t3)  # Centinela de la lista
-    lw $s2, 8($s3)  # Primer nodo de la lista
+    lw $s0,  ($s2)  # Centinela de la lista
+    lw $s3, 8($s0)  # Primer nodo de la lista
 
-    TablaHash_obtenerValor_loop:
-        # while Nodo != centinela 
-        beq $s2, $s3, TablaHash_obtenerValor_loop_fin
+    Lista_insertarOrdenado_loop:
+        # while Nodo != centinela
+        beq $s0, $s3, Lista_insertarOrdenado_ultimo
 
-        lw   $s1, 4($s2)  # Valor del nodo
-        lw   $a0,  ($s1)  # Clave del nodo
-        move $a1,   $s1   # Clave proporcionada a la función
+        # Compara nodoAInsertar < nodoActual
+        move $a0,   $s4 
+        lw   $a1, 4($s3) 
+        jalr $s5
 
-        jal TablaHash_compararStrings
-        # while Nodo.clave != clave
-        beqz $v0, TablaHash_obtenerValor_loop_fin
-        
+        # Si nodoAInsertar < nodoActual
+        beqz $v0, Lista_insertarOrdenado_loop_siguiente
+
+        # Si nodoAInsertar >= nodoActual
+        lw $t1, 8($s3) # nodoActual.siguiente
+
+        sw $s1,  ($t1) # nodoActual.siguiente.anterior = nodoAInsertar
+        sw $t1, 8($s1) # nodoAInsertar.siguiente = nodoActual.siguiente
+        sw $s3,  ($s1) # nodoAInsertar.anterior = nodoActual
+        lw $s1, 8($s3) # nodoActual.siguiente = nodoAInsertar
+
+        # Actualiza tamanio de la lista
+        lw   $t0, 4($s2)
+        addi $t0,   $t0, 1
+        sw   $t0, 4($s2)
+        b    Lista_insertarOrdenado_fin
+
+    Lista_insertarOrdenado_loop_siguiente:
         # Actualizamos al Nodo.siguiente
-        lw $s2, 8($s2) # Había un sw 4sum reasom
-        
-        b TablaHash_obtenerValor_loop
-        # ----------- TRAIDO DE TABLAHASH -----------
+        lw $s3, 8($s3)
+        b  Lista_insertarOrdenado_loop
 
-    # Actualiza cabeza y nodo x creado
-    lw $s0,  ($t3)
-    lw $s1,  ($s0)
-    sw $s1,  ($v0) # x.anterior = centinela.anterior
-    sw $s0, 8($v0) # x.siguiente = centinela
-    sw $v0, 8($s1) # centinela.anterior.siguiente = x
-    sw $v0,  ($s0) # centinela.anterior = x
-
+Lista_insertarOrdenado_ultimo:
+    move $a0, $s2
+    move $a1, $s4
+    b Lista_insertarOrdenado_usar_insertar
 
 Lista_insertarOrdenado_fin:
-
     # Epilogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -14($sp)
+    lw   $s3, -16($sp)
+    lw   $s4, -20($sp)
+    lw   $s5, -20($sp)
 
     jr $ra
 
