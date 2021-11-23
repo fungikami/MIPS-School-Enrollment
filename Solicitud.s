@@ -1,7 +1,7 @@
 # Solicitud.s
 #
 # Estructura de datos que implementa el TAD
-# Solicutud.
+# Solicitud.
 # 
 # estudiante: Estudiante que hace la solicitud.
 # materia:    Materia que solicita.
@@ -18,9 +18,10 @@
 # Crea una solicitud con los parametros dados.
 # Entrada:   $a0: Estudiante.
 #            $a1: Materia.
+#            $a2: operacion
 # Salida:    $v0: Solicitud (negativo si no se pudo crear).
-#          ($v0): estudiante.
-#         4($v0): materia.
+#          ($v0): Estudiante.
+#         4($v0): Materia.
 #         8($v0): operacion.
 #
 # Planificacion de registros:

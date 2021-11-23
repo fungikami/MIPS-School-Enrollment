@@ -224,7 +224,7 @@ TablaHash_insertar_fin:
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
 # Salida:  $v0: valor de entrada de hash.
-# 
+#           [0 si no encontro el valor].
 # Planificacion de registros:
 # $s0: TablaHash
 # $s1: Clave a buscar
@@ -276,7 +276,9 @@ TablaHash_obtenerValor:
 
 TablaHash_obtenerValor_loop_fin:
     lw $t1,   4($s2) # Valor del nodo
-    beqz $t1, TablaHash_obtenerValor_fin # Si no encontró el valor retorna 0
+
+    # Si no encontró el valor retorna 0
+    beqz $t1, TablaHash_obtenerValor_fin 
 
     # Retorna valor de la entrada de hash
     lw $v0, 4($t1)
