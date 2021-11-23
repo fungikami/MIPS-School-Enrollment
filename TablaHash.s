@@ -258,7 +258,7 @@ TablaHash_obtenerValor:
     lw $s2, 8($s3)  # Primer nodo de la lista
 
     TablaHash_obtenerValor_loop:
-        # while Nodo != centinela 
+        # while Nodo != centinela
         beq $s2, $s3, TablaHash_obtenerValor_loop_fin
 
         lw   $t1, 4($s2)  # Valor del nodo
