@@ -15,16 +15,17 @@ arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
 tamanioTablaHash:   .word 100
 
 buscarEst:      .asciiz "15-47895" # Indice de 4.2827
-buscarMat:      .asciiz "CI-7337"
+buscarMat:      .asciiz "CI-2875"
 
 buffer:         .space 1048576 # 1Mb
-buffer2:         .space 1048576 # 1Mb
-buffer3:         .space 1048576 # 1Mb
-bufferTamanio:   .word  1048576
-bufferNull:     .ascii "\0"
+buffer2:        .space 1048576 # 1Mb
+buffer3:        .space 1048576 # 1Mb
+bufferTamanio:  .word  1048576
+
 error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
+
 newl:           .asciiz "\n"
 
 tablaHashEst:   .word 0
@@ -384,12 +385,11 @@ main:
         bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
     fin_leer_solicitud:
-    #     lw $a0, listaSolIns
-    #     jal Lista_primero
+        lw $a0, listaSolIns
 
-    #     li $v0, 4
-    #     lw $a0, ($v0)
-    #     syscall
+        lw $a0, ($v0)
+        li $v0, 4
+        syscall
 
     # ---------------- INSCRIPCION ------------------
     # Planificacion de registros:
@@ -441,7 +441,7 @@ main:
 
     # Abrir archivo para escribir
     li $v0, 13
-    la $a0, arcIns
+    la $a0, arcTen
     li $a1, 1 
     syscall
     move $s0, $v0
