@@ -41,16 +41,16 @@ main:
     # $s5: Direccion indice
     # $s6: Direccion credito
 
-    # Abrir archivo
+    # Abrir archivo para leer
     li $v0, 13
     la $a0, arcEst
-    li $a1, 0 # 0 para leer
+    li $a1, 0
     syscall
 
     bltz $v0, error
     move $a0, $v0
 
-    # Leer archivo ($v0=14) ($a0=$v0)
+    # Leer archivo
     li $v0, 14
     la $a1, buffer
     li $a2, 1024
@@ -167,16 +167,16 @@ main:
     # $s6: Direccion cupos
     # $s7: Direccion min creditos
 
-    # Abrir archivo
+    # Abrir archivo para leer
     li $v0, 13
     la $a0, arcMat
-    li $a1, 0 # 0 para leer
+    li $a1, 0 
     syscall
 
     bltz $v0, error
     move $a0, $v0
 
-    # Leer archivo ($v0=14) ($a0=$v0)
+    # Leer archivo
     li $v0, 14
     la $a1, buffer
     li $a2, 1024
@@ -303,7 +303,7 @@ main:
     # $s3: Estudiante
     # $s4: Materia
     
-    # Abrir archivo 
+    # Abrir archivo para leer
     li $v0, 13
     la $a0, arcIns
     li $a1, 0 
@@ -439,15 +439,45 @@ main:
     # ------------- ARCHIVO TENTATIVO --------------------
 
     # Planificacion de registros:
-    # $s0: Lista de Solicitud de inscripcion
-    # $s1: Centinela de Lista
-    # $s2: Nodo de Lista
-    # $s3: valor del nodo (Solicitud)
+    # $s1: Archivo (descriptor)
+    # $s1: 
+    # $s2: 
+    # $s3: 
 
     # for Materia in <TablaHash Materias>
     # 	print Materia
     #	for Estudiante in Materia.Estudiantes
     #		print Estudiante.primero
+
+    # Abrir archivo para escribir
+    li $v0, 13
+    la $a0, arcIns
+    li $a1, 1 
+    syscall
+    move $s0, $v0
+
+    #
+    for_imprimir_mat:
+
+        # Escribir Materia
+        # li   $v0, 15       
+        # move $a0, $s0
+        # lw   $a1, 
+        # li   $a2, 
+
+        for_imprimir_est:
+
+            # Escribir Estudiante
+            # li   $v0, 15       
+            # move $a0, $s0
+            # lw   $a1, 
+            # li   $a2, 
+    
+
+    # Cerrar archivo
+    li   $v0, 16       
+    move $a0, $s0      
+    syscall 
 
 
     # -------- SOLICITUDES CORRECCION---------------
@@ -474,7 +504,7 @@ main:
     # <Lista Solicitudes>.insertar(Solicitud)
 
 
-    # ---------------- CORRECCIeN ------------------
+    # ---------------- CORRECCION ------------------
     # <ColaDePrioridad(min) Inscribir>.crear()
 
     # for solicitud in <Lista Solicitudes>

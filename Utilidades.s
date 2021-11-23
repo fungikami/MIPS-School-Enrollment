@@ -1,4 +1,9 @@
-# Funcion: 
+# Utilidades.s
+# 
+# Autores: Ka Fung & Christopher Gomez
+# Fecha: 25-nov-2021
+
+# Funcion: Reserva memoria y guarda un dato dado
 # Entrada: $a0: Buffer.
 #          $a1: Tamanio del dato.
 #          $a2: Booleano
