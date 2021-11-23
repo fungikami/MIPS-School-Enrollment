@@ -5,9 +5,9 @@
 
         .data
 
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "ejemplo-SolCorreccion.txt"
 arcTen:         .asciiz "ejemplo-InsTentativa.txt"
 arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
@@ -23,6 +23,8 @@ buffer3:         .space 1048576 # 1Mb
 bufferTamanio:   .word  1048576
 bufferNull:     .ascii "\0"
 error1:         .asciiz "Ha ocurrido un error."
+errorMat:       .asciiz "Materia de la solicitud no se encontro"
+errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 newl:           .asciiz "\n"
 
 tablaHashEst:   .word 0
@@ -341,14 +343,13 @@ main:
         move $s1, $v1
         add  $s1, $s1, 1 # Salta \n
 
-
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
         move $a1, $s3
         jal TablaHash_obtenerValor
 
         # Si no se encontro carnet en la TablaHash
-        beqz $v0, error
+        beqz $v0, errorEstudiante
         move $s3, $v0
 
         # Buscar codigo en la TablaHash
@@ -357,7 +358,7 @@ main:
         jal TablaHash_obtenerValor
 
         # Si no se encontro codigo en la TablaHash
-        beqz $v0, error
+        beqz $v0, errorMateria
         move $s4, $v0
 
         # Crear Solicitud(Estudiante, Materia, ‘S’)
@@ -383,14 +384,12 @@ main:
         bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
     fin_leer_solicitud:
-        lw $a0, listaSolIns
-        jal Lista_primero
+    #     lw $a0, listaSolIns
+    #     jal Lista_primero
 
-        lw $a0, ($v0)
-        lw $a0, 4($v0)
-        li $v0, 4
-
-        syscall
+    #     li $v0, 4
+    #     lw $a0, ($v0)
+    #     syscall
 
     # ---------------- INSCRIPCION ------------------
     # Planificacion de registros:
@@ -403,7 +402,7 @@ main:
     #     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
     #     solicitud.Materia.cupo--
 
-    la $s0, listaSolIns
+    lw $s0, listaSolIns
     lw $s1,  ($s0)  # Centinela de la lista
     lw $s2, 8($s1)  # Primer nodo de la lista
 
@@ -531,6 +530,19 @@ main:
 error:
     li $v0, 4
     la $a0, error1
+    syscall
+    b fin
+
+errorEstudiante:
+    li $v0, 4
+    la $a0, errorEst
+    syscall
+    b fin
+
+
+errorMateria:
+    li $v0, 4
+    la $a0, errorMat
     syscall
 
 fin:
