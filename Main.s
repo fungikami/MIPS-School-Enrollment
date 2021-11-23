@@ -56,14 +56,14 @@ main:
     li $v0, 16
     syscall
 
-    # Direccion de los datos
-    la $s1, buffer
-
     # <TablaHash Estudiantes>.crear()
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
     move $s2, $v0
+
+    # Direccion de los datos
+    la $s1, buffer
 
     for_leer_estudiantes:
         # Guarda el carnet
