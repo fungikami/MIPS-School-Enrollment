@@ -66,6 +66,7 @@ main:
     la $s1, buffer
 
     for_leer_estudiantes:
+
         # Guarda el carnet
         move $a0, $s1
         li   $a1, 8
@@ -245,7 +246,6 @@ main:
         # la $a0, newl
         # syscall
         
-        lb $t2, ($s1)
 
         # Crear Estudiante
         move $a0, $s3
@@ -265,6 +265,8 @@ main:
 
         # Si no se logro insertar
         bltz $v0, fin_leer_estudiantes 
+        
+        lb $t2, ($s1)
         
         bnez $t2, for_leer_estudiantes      # Nulo
         bne  $t2, 10, for_leer_estudiantes  # Salto de linea
