@@ -275,7 +275,7 @@ main:
         
         lb $t2, ($s1)
 
-        bnez $t2, for_leer_estudiantes      # Nulo
+        bnez $t2, for_leer_materias         # Nulo
         bne  $t2, 10, fin_leer_materias     # Salto de linea
         bne  $t2, 11, fin_leer_materias     # Tab vertical
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
