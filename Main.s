@@ -18,6 +18,8 @@ buscarEst:      .asciiz "15-47895" # Indice de 4.2827
 buscarMat:      .asciiz "CI-7337"
 
 buffer:         .space 1048576 # 1Mb
+buffer2:         .space 1048576 # 1Mb
+buffer3:         .space 1048576 # 1Mb
 bufferTamanio:   .word  1048576
 bufferNull:     .ascii "\0"
 error1:         .asciiz "Ha ocurrido un error."
@@ -33,7 +35,7 @@ main:
 
     # ------------ ESTUDIANTES ---------------
 
-    # Planificacion de registros:
+    # Planificacsion de registros:
     # $s0: Archivo (identificador)
     # $s1: Direccion del buffer
     # $s2: TablaHash Estudiantes
@@ -67,9 +69,9 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    sw $v0, tablaHashEst
-
+    # Guardar TablaHash Estudiante
     move $s2, $v0
+    sw   $s2, tablaHashEst
 
     # Direccion de los datos
     la $s1, buffer
@@ -169,7 +171,7 @@ main:
 
     # Leer archivo
     li $v0, 14
-    la $a1, buffer
+    la $a1, buffer2
     lw $a2, bufferTamanio
     syscall
 
@@ -183,12 +185,12 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    sw $s2, tablaHashMat
-
+    # Guardar TablaHash Materia
     move $s2, $v0
+    sw   $s2, tablaHashMat
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s1, buffer2
 
     for_leer_materias:
         # Guardar codigo
@@ -295,7 +297,7 @@ main:
 
     # Leer archivo 
     li $v0, 14
-    la $a1, buffer
+    la $a1, buffer3
     lw $a2, bufferTamanio
     syscall
 
@@ -309,10 +311,11 @@ main:
     jal Lista_crear
 
     # Guardar la lista
-    sw $s2, listaSolIns
+    move $s2, $v0
+    sw   $s2, listaSolIns
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s1, buffer3
 
     for_leer_solicitud:
         # Guardar carnet
@@ -339,7 +342,7 @@ main:
         add  $s1, $s1, 1 # Salta \n
 
         # Buscar carnet en la TablaHash
-        la   $a0, tablaHashEst
+        lw   $a0, tablaHashEst
         move $a1, $s3
         jal TablaHash_obtenerValor
 
@@ -348,7 +351,7 @@ main:
         move $s3, $v0
 
         # Buscar codigo en la TablaHash
-        la   $a0, tablaHashMat
+        lw   $a0, tablaHashMat
         move $a1, $s4
         jal TablaHash_obtenerValor
 
@@ -359,7 +362,8 @@ main:
         # Crear Solicitud(Estudiante, Materia, ‘S’)
         move $a0, $s3
         move $a1, $s4
-        lb   $a2, 83
+        li   $a2, 83
+
         jal Solicitud_crear
 
         # Insertar solicitud en listaSol

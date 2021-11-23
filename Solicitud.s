@@ -43,10 +43,10 @@ Solicitud_crear:
     bltz $v0, Solicitud_crear_fin
 
     # Inicializa la solicitud.
-    sw $t0    ($v0)
-    sw $a1,  4($v0)
-    sb $a2,  8($v0)
-    
+    sw $t0   ($v0)
+    sw $a1, 4($v0)
+    sb $a2, 8($v0)
+
 Solicitud_crear_fin:
     # Epilogo
     move $sp,  $fp
