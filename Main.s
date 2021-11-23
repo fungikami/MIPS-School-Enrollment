@@ -341,6 +341,10 @@ main:
         move $s1, $v1
         add  $s1, $s1, 1 # Salta \n
 
+        li $v0, 4
+        move $a0, $s3
+        syscall
+
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
         move $a1, $s3
@@ -349,6 +353,10 @@ main:
         # Si no se encontro carnet en la TablaHash
         beqz $v0, error
         move $s3, $v0
+
+        li $v0, 4
+        la $a0, newl
+        syscall
 
         # Buscar codigo en la TablaHash
         lw   $a0, tablaHashMat
@@ -366,6 +374,7 @@ main:
 
         jal Solicitud_crear
 
+
         # Insertar solicitud en listaSol
         move $a0, $s2
         move $a1, $v0
@@ -382,6 +391,14 @@ main:
         bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
     fin_leer_solicitud:
+        lw $a0, listaSolIns
+        jal Lista_primero
+
+        lw $a0, ($v0)
+        li $v0, 4
+
+        syscall
+
     # ---------------- INSCRIPCION ------------------
     # Planificacion de registros:
     # $s0: Lista de Solicitud de inscripcion
