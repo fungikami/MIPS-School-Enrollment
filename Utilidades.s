@@ -22,7 +22,7 @@ guardar_dato:
     # Reserva memoria
     add $t1, $a1, 1 
     li $v0, 9
-    lw $a0, $t1
+    move $a0, $t1
     syscall
 
     bltz $v0, guardar_dato_fin

@@ -5,14 +5,14 @@
 
         .data
 
-arcEst:     .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:     .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcEst:     .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:     .asciiz "/home/chus/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
 arcIns:     .asciiz "ejemplo-SolInscripcion.txt"
 arcCor:     .asciiz "ejemplo-SolCorreccion.txt"
 arcTen:     .asciiz "ejemplo-InsTentativa.txt"
 arcDef:     .asciiz "ejemplo-InsDefinitiva.txt"
 
-tamanioTablaHash:   .word 1
+tamanioTablaHash:   .word 100
 
 buscarEst: .asciiz "15-47895" # Indice de 4.2827
 
@@ -27,13 +27,11 @@ main:
     # Planificacion de registros:
     # $s0: Archivo (identificador)
     # $s1: Direccion del buffer
-    #  
-    # $t1: Direccion carnet
-    # $t2: Caracter actual
-    # $t3: Direccion del nombre
-    # $t4: Direccion del indice
-    # $t5: Direccion del credito
-    # $t6: Contador
+    # $s2: TablaHash Estudiantes
+    # $s3: Direccion carnet
+    # $s4: Direccion nombre
+    # $s5: Direccion indice
+    # $s6: Direccion credito
 
     # ------------ ESTUDIANTES ---------------
 
@@ -58,117 +56,161 @@ main:
     li $v0, 16
     syscall
 
-    # <TablaHash Estudiantes>.crear()
-    lw $t7, tamanioTablaHash
-    move $a0, $t7
-    jal TablaHash_crear
-
-    move $t7, $v0
-
+    # Direccion de los datos
     la $s1, buffer
 
+    # <TablaHash Estudiantes>.crear()
+    lw  $a0, tamanioTablaHash
+    jal TablaHash_crear
+
+    move $s2, $v0
+
     for_leer_estudiantes:
-        # Reservar la memoria para el carnet
-        li $v0, 9
-        li $a0, 9
-        syscall
-
-
-        bltz $v0, error
-        move $t1, $v0
-
         # Guarda el carnet
-        for_carnet:
-            lb $t2, ($s1)
-            
-            # Si es una comilla, termina el carnet
-            beq $t2, 34 for_carnet_fin
-            beqz $t2, fin_leer_estudiantes # Si es un null terminator termina de leer
-            
-            sb $t2, ($v0)
+        move $a0, $s1
+        li   $a1, 8
+        li   $a2, 1
+        jal guardar_dato
 
-            add $v0, $v0, 1
-            add $s1, $s1, 1
+        bltz $v0, fin_leer_estudiantes
+        move $s3, $v0
 
-            b for_carnet
-        
-        for_carnet_fin:
-            sb $zero, ($v0)
-            add $s1, $s1, 1 # Saltar comilla
-        
-        # Reservar la memoria para el nombre
-        li $v0, 9
-        li $a0, 21
-        syscall
-        
-        bltz $v0, error
-        move $t3, $v0
-        
+        add $s1, $s1, 1 # Saltar comilla
+
         # Guarda el nombre
-        for_nombre:
-            lb $t2, ($s1)
+        move $a0, $v1
+        li   $a1, 20
+        li   $a2, 1
+        jal guardar_dato
 
-            # Si es una comilla, termina el nombre
-            beq $t2, 34 for_nombre_fin
+        bltz $v0, fin_leer_estudiantes
+        move $s4, $v0
 
-            sb $t2, ($v0)
-            
-            add $v0, $v0, 1
-            add $s1, $s1, 1
+        add $s1, $s1, 1 # Saltar comilla
 
-            b for_nombre
+        # Guardar el indice
+        move $a0, $v1
+        li   $a1, 6
+        li   $a2, 0
+        jal guardar_dato
 
-        for_nombre_fin:
-            sb $zero, ($v0)
-            add $s1, $s1, 1 # Saltar comilla
+        bltz $v0, fin_leer_estudiantes
+        move $s5, $v0
 
-        # Reservar la memoria para el indice
-        li $v0, 9
-        li $a0, 7
-        syscall
+        # Guardar creditos aprobados
+        move $a0, $v1
+        li   $a1, 3
+        li   $a2, 0
+        jal guardar_dato
 
-        bltz $v0, error
-        move $t4, $v0
+        bltz $v0, fin_leer_estudiantes
+        move $s6, $v0
 
-        # Guarda el indice
-        li $t6, 6
-        for_indice:
-            lb $t2, ($s1)
-            sb $t2, ($v0)
-
-            add $v0, $v0,  1
-            add $s1, $s1,  1
-            add $t6, $t6, -1
-
-            bnez $t6, for_indice
-
-        for_indice_fin:
-            sb $zero, ($v0)
-
-        # Reservar la memoria para los creditos
-        li $v0, 9
-        li $a0, 4
-        syscall
-
-        bltz $v0, error
-        move $t5, $v0
-
-        # Guarda los creditos
-        li $t6, 3
-        for_creditos:
-            lb $t2, ($s1)
-            sb $t2, ($v0)
-
-            add $v0, $v0,  1
-            add $s1, $s1,  1
-            add $t6, $t6, -1
-
-            bnez $t6, for_creditos
-
-        for_creditos_fin:
-            sb $zero, ($v0)
-        
         add $s1, $s1, 1 # Salta \n
+
+
+        # # Reservar la memoria para el carnet
+        # li $v0, 9
+        # li $a0, 9
+        # syscall
+
+
+        # bltz $v0, error
+        # move $t1, $v0
+
+        # # Guarda el carnet
+        # for_carnet:
+        #     lb $t2, ($s1)
+            
+        #     # Si es una comilla, termina el carnet
+        #     beq $t2, 34 for_carnet_fin
+        #     beqz $t2, fin_leer_estudiantes # Si es un null terminator termina de leer
+            
+        #     sb $t2, ($v0)
+
+        #     add $v0, $v0, 1
+        #     add $s1, $s1, 1
+
+        #     b for_carnet
+        
+        # for_carnet_fin:
+        #     sb $zero, ($v0)
+        #     add $s1, $s1, 1 # Saltar comilla
+        
+        # # Reservar la memoria para el nombre
+        # li $v0, 9
+        # li $a0, 21
+        # syscall
+        
+        # bltz $v0, error
+        # move $t3, $v0
+        
+        # # Guarda el nombre
+        # for_nombre:
+        #     lb $t2, ($s1)
+
+        #     # Si es una comilla, termina el nombre
+        #     beq $t2, 34 for_nombre_fin
+
+        #     sb $t2, ($v0)
+            
+        #     add $v0, $v0, 1
+        #     add $s1, $s1, 1
+
+        #     b for_nombre
+
+        # for_nombre_fin:
+        #     sb $zero, ($v0)
+        #     add $s1, $s1, 1 # Saltar comilla
+
+        # # Reservar la memoria para el indice
+        # li $v0, 9
+        # li $a0, 7
+        # syscall
+
+        # bltz $v0, error
+        # move $t4, $v0
+
+        # # Guarda el indice
+        # li $t6, 6
+        # for_indice:
+        #     lb $t2, ($s1)
+        #     sb $t2, ($v0)
+
+        #     add $v0, $v0,  1
+        #     add $s1, $s1,  1
+        #     add $t6, $t6, -1
+
+        #     bnez $t6, for_indice
+
+        # for_indice_fin:
+        #     sb $zero, ($v0)
+
+        # # Reservar la memoria para los creditos
+        # li $v0, 9
+        # li $a0, 4
+        # syscall
+
+        # bltz $v0, error
+        # move $t5, $v0
+
+        # # Guarda los creditos
+        # li $t6, 3
+        # for_creditos:
+        #     lb $t2, ($s1)
+        #     sb $t2, ($v0)
+
+        #     add $v0, $v0,  1
+        #     add $s1, $s1,  1
+        #     add $t6, $t6, -1
+
+        #     bnez $t6, for_creditos
+
+        # for_creditos_fin:
+        #     sb $zero, ($v0)
+        
+        # add $s1, $s1, 1 # Salta \n
+
 
         # li $v0, 4
         # move $a0, $t1
@@ -205,15 +247,15 @@ main:
         lb $t2, ($s1)
 
         # Crear Estudiante
-        move $a0, $t1
-        move $s7, $t1  # Borrar
+        move $a0, $s3
+        move $s7, $s3  # Borrar
         
-        move $a1, $t3
-        move $a2, $t4
-        move $a3, $t5
+        move $a1, $s4
+        move $a2, $s5
+        move $a3, $s6
         jal Estudiante_crear
 
-        move $a0,  $t7  # Tabla
+        move $a0,  $s2  # Tabla
         lw   $a1, ($v0) # Clave
         move $a2,  $v0  # Valor
         
@@ -223,13 +265,13 @@ main:
         # Si no se logro insertar
         bltz $v0, fin_leer_estudiantes 
         
-        bnez $t2, for_leer_estudiantes     # Nulo
-        bne $t2, 10, for_leer_estudiantes  # Salto de linea
-        bne $t2, 11, for_leer_estudiantes  # Tab vertical
-        bne $t2, 32, for_leer_estudiantes  # Espacio en blanco
+        bnez $t2, for_leer_estudiantes      # Nulo
+        bne  $t2, 10, for_leer_estudiantes  # Salto de linea
+        bne  $t2, 11, for_leer_estudiantes  # Tab vertical
+        bne  $t2, 32, for_leer_estudiantes  # Espacio en blanco
 
     fin_leer_estudiantes:
-        move $a0, $t7
+        move $a0, $s2
         la $a1, buscarEst
         jal TablaHash_obtenerValor
         
@@ -255,152 +297,152 @@ main:
         # Crear Materia(cedigo, nombre, creditos, cupos, minimoCreditos, <Lista Estudiantes>.crear())
         # <TablaHash Materias>.insertar(cedigo, Materia)
 
-    # Abrir archivo
-    li $v0, 13
-    la $a0, arcMat
-    li $a1, 0 # 0 para leer
-    syscall
+    # # Abrir archivo
+    # li $v0, 13
+    # la $a0, arcMat
+    # li $a1, 0 # 0 para leer
+    # syscall
 
-    bltz $v0, error
-    move $a0, $v0
+    # bltz $v0, error
+    # move $a0, $v0
 
-    # Leer archivo ($v0=14) ($a0=$v0)
-    li $v0, 14
-    la $a1, buffer
-    li $a2, 1024
-    syscall
+    # # Leer archivo ($v0=14) ($a0=$v0)
+    # li $v0, 14
+    # la $a1, buffer
+    # li $a2, 1024
+    # syscall
 
-    bltz $v0, error
+    # bltz $v0, error
 
-    # Cerrar el archivo
-    li $v0, 16
-    syscall
+    # # Cerrar el archivo
+    # li $v0, 16
+    # syscall
 
-    # <TablaHash Materias>.crear()
-    li $t7, 101
-    move $a0, $t7
-    jal TablaHash_crear
+    # # <TablaHash Materias>.crear()
+    # li $t7, 101
+    # move $a0, $t7
+    # jal TablaHash_crear
 
-    move $t7, $v0
+    # move $t7, $v0
 
-    la $s1, buffer
+    # la $s1, buffer
 
-    for_leer_materias:
-        # Reservar la memoria para el codigo
-        li $v0, 9
-        li $a0, 8
-        syscall
+    # for_leer_materias:
+    #     # Reservar la memoria para el codigo
+    #     li $v0, 9
+    #     li $a0, 8
+    #     syscall
 
-        bltz $v0, error
-        move $t1, $v0
+    #     bltz $v0, error
+    #     move $t1, $v0
 
-        # Guarda el codigo
-        for_codigo:
-            lb $t2, ($s1)
+    #     # Guarda el codigo
+    #     for_codigo:
+    #         lb $t2, ($s1)
             
-            # Si es una comilla, termina el codigo
-            beq $t2, 34 for_codigo_fin
-            beqz $t2, fin_leer_materias # Si es un null terminator termina de leer
+    #         # Si es una comilla, termina el codigo
+    #         beq $t2, 34 for_codigo_fin
+    #         beqz $t2, fin_leer_materias # Si es un null terminator termina de leer
             
-            sb $t2, ($v0)
+    #         sb $t2, ($v0)
 
-            add $v0, $v0, 1
-            add $s1, $s1, 1
+    #         add $v0, $v0, 1
+    #         add $s1, $s1, 1
 
-            b for_codigo
+    #         b for_codigo
         
-        for_codigo_fin:
-            sb $zero, ($v0)
-            add $s1, $s1, 1 # Saltar comilla
+    #     for_codigo_fin:
+    #         sb $zero, ($v0)
+    #         add $s1, $s1, 1 # Saltar comilla
         
-        # Reservar la memoria para el nombre
-        li $v0, 9
-        li $a0, 31
-        syscall
+    #     # Reservar la memoria para el nombre
+    #     li $v0, 9
+    #     li $a0, 31
+    #     syscall
 
-        bltz $v0, error
-        move $t3, $v0
+    #     bltz $v0, error
+    #     move $t3, $v0
         
-        # Guarda el nombre
-        for_nombre_mat:
-            lb $t2, ($s1)
+    #     # Guarda el nombre
+    #     for_nombre_mat:
+    #         lb $t2, ($s1)
 
-            # Si es una comilla, termina el nombre
-            beq $t2, 34 for_nombre_mat_fin
+    #         # Si es una comilla, termina el nombre
+    #         beq $t2, 34 for_nombre_mat_fin
 
-            sb $t2, ($v0)
+    #         sb $t2, ($v0)
             
-            add $v0, $v0, 1
-            add $s1, $s1, 1
+    #         add $v0, $v0, 1
+    #         add $s1, $s1, 1
 
-            b for_nombre_mat
+    #         b for_nombre_mat
 
-        for_nombre_mat_fin:
-            sb $zero, ($v0)
-            add $s1, $s1, 1 # Saltar comilla
+    #     for_nombre_mat_fin:
+    #         sb $zero, ($v0)
+    #         add $s1, $s1, 1 # Saltar comilla
 
 
-        # Reservar la memoria para el credito
-        li $v0, 9
-        li $a0, 2
-        syscall
+    #     # Reservar la memoria para el credito
+    #     li $v0, 9
+    #     li $a0, 2
+    #     syscall
 
-        bltz $v0, error
-        move $t4, $v0
+    #     bltz $v0, error
+    #     move $t4, $v0
         
-        # Guarda el credito
-        lb $t2, ($s1)
-        sb $t2, ($v0)
+    #     # Guarda el credito
+    #     lb $t2, ($s1)
+    #     sb $t2, ($v0)
 
-        add $v0, $v0,  1
-        add $s1, $s1,  1
-        sb $zero, ($v0)
+    #     add $v0, $v0,  1
+    #     add $s1, $s1,  1
+    #     sb $zero, ($v0)
 
-        # Reservar la memoria para el #cupos
-        li $v0, 9
-        li $a0, 4
-        syscall
+    #     # Reservar la memoria para el #cupos
+    #     li $v0, 9
+    #     li $a0, 4
+    #     syscall
 
-        li $t6, 3
-        for_cupo:
-            lb $t2, ($s1)
-            sb $t2, ($v0)
+    #     li $t6, 3
+    #     for_cupo:
+    #         lb $t2, ($s1)
+    #         sb $t2, ($v0)
 
-            add $v0, $v0,  1
-            add $s1, $s1,  1
-            add $t6, $t6, -1
+    #         add $v0, $v0,  1
+    #         add $s1, $s1,  1
+    #         add $t6, $t6, -1
 
-            bnez $t6, for_cupo
+    #         bnez $t6, for_cupo
 
-        for_cupo_fin:
-            sb $zero, ($v0)
+    #     for_cupo_fin:
+    #         sb $zero, ($v0)
 
-        # Reservar la memoria para los min. creditos
-        li $v0, 9
-        li $a0, 4
-        syscall
+    #     # Reservar la memoria para los min. creditos
+    #     li $v0, 9
+    #     li $a0, 4
+    #     syscall
 
-        bltz $v0, error
-        move $t5, $v0
+    #     bltz $v0, error
+    #     move $t5, $v0
 
-        # Guarda los creditos
-        li $t6, 3
-        for_min_creditos:
-            lb $t2, ($s1)
-            sb $t2, ($v0)
+    #     # Guarda los creditos
+    #     li $t6, 3
+    #     for_min_creditos:
+    #         lb $t2, ($s1)
+    #         sb $t2, ($v0)
 
-            add $v0, $v0,  1
-            add $s1, $s1,  1
-            add $t6, $t6, -1
+    #         add $v0, $v0,  1
+    #         add $s1, $s1,  1
+    #         add $t6, $t6, -1
 
-            bnez $t6, for_min_creditos
+    #         bnez $t6, for_min_creditos
 
-        for_min_creditos_fin:
-            sb $zero, ($v0)
+    #     for_min_creditos_fin:
+    #         sb $zero, ($v0)
         
-        add $s1, $s1, 1 # Salta \n
+    #     add $s1, $s1, 1 # Salta \n
 
-        lb $t2, ($s1)
+    #     lb $t2, ($s1)
 
         # Crear Materia
         # move $a0, $t1
@@ -427,7 +469,7 @@ main:
         # bne $t2, 11, for_leer_estudiantes  # Tab vertical
         # bne $t2, 32, for_leer_estudiantes  # Espacio en blanco
 
-    fin_leer_materias:
+    # fin_leer_materias:
         # move $a0, $t7
         # move $a1, $s7
         # jal TablaHash_obtenerValor
@@ -542,3 +584,4 @@ fin:
 .include "Estudiante.s"
 .include "TablaHash.s"
 .include "Lista.s"
+.include "Utilidades.s"
