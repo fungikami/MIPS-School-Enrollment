@@ -39,11 +39,12 @@
 # $s1: Direccion de la materia
 Materia_crear:
     # Prologo
-	sw   $fp,   ($sp)
-    sw   $ra, -4($sp)
-    sw   $s0, -8($sp)
+	sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
 	move $fp,    $sp
-	addi $sp,    $sp, -12
+	addi $sp,    $sp, -16
 
     # Guarda el valor de $a0
     move $s0, $a0
@@ -73,10 +74,11 @@ Materia_crear:
 
 Materia_crear_fin:
     # Epilogo
-    move $sp,    $fp
-    lw   $fp,   ($sp)
-    lw   $ra, -4($sp)
-    lw   $s0, -8($sp)
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
 
     jr $ra
 

@@ -129,22 +129,22 @@ TablaHash_hash:
 
         b TablaHash_hash_loop
 
-TablaHash_hash_loop_fin:
-    # Calcula hash
-    mul  $t0,   $t0, 31    # acc *= 31
-    abs  $t0,   $t0        # acc = |acc|
-    lw   $t2, 4($a0)       # numBuckets
-    div  $t0,   $t2		   # acc %= numBuckets
-    mfhi $t0
+    TablaHash_hash_loop_fin:
+        # Calcula hash
+        mul  $t0,   $t0, 31    # acc *= 31
+        abs  $t0,   $t0        # acc = |acc|
+        lw   $t2, 4($a0)       # numBuckets
+        div  $t0,   $t2		   # acc %= numBuckets
+        mfhi $t0
 
-    # Retorna acc * 4
-    mul $v0, $t0, 4        # acc *= 4
+        # Retorna acc * 4
+        mul $v0, $t0, 4        # acc *= 4
 
-    # Epilogo
-    move $sp,  $fp
-    lw   $fp, ($sp)
+        # Epilogo
+        move $sp,  $fp
+        lw   $fp, ($sp)
 
-    jr $ra
+        jr $ra
     
 
 # Funcion insertar
