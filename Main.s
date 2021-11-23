@@ -219,6 +219,9 @@ main:
         
         # Guardar el estudiante en la tabla
         jal TablaHash_insertar
+
+        # Si no se logro insertar
+        bltz $v0, fin_leer_estudiantes 
         
         bnez $t2, for_leer_estudiantes     # Nulo
         bne $t2, 10, for_leer_estudiantes  # Salto de linea
@@ -415,6 +418,9 @@ main:
         
         # # Guardar la materia en la tabla
         # jal TablaHash_insertar
+
+        # Si no se logro insertar
+        #bltz $v0, fin_leer_materias 
         
         # bnez $t2, for_leer_estudiantes     # Nulo
         # bne $t2, 10, for_leer_estudiantes  # Salto de linea

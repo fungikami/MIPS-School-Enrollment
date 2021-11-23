@@ -152,6 +152,7 @@ TablaHash_hash_loop_fin:
 # Entrada: $a0: TablaHash.
 #          $a1: Clave del elemento a insertar.
 #          $a2: Valor del elemento a insertar.
+# Salida:  $v0: [1 si se pudo eliminar | negativo de otra manera]
 #
 # Planificacion de registros:
 # $s0: TablaHash
@@ -203,6 +204,9 @@ TablaHash_insertar:
     addi $t0,  $t0, 1
     lw   $t0, ($s0) 
 
+    # Si se logro insertar, retorna 1
+    li $v0, 1
+
 TablaHash_insertar_fin:
     # Epilogo
     move $sp,     $fp
@@ -227,7 +231,7 @@ TablaHash_insertar_fin:
 # $s2: nodo de Lista
 # $s3: centinela de Lista
 # $t0: Lista
-# $t3: valor de Nodo
+# $t1: valor de Nodo
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,    ($sp)
@@ -257,8 +261,8 @@ TablaHash_obtenerValor:
         # while Nodo != centinela 
         beq $s2, $s3, TablaHash_obtenerValor_loop_fin
 
-        lw   $t3, 4($s2)  # Valor del nodo
-        lw   $a0,  ($t3)  # Clave del nodo
+        lw   $t1, 4($s2)  # Valor del nodo
+        lw   $a0,  ($t1)  # Clave del nodo
         move $a1,   $s1   # Clave proporcionada a la función
 
         jal TablaHash_compararStrings
@@ -271,11 +275,11 @@ TablaHash_obtenerValor:
         b TablaHash_obtenerValor_loop
 
 TablaHash_obtenerValor_loop_fin:
-    lw $t3,   4($s2) # Valor del nodo
-    beqz $t3, TablaHash_obtenerValor_fin # Si no encontró el valor retorna 0
+    lw $t1,   4($s2) # Valor del nodo
+    beqz $t1, TablaHash_obtenerValor_fin # Si no encontró el valor retorna 0
 
     # Retorna valor de la entrada de hash
-    lw $v0, 4($t3)
+    lw $v0, 4($t1)
 
 TablaHash_obtenerValor_fin:
     # Epilogo
@@ -301,7 +305,7 @@ TablaHash_obtenerValor_fin:
 # $s2: nodo de Lista
 # $s3: centinela de Lista
 # $t0: Lista
-# $t3: valor de Nodo
+# $t1: caracter actual
 TablaHash_compararStrings:
     # Prologo
     sw   $fp,   ($sp)
