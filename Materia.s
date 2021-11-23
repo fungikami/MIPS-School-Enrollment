@@ -133,7 +133,7 @@ Materia_disminuirCupo:
 # Agrega un estudiante a la lista de estudiantes de la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Estudiante.
-#            $a2: Dirección de caracter con la operación.
+#            $a2: ASCII caracter con la operación.
 # 
 # Planificación de registros:
 # $s0: Materia.
@@ -150,8 +150,8 @@ Materia_agregarEstudiante:
     move $s0, $a0
 
     # Crea el Par(Estudiante, Op.)
-    move $a0,  $a1 # Estudiante
-    lb   $a1, ($a2) # Op.
+    move $a0, $a1 # Estudiante
+    move $a1, $a2 # Op.
     jal  Par_crear
 
     # Verifica la creación del Par.
