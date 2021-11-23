@@ -47,15 +47,6 @@ Solicitud_crear:
     sw $a1, 4($v0)
     sb $a2, 8($v0)
 
-    # move $a0, $zero
-    # lb $a0, 8($v0)
-    # li $v0, 1
-    # syscall
-
-    # li $v0, 4
-    # la $a0, newl
-    # syscall
-    
 Solicitud_crear_fin:
     # Epilogo
     move $sp,  $fp

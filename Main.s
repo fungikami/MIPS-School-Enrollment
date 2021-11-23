@@ -18,6 +18,8 @@ buscarEst:      .asciiz "15-47895" # Indice de 4.2827
 buscarMat:      .asciiz "CI-7337"
 
 buffer:         .space 1048576 # 1Mb
+buffer2:         .space 1048576 # 1Mb
+buffer3:         .space 1048576 # 1Mb
 bufferTamanio:   .word  1048576
 bufferNull:     .ascii "\0"
 error1:         .asciiz "Ha ocurrido un error."
@@ -169,7 +171,7 @@ main:
 
     # Leer archivo
     li $v0, 14
-    la $a1, buffer
+    la $a1, buffer2
     lw $a2, bufferTamanio
     syscall
 
@@ -188,7 +190,7 @@ main:
     sw   $s2, tablaHashMat
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s1, buffer2
 
     for_leer_materias:
         # Guardar codigo
@@ -295,7 +297,7 @@ main:
 
     # Leer archivo 
     li $v0, 14
-    la $a1, buffer
+    la $a1, buffer3
     lw $a2, bufferTamanio
     syscall
 
@@ -313,9 +315,8 @@ main:
     sw   $s2, listaSolIns
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s1, buffer3
 
-    li $s0, $zero
     for_leer_solicitud:
         # Guardar carnet
         move $a0, $s1
@@ -372,11 +373,6 @@ main:
 
         # Si no se logro insertar
         bltz $v0, fin_leer_solicitud
-
-        add $s0, $s0, 1
-        li $v0, 1
-        lw $a0, $s0
-        syscall
 
         # Iterar siguiente linea
         lb $t2, ($s1)
