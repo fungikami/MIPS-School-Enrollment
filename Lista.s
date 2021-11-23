@@ -182,21 +182,22 @@ Lista_insertarOrdenado_no_vacia:
         # while Nodo != centinela
         beq $s0, $s3, Lista_insertarOrdenado_ultimo
 
-        # Compara nodoAInsertar < nodoActual
-        move $a0,   $s4 
-        lw   $a1, 4($s3) 
+        # Compara nodoActual < nodoAInsertar 
+        lw   $a0, 4($s3) 
+        move $a1,   $s4 
         jalr $s5
 
-        # Si nodoAInsertar < nodoActual
+        # Si nodoActual < nodoAInsertar
         beqz $v0, Lista_insertarOrdenado_loop_siguiente
 
-        # Si nodoAInsertar >= nodoActual
-        lw $t1, 8($s3) # nodoActual.siguiente
+        # Si nodoActual >= nodoAInsertar
+        # Inserta el nodo detrás de nodoActual
+        lw $t1, ($s3) # nodoActual.anterior
 
-        sw $s1,  ($t1) # nodoActual.siguiente.anterior = nodoAInsertar
-        sw $t1, 8($s1) # nodoAInsertar.siguiente = nodoActual.siguiente
-        sw $s3,  ($s1) # nodoAInsertar.anterior = nodoActual
-        lw $s1, 8($s3) # nodoActual.siguiente = nodoAInsertar
+        sw $s1, 8($t1) # nodoActual.anterior.siguiente = nodoAInsertar
+        sw $t1,  ($s1) # nodoAInsertar.anterior = nodoActual.anterior
+        sw $s3, 8($s1) # nodoAInsertar.siguiente = nodoActual
+        lw $s1,  ($s3) # nodoActual.anterior = nodoAInsertar
 
         # Actualiza tamanio de la lista
         lw   $t0, 4($s2)
