@@ -15,6 +15,7 @@ arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
 tamanioTablaHash:   .word 100
 
 buscarEst:      .asciiz "15-47895" # Indice de 4.2827
+buscarMat:      .asciiz "CI-7337"
 
 buffer:         .space 1048576 # 1Mb
 bufferNull:     .ascii "\0"
@@ -281,6 +282,14 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
+        move $a0, $s2
+        la $a1, buscarMat
+        jal TablaHash_obtenerValor
+        lw $a0, 8($v0)
+
+        lw $a0, 4($v0)
+        li $v0, 4
+        syscall
         
 
     # ------------ SOLICITUDES ---------------
