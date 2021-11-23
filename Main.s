@@ -33,7 +33,7 @@ main:
 
     # ------------ ESTUDIANTES ---------------
 
-    # Planificacion de registros:
+    # Planificacsion de registros:
     # $s0: Archivo (identificador)
     # $s1: Direccion del buffer
     # $s2: TablaHash Estudiantes
@@ -67,9 +67,9 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    sw $v0, tablaHashEst
-
+    # Guardar TablaHash Estudiante
     move $s2, $v0
+    sw   $s2, tablaHashEst
 
     # Direccion de los datos
     la $s1, buffer
@@ -183,9 +183,9 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    sw $s2, tablaHashMat
-
+    # Guardar TablaHash Materia
     move $s2, $v0
+    sw   $s2, tablaHashMat
 
     # Direccion de los datos
     la $s1, buffer
@@ -309,11 +309,13 @@ main:
     jal Lista_crear
 
     # Guardar la lista
-    sw $s2, listaSolIns
+    move $s2, $v0
+    sw   $s2, listaSolIns
 
     # Direccion de los datos
     la $s1, buffer
 
+    li $s0, 
     for_leer_solicitud:
         # Guardar carnet
         move $a0, $s1
@@ -339,7 +341,7 @@ main:
         add  $s1, $s1, 1 # Salta \n
 
         # Buscar carnet en la TablaHash
-        la   $a0, tablaHashEst
+        lw   $a0, tablaHashEst
         move $a1, $s3
         jal TablaHash_obtenerValor
 
@@ -348,7 +350,7 @@ main:
         move $s3, $v0
 
         # Buscar codigo en la TablaHash
-        la   $a0, tablaHashMat
+        lw   $a0, tablaHashMat
         move $a1, $s4
         jal TablaHash_obtenerValor
 
@@ -359,7 +361,8 @@ main:
         # Crear Solicitud(Estudiante, Materia, ‘S’)
         move $a0, $s3
         move $a1, $s4
-        lb   $a2, 83
+        li   $a2, 83
+
         jal Solicitud_crear
 
         # Insertar solicitud en listaSol
