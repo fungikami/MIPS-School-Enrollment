@@ -68,7 +68,7 @@ Lista_crear_fin:
 # Inserta un elemento con el valor dado en la lista.
 # Entrada: $a0: lista.
 #          $a1: valor del elemento a insertar.
-# Salida: 
+# Salida:  $v0: negativo si no se logro insertar
 #
 # Planificacion de registros:
 # $t0: centinela de la lista

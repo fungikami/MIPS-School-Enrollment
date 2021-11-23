@@ -295,6 +295,7 @@ main:
         
 
     # ------------ SOLICITUDES ---------------
+
     # Planificacion de registros:
     # $s0: Archivo (identificador)
     # $s1: Direccion del buffer
@@ -362,7 +363,7 @@ main:
         move $a1, $s3
         jal TablaHash_obtenerValor
 
-        # Si no se encontro en la TablaHash
+        # Si no se encontro carnet en la TablaHash
         beqz $v0, error
         move $s3, $v0
 
@@ -371,7 +372,7 @@ main:
         move $a1, $s4
         jal TablaHash_obtenerValor
 
-        # Si no se encontro en la TablaHash
+        # Si no se encontro codigo en la TablaHash
         beqz $v0, error
         move $s4, $v0
 
@@ -401,22 +402,55 @@ main:
 
     # ---------------- INSCRIPCION ------------------
 
-    for_solicitud:
-
-    for_solicitud_end:
+    # Planificacion de registros:
+    # $s0: Lista de Solicitud de inscripcion
+    # $s1: Centinela de Lista
+    # $s2: Nodo de Lista
+    # $s3: valor del nodo (Solicitud)
 
     # for solicitud in <Lista Solicitudes>
     #     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
     #     solicitud.Materia.cupo--
 
+    la $s0, listaSolIns
+    lw $s1,  ($s0)  # Centinela de la lista
+    lw $s2, 8($s1)  # Primer nodo de la lista
+
+    for_solicitud:
+        # while Nodo != centinela
+        beq $s2, $s1, for_solicitud_end
+
+        lw $s3, 4($s2)  # Valor del nodo (Solicitud)
+
+        # Insertar Estudiante en la lista de Materia
+        lw $a0,  ($s3)  # Estudiante
+        lw $a1, 4($s3)  # Materia
+        lw $a2, 8($s3)  # operacion
+        jal Materia_agregarEstudiante
+
+        # Actualizamos al Nodo.siguiente
+        lw $s2, 8($s2) 
+        
+        b for_solicitud
+
+    for_solicitud_end:
+
+
     # ------------- ARCHIVO TENTATIVO --------------------
+
+    # Planificacion de registros:
+    # $s0: Lista de Solicitud de inscripcion
+    # $s1: Centinela de Lista
+    # $s2: Nodo de Lista
+    # $s3: valor del nodo (Solicitud)
+
     # for Materia in <TablaHash Materias>
     # 	print Materia
     #	for Estudiante in Materia.Estudiantes
     #		print Estudiante.primero
 
 
-    # -------- SOLICITUDES CORRECCIeN---------------
+    # -------- SOLICITUDES CORRECCION---------------
     # Abrir archivo
 
     # Verificar $v0
@@ -474,13 +508,11 @@ main:
     j fin
 
 error:
-
     li $v0, 4
     la $a0, error1
     syscall
 
 fin:
-
     li $v0, 10               
     syscall
 

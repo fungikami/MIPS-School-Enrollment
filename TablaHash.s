@@ -224,7 +224,7 @@ TablaHash_insertar_fin:
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
 # Salida:  $v0: valor de entrada de hash.
-#           [0 si no encontro el valor].
+#          [0 si no encontro el valor].
 # Planificacion de registros:
 # $s0: TablaHash
 # $s1: Clave a buscar
@@ -265,8 +265,8 @@ TablaHash_obtenerValor:
         lw   $a0,  ($t1)  # Clave del nodo
         move $a1,   $s1   # Clave proporcionada a la función
 
-        jal TablaHash_compararStrings
         # while Nodo.clave != clave
+        jal TablaHash_compararStrings
         beqz $v0, TablaHash_obtenerValor_loop_fin
         
         # Actualizamos al Nodo.siguiente
@@ -275,7 +275,7 @@ TablaHash_obtenerValor:
         b TablaHash_obtenerValor_loop
 
 TablaHash_obtenerValor_loop_fin:
-    lw $t1,   4($s2) # Valor del nodo
+    lw $t1, 4($s2) # Valor del nodo
 
     # Si no encontró el valor retorna 0
     beqz $t1, TablaHash_obtenerValor_fin 
@@ -297,17 +297,14 @@ TablaHash_obtenerValor_fin:
 
 # Funcion compararStrings
 # Evalúa la igualdad de dos strings dadas
-# Entrada: $a0: TablaHash.
-#          $a1: clave a obtener valor.
-# Salida:  $v0: valor de entrada de hash.
+# Entrada: $a0: clave de un nodo.
+#          $a1: clave a comparar.
+# Salida:  $v0: 0 si son iguales.
+#              -1 si no son iguales.
 # 
 # Planificacion de registros:
-# $s0: TablaHash
-# $s1: Clave a buscar
-# $s2: nodo de Lista
-# $s3: centinela de Lista
-# $t0: Lista
-# $t1: caracter actual
+# $t0: caracter actual 
+# $t1: caracter actual a comparar
 TablaHash_compararStrings:
     # Prologo
     sw   $fp,   ($sp)
@@ -320,7 +317,7 @@ TablaHash_compararStrings:
         lb $t0, ($a0)
         lb $t1, ($a1)
 
-        bne $t0,  $t1, TablaHash_compararStrings_retornar_falso
+        bne  $t0, $t1, TablaHash_compararStrings_retornar_falso
         beqz $t1, TablaHash_compararStrings_fin
 
         add $a0, $a0, 1
