@@ -39,10 +39,11 @@
 # $s1: Direccion de la materia
 Materia_crear:
     # Prologo
-	sw   $fp,  ($sp)
-    sw   $s0, 4($sp)
-	move $fp,   $sp
-	addi $sp,   $sp, -8
+	sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    sw   $s0, -8($sp)
+	move $fp,    $sp
+	addi $sp,    $sp, -12
 
     # Guarda el valor de $a0
     move $s0, $a0
@@ -65,16 +66,17 @@ Materia_crear:
     sw $a1,  4($s1) # nombre
     sw $a2,  8($s1) # creditos
     sw $a3, 12($s1) # cupos
-    
+
     lw $a0,  4($fp)
     sw $a0, 16($s1) # minCreditos
     sw $v0, 20($s1) # Lista de estudiantes 
 
 Materia_crear_fin:
     # Epilogo
-    move $sp,  $fp
-    lw   $fp, ($sp)
-    lw   $s0, 4($sp)
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
+    lw   $s0, -8($sp)
 
     jr $ra
 

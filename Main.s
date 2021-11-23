@@ -164,22 +164,6 @@ main:
     # $s6: Direccion cupos
     # $s7: Direccion min creditos
 
-    # Por cada linea:
-        # syscall 9 (24 bytes) [verificar]
-        # Crear materia
-        # 7 chars:
-            # Guardar cedigo
-        # do while != “”:
-            # Guardar nombre
-        # 1 chars:
-            # Guardar creditos
-        # 3 chars:
-            # Guardar cupos
-        # 3 chars:
-            # Guardar minimoCreditos
-        # Crear Materia(cedigo, nombre, creditos, cupos, minimoCreditos, <Lista Estudiantes>.crear())
-        # <TablaHash Materias>.insertar(cedigo, Materia)
-
     # Abrir archivo
     li $v0, 13
     la $a0, arcMat
@@ -297,13 +281,7 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
-        move $a0, $t7
-        move $a1, $s7
-        jal TablaHash_obtenerValor
         
-        lw $a0, 4($v0)    
-        li $v0, 4
-        syscall
 
     # ------------ SOLICITUDES ---------------
 
