@@ -133,20 +133,19 @@ Lista_insertar_fin:
 # $s4: valor del nodo a insertar
 # $s5: función de comparación
 # $t0: tamanio de la lista
-# $t1: nodoActual.siguiente
-# $t2: nodoActual.anterior
+# $t1: nodoActual.anterior
 Lista_insertarOrdenado:
     # Prologo
     sw   $fp,    ($sp)
     sw   $ra,  -4($sp)
     sw   $s0,  -8($sp)
     sw   $s1, -12($sp)
-    sw   $s2, -14($sp)
-    sw   $s3, -16($sp)
-    sw   $s4, -20($sp)
-    sw   $s5, -20($sp)
+    sw   $s2, -16($sp)
+    sw   $s3, -20($sp)
+    sw   $s4, -24($sp)
+    sw   $s5, -28($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -28
+    addi $sp,    $sp, -32
 
     # Si la lista esta vacia se usa el procedimiento insertar
     lw   $t0, 4($a0)
@@ -222,10 +221,10 @@ Lista_insertarOrdenado_fin:
     lw   $ra,  -4($sp)
     lw   $s0,  -8($sp)
     lw   $s1, -12($sp)
-    lw   $s2, -14($sp)
-    lw   $s3, -16($sp)
-    lw   $s4, -20($sp)
-    lw   $s5, -20($sp)
+    lw   $s2, -16($sp)
+    lw   $s3, -20($sp)
+    lw   $s4, -24($sp)
+    lw   $s5, -28($sp)
 
     jr $ra
 
