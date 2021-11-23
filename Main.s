@@ -341,9 +341,6 @@ main:
         move $s1, $v1
         add  $s1, $s1, 1 # Salta \n
 
-        li $v0, 4
-        move $a0, $s3
-        syscall
 
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
@@ -353,10 +350,6 @@ main:
         # Si no se encontro carnet en la TablaHash
         beqz $v0, error
         move $s3, $v0
-
-        li $v0, 4
-        la $a0, newl
-        syscall
 
         # Buscar codigo en la TablaHash
         lw   $a0, tablaHashMat
@@ -373,7 +366,6 @@ main:
         li   $a2, 83
 
         jal Solicitud_crear
-
 
         # Insertar solicitud en listaSol
         move $a0, $s2
@@ -395,6 +387,7 @@ main:
         jal Lista_primero
 
         lw $a0, ($v0)
+        lw $a0, 4($v0)
         li $v0, 4
 
         syscall
