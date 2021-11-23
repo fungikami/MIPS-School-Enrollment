@@ -23,6 +23,7 @@
 # Crea un Materia con los parametros dados.
 # Entrada:   $a0: codigo
 #            $a1: nombre.
+#            $a2: credito
 #            $a3: cupos.
 #         4($fp): minCreditos.
 # Salida:    $v0: Materia (negativo si no se pudo crear).
@@ -65,7 +66,7 @@ Materia_crear:
     sw $a2,  8($s1) # creditos
     sw $a3, 12($s1) # cupos
     
-    lw $a0,  4($fp) 
+    lw $a0,  4($fp)
     sw $a0, 16($s1) # minCreditos
     sw $v0, 20($s1) # Lista de estudiantes 
 
@@ -146,7 +147,7 @@ Materia_agregarEstudiante:
 
     # Crea el Par(Estudiante, Op.)
     move $a0,  $a1 # Estudiante
-    lb   $a1,  $a2 # Op.
+    lb   $a1, ($a2) # Op.
     jal  Par_crear
 
     # Verifica la creación del Par.
@@ -156,7 +157,7 @@ Materia_agregarEstudiante:
     # Agrega el Par a la lista de estudiantes.
     move $a0,    $s0
     lw   $a0, 20($a0)
-    jal Lista_agregar
+    jal Lista_insertar
 
     # Disminuye por uno el número de cupos.
     lw   $t0, 12($s0)

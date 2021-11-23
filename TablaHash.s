@@ -270,7 +270,7 @@ TablaHash_obtenerValor:
         beqz $v0, TablaHash_obtenerValor_loop_fin
         
         # Actualizamos al Nodo.siguiente
-        lw $s2, 8($s2) # Había un sw 4sum reasom
+        lw $s2, 8($s2) 
         
         b TablaHash_obtenerValor_loop
 
