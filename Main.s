@@ -73,7 +73,7 @@ main:
         li   $a2, 1
         jal guardar_dato
 
-        bltz $v0, fin_leer_estudiantes
+        blez $v0, fin_leer_estudiantes
         move $s3, $v0
 
         add $v1, $v1, 1 # Saltar comilla
@@ -84,7 +84,7 @@ main:
         li   $a2, 1
         jal guardar_dato
 
-        bltz $v0, fin_leer_estudiantes
+        blez $v0, fin_leer_estudiantes
         move $s4, $v0
 
         add $v1, $v1, 1 # Saltar comilla
@@ -95,7 +95,7 @@ main:
         li   $a2, 0
         jal guardar_dato
 
-        bltz $v0, fin_leer_estudiantes
+        blez $v0, fin_leer_estudiantes
         move $s5, $v0
 
         # Guardar creditos aprobados
@@ -104,7 +104,7 @@ main:
         li   $a2, 0
         jal guardar_dato
 
-        bltz $v0, fin_leer_estudiantes
+        blez $v0, fin_leer_estudiantes
         move $s6, $v0
 
         move $s1, $v1
@@ -267,7 +267,7 @@ main:
         bltz $v0, fin_leer_estudiantes 
         
         lb $t2, ($s1)
-        
+
         bnez $t2, for_leer_estudiantes      # Nulo
         bne  $t2, 10, for_leer_estudiantes  # Salto de linea
         bne  $t2, 11, for_leer_estudiantes  # Tab vertical

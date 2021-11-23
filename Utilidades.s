@@ -35,8 +35,8 @@ guardar_dato:
         lb $t3, ($t0)
 
         # Si es una comilla o nulo, se termina 
-        beq  $t3, 34, guardar_dato_fin
-        beqz $t3, guardar_dato_fin
+        beq  $t3, 34, guardar_dato_exitoso
+        beqz $t3, guardar_dato_error
 
         sb $t3, ($t2)
 
@@ -55,12 +55,18 @@ guardar_dato:
 
         bnez $a1, guardar_hasta_tamanio
 
-guardar_dato_fin:
+guardar_dato_exitoso:
     sb $zero, ($t2)
 
     # Retorna dato y buffer
     move $v1, $t0
 
+    b guardar_dato_fin
+
+guardar_dato_error:
+    li $v0, -1
+    
+guardar_dato_fin:
     # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
