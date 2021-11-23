@@ -90,7 +90,7 @@ Lista_insertar:
     syscall
 
     # Si hubo error en la creacion del nodo
-    bltz $v0, Lista_crear_fin
+    bltz $v0, Lista_insertar_fin
 
     # Inicializa el valor del nodo
     sw $a1, 4($v0)
@@ -109,6 +109,87 @@ Lista_insertar:
     sw   $t2, 4($t3)
 
 Lista_insertar_fin:
+    # Epilogo
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+
+    jr $ra
+
+# Funcion insertarOrdenado
+# Inserta un elemento con el valor dado en la lista, manteniendo
+# un orden indicado por la función.
+# 
+# Entrada: $a0: Lista
+#          $a1: valor del elemento a insertar.
+#          $a2: función de comparación.
+#               (a, b -> bool: 0 si a a<b, 1 de otra forma)
+# Salida: Ñ
+#
+# Planificacion de registros:
+# $t0: centinela de la lista
+# $t1: centinela.anterior
+# $t2: tamanio de la lista
+# $t3: lista
+Lista_insertarOrdenado:
+    # Prologo
+    sw   $fp,   ($sp)
+    sw   $s0, -4($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -8
+
+    # Guardar la lista en $t3
+    move $t3, $a0
+
+    # Reserva memoria para crear el nodo
+    li $a0, 12
+    li $v0, 9
+    syscall
+
+    # Si hubo error en la creacion del nodo
+    bltz $v0, Lista_insertarOrdenado_fin
+
+    # Inicializa el valor del nodo
+    sw $a1, 4($v0)
+
+    # Busca donde insertar el nodo
+
+    # ---------- TRAIDO DE TABLAHASH -----------------
+    # Actualiza tamanio de la lista
+    lw   $t2, 4($t3)
+    addi $t2,   $t2, 1
+    sw   $t2, 4($t3)
+
+        lw $s3,  ($t0)  # Centinela de la lista
+    lw $s2, 8($s3)  # Primer nodo de la lista
+
+    TablaHash_obtenerValor_loop:
+        # while Nodo != centinela 
+        beq $s2, $s3, TablaHash_obtenerValor_loop_fin
+
+        lw   $t1, 4($s2)  # Valor del nodo
+        lw   $a0,  ($t1)  # Clave del nodo
+        move $a1,   $s1   # Clave proporcionada a la función
+
+        jal TablaHash_compararStrings
+        # while Nodo.clave != clave
+        beqz $v0, TablaHash_obtenerValor_loop_fin
+        
+        # Actualizamos al Nodo.siguiente
+        lw $s2, 8($s2) # Había un sw 4sum reasom
+        
+        b TablaHash_obtenerValor_loop
+        # ----------- TRAIDO DE TABLAHASH -----------
+
+    # Actualiza cabeza y nodo x creado
+    lw $t0,  ($t3)
+    lw $t1,  ($t0)
+    sw $t1,  ($v0) # x.anterior = centinela.anterior
+    sw $t0, 8($v0) # x.siguiente = centinela
+    sw $v0, 8($t1) # centinela.anterior.siguiente = x
+    sw $v0,  ($t0) # centinela.anterior = x
+
+
+Lista_insertarOrdenado_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
