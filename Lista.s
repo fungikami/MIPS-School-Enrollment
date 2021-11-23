@@ -126,8 +126,8 @@ Lista_insertar_fin:
 # Salida: Ñ
 #
 # Planificacion de registros:
-# $t0: centinela de la lista
-# $t1: centinela.anterior
+# $s0: centinela de la lista
+# $s1: nodo actual
 # $t2: tamanio de la lista
 # $t3: lista
 Lista_insertarOrdenado:
@@ -151,23 +151,21 @@ Lista_insertarOrdenado:
     # Inicializa el valor del nodo
     sw $a1, 4($v0)
 
-    # Busca donde insertar el nodo
-
-    # ---------- TRAIDO DE TABLAHASH -----------------
     # Actualiza tamanio de la lista
     lw   $t2, 4($t3)
     addi $t2,   $t2, 1
     sw   $t2, 4($t3)
 
-        lw $s3,  ($t0)  # Centinela de la lista
+    # Busca donde insertar el nodo
+    lw $s0,  ($t3)  # Centinela de la lista
     lw $s2, 8($s3)  # Primer nodo de la lista
 
     TablaHash_obtenerValor_loop:
         # while Nodo != centinela 
         beq $s2, $s3, TablaHash_obtenerValor_loop_fin
 
-        lw   $t1, 4($s2)  # Valor del nodo
-        lw   $a0,  ($t1)  # Clave del nodo
+        lw   $s1, 4($s2)  # Valor del nodo
+        lw   $a0,  ($s1)  # Clave del nodo
         move $a1,   $s1   # Clave proporcionada a la función
 
         jal TablaHash_compararStrings
@@ -181,15 +179,16 @@ Lista_insertarOrdenado:
         # ----------- TRAIDO DE TABLAHASH -----------
 
     # Actualiza cabeza y nodo x creado
-    lw $t0,  ($t3)
-    lw $t1,  ($t0)
-    sw $t1,  ($v0) # x.anterior = centinela.anterior
-    sw $t0, 8($v0) # x.siguiente = centinela
-    sw $v0, 8($t1) # centinela.anterior.siguiente = x
-    sw $v0,  ($t0) # centinela.anterior = x
+    lw $s0,  ($t3)
+    lw $s1,  ($s0)
+    sw $s1,  ($v0) # x.anterior = centinela.anterior
+    sw $s0, 8($v0) # x.siguiente = centinela
+    sw $v0, 8($s1) # centinela.anterior.siguiente = x
+    sw $v0,  ($s0) # centinela.anterior = x
 
 
 Lista_insertarOrdenado_fin:
+
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
