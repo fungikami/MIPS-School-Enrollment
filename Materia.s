@@ -43,8 +43,8 @@ Materia_crear:
     sw   $ra,  -4($sp)
     sw   $s0,  -8($sp)
     sw   $s1, -12($sp)
-	move $fp,    $sp
-	addi $sp,    $sp, -16
+	move $fp,     $sp
+	addi $sp,     $sp, -16
 
     # Guarda el valor de $a0
     move $s0, $a0
