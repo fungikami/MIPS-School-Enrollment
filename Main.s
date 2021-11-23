@@ -75,7 +75,7 @@ main:
         bltz $v0, fin_leer_estudiantes
         move $s3, $v0
 
-        add $s1, $s1, 1 # Saltar comilla
+        add $v1, $v1, 1 # Saltar comilla
 
         # Guarda el nombre
         move $a0, $v1
@@ -86,7 +86,7 @@ main:
         bltz $v0, fin_leer_estudiantes
         move $s4, $v0
 
-        add $s1, $s1, 1 # Saltar comilla
+        add $v1, $v1, 1 # Saltar comilla
 
         # Guardar el indice
         move $a0, $v1
@@ -106,6 +106,7 @@ main:
         bltz $v0, fin_leer_estudiantes
         move $s6, $v0
 
+        move $s1, $v1
         add $s1, $s1, 1 # Salta \n
 
 

@@ -14,8 +14,8 @@
 guardar_dato:
     # Prologo
 	sw   $fp, ($sp)
-	move $fp, $sp
-	addi $sp, $sp, -4
+	move $fp,  $sp
+	addi $sp,  $sp, -4
 
     move $t0, $a0
 
