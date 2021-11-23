@@ -20,9 +20,8 @@ guardar_dato:
     move $t0, $a0
 
     # Reserva memoria
-    add $t1, $a1, 1 
-    li $v0, 9
-    move $a0, $t1
+    li  $v0, 9
+    add $a0, $a1, 1 
     syscall
 
     bltz $v0, guardar_dato_fin
@@ -36,31 +35,30 @@ guardar_dato:
         lb $t3, ($t0)
 
         # Si es una comilla o nulo, se termina 
-        beq $t3, 34 guardar_dato_fin
+        beq  $t3, 34, guardar_dato_fin
         beqz $t3, guardar_dato_fin
 
-        sb $t3, ($v0)
+        sb $t3, ($t2)
 
         add $t0, $t0, 1
-        add $v0, $v0, 1
+        add $t2, $t2, 1
 
         b guardar_hasta_comilla
 
     guardar_hasta_tamanio:
         lb $t3, ($t0)
-        sb $t3, ($v0)
+        sb $t3, ($t2)
 
         add $t0, $t0,  1
-        add $v0, $v0,  1
+        add $t2, $t2,  1
         add $a1, $a1, -1
 
         bnez $a1, guardar_hasta_tamanio
 
 guardar_dato_fin:
-    sb $zero, ($v0)
+    sb $zero, ($t2)
 
     # Retorna dato y buffer
-    move $v0, $t2
     move $v1, $t0
 
     # Epilogo
