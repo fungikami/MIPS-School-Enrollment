@@ -5,9 +5,9 @@
 
         .data
 
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "ejemplo-SolCorreccion.txt"
 arcTen:         .asciiz "ejemplo-InsTentativa.txt"
 arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
@@ -18,6 +18,7 @@ buscarEst:      .asciiz "15-47895" # Indice de 4.2827
 buscarMat:      .asciiz "CI-7337"
 
 buffer:         .space 1048576 # 1Mb
+bufferTamanio:   .word  1048576
 bufferNull:     .ascii "\0"
 error1:         .asciiz "Ha ocurrido un error."
 newl:           .asciiz "\n"
@@ -53,7 +54,7 @@ main:
     # Leer archivo
     li $v0, 14
     la $a1, buffer
-    li $a2, 1024
+    lw $a2, bufferTamanio
     syscall
 
     bltz $v0, error
@@ -66,8 +67,7 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    la $s2, tablaHashEst
-    sw $v0, ($s2)
+    sw $v0, tablaHashEst
 
     move $s2, $v0
 
@@ -145,16 +145,7 @@ main:
         bne  $t2, 11, for_leer_estudiantes  # Tab vertical
         bne  $t2, 32, for_leer_estudiantes  # Espacio en blanco
 
-    fin_leer_estudiantes:
-        move $a0, $s2
-        la $a1, buscarEst
-        jal TablaHash_obtenerValor
-        
-        lw $a0, 8($v0)
-        li $v0, 4
-        syscall
-    
-    
+    fin_leer_estudiantes:  
     # ------------ MATERIAS ---------------
     
     # Planificacion de registros:
@@ -179,7 +170,7 @@ main:
     # Leer archivo
     li $v0, 14
     la $a1, buffer
-    li $a2, 1024
+    lw $a2, bufferTamanio
     syscall
 
     bltz $v0, error
@@ -192,8 +183,7 @@ main:
     lw  $a0, tamanioTablaHash
     jal TablaHash_crear
 
-    la $s2, tablaHashMat
-    sw $v0, ($s2)
+    sw $s2, tablaHashMat
 
     move $s2, $v0
 
@@ -284,20 +274,10 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
-        move $a0, $s2
-        la $a1, buscarMat
-        jal TablaHash_obtenerValor
-        lw $a0, 8($v0)
-
-        lw $a0, 4($v0)
-        li $v0, 4
-        syscall
-        
-
     # ------------ SOLICITUDES ---------------
 
     # Planificacion de registros:
-    # $s0: Archivo (identificador)
+    # $s0: 
     # $s1: Direccion del buffer
     # $s2: TablaHash Materias
     # $s3: Estudiante
@@ -309,13 +289,14 @@ main:
     li $a1, 0 
     syscall
 
+    # Si hubo un error en la lectura del archivo
     bltz $v0, error
     move $a0, $v0
 
     # Leer archivo 
     li $v0, 14
     la $a1, buffer
-    li $a2, 1024
+    lw $a2, bufferTamanio
     syscall
 
     bltz $v0, error
@@ -328,8 +309,7 @@ main:
     jal Lista_crear
 
     # Guardar la lista
-    la $s2, listaSolIns
-    sw $v0, ($s2)
+    sw $s2, listaSolIns
 
     # Direccion de los datos
     la $s1, buffer
@@ -356,7 +336,7 @@ main:
         move $s4, $v0
 
         move $s1, $v1
-        add  $s1, $s1, 1     # Salta \n
+        add  $s1, $s1, 1 # Salta \n
 
         # Buscar carnet en la TablaHash
         la   $a0, tablaHashEst
@@ -392,16 +372,13 @@ main:
 
         # Iterar siguiente linea
         lb $t2, ($s1)
-        bnez $t2, for_leer_materias         # Nulo
-        bne  $t2, 10, fin_leer_materias     # Salto de linea
-        bne  $t2, 11, fin_leer_materias     # Tab vertical
-        bne  $t2, 32, fin_leer_materias     # Espacio en blanco
+        bnez $t2, for_leer_solicitud         # Nulo
+        bne  $t2, 10, fin_leer_solicitud     # Salto de linea
+        bne  $t2, 11, fin_leer_solicitud     # Tab vertical
+        bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
     fin_leer_solicitud:
-
-
     # ---------------- INSCRIPCION ------------------
-
     # Planificacion de registros:
     # $s0: Lista de Solicitud de inscripcion
     # $s1: Centinela de Lista
