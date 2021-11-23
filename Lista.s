@@ -90,7 +90,7 @@ Lista_insertar:
     syscall
 
     # Si hubo error en la creacion del nodo
-    bltz $v0, Lista_crear_fin
+    bltz $v0, Lista_insertar_fin
 
     # Inicializa el valor del nodo
     sw $a1, 4($v0)
@@ -112,6 +112,119 @@ Lista_insertar_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)
+
+    jr $ra
+
+# Funcion insertarOrdenado
+# Inserta un elemento con el valor dado en la lista, manteniendo
+# un orden indicado por la función.
+# 
+# Entrada: $a0: Lista
+#          $a1: valor del elemento a insertar.
+#          $a2: función de comparación.
+#               (a, b -> bool: 0 si a a<b, 1 de otra forma)
+# Salida: Ñ
+#
+# Planificacion de registros:
+# $s0: centinela de la lista
+# $s1: nodoAInsertar
+# $s2: Lista
+# $s3: nodoActual
+# $s4: valor del nodo a insertar
+# $s5: función de comparación
+# $t0: tamanio de la lista
+# $t1: nodoActual.anterior
+Lista_insertarOrdenado:
+    # Prologo
+    sw   $fp,    ($sp)
+    sw   $ra,  -4($sp)
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -16($sp)
+    sw   $s3, -20($sp)
+    sw   $s4, -24($sp)
+    sw   $s5, -28($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -32
+
+    # Si la lista esta vacia se usa el procedimiento insertar
+    lw   $t0, 4($a0)
+    bnez $t0, Lista_insertarOrdenado_no_vacia
+
+Lista_insertarOrdenado_usar_insertar:
+    jal Lista_insertar
+    b Lista_insertarOrdenado_fin
+
+Lista_insertarOrdenado_no_vacia:
+    # Guardar los argumentos
+    move $s2, $a0
+    move $s4, $a1
+    move $s5, $a2
+
+    # Reserva memoria para crear el nodo
+    li $a0, 12
+    li $v0, 9
+    syscall
+
+    # Si hubo error en la creacion del nodo
+    bltz $v0, Lista_insertarOrdenado_fin
+
+    # Guarda el nodo e inicializa su valor
+    move $s1,   $v0
+    sw   $a1, 4($s1)
+
+    # Busca donde insertar el nodo
+    lw $s0,  ($s2)  # Centinela de la lista
+    lw $s3, 8($s0)  # Primer nodo de la lista
+
+    Lista_insertarOrdenado_loop:
+        # while Nodo != centinela
+        beq $s0, $s3, Lista_insertarOrdenado_ultimo
+
+        # Compara nodoActual < nodoAInsertar 
+        lw   $a0, 4($s3) 
+        move $a1,   $s4 
+        jalr $s5
+
+        # Si nodoActual < nodoAInsertar
+        beqz $v0, Lista_insertarOrdenado_loop_siguiente
+
+        # Si nodoActual >= nodoAInsertar
+        # Inserta el nodo detrás de nodoActual
+        lw $t1, ($s3) # nodoActual.anterior
+
+        sw $s1, 8($t1) # nodoActual.anterior.siguiente = nodoAInsertar
+        sw $t1,  ($s1) # nodoAInsertar.anterior = nodoActual.anterior
+        sw $s3, 8($s1) # nodoAInsertar.siguiente = nodoActual
+        sw $s1,  ($s3) # nodoActual.anterior = nodoAInsertar
+
+        # Actualiza tamanio de la lista
+        lw   $t0, 4($s2)
+        addi $t0,   $t0, 1
+        sw   $t0, 4($s2)
+        b    Lista_insertarOrdenado_fin
+
+    Lista_insertarOrdenado_loop_siguiente:
+        # Actualizamos al Nodo.siguiente
+        lw $s3, 8($s3)
+        b  Lista_insertarOrdenado_loop
+
+Lista_insertarOrdenado_ultimo:
+    move $a0, $s2
+    move $a1, $s4
+    b Lista_insertarOrdenado_usar_insertar
+
+Lista_insertarOrdenado_fin:
+    # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -16($sp)
+    lw   $s3, -20($sp)
+    lw   $s4, -24($sp)
+    lw   $s5, -28($sp)
 
     jr $ra
 
