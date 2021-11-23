@@ -196,7 +196,7 @@ Lista_insertarOrdenado_no_vacia:
         sw $s1, 8($t1) # nodoActual.anterior.siguiente = nodoAInsertar
         sw $t1,  ($s1) # nodoAInsertar.anterior = nodoActual.anterior
         sw $s3, 8($s1) # nodoAInsertar.siguiente = nodoActual
-        lw $s1,  ($s3) # nodoActual.anterior = nodoAInsertar
+        sw $s1,  ($s3) # nodoActual.anterior = nodoAInsertar
 
         # Actualiza tamanio de la lista
         lw   $t0, 4($s2)

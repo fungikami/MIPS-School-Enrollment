@@ -104,6 +104,56 @@ main:
     la $a0, newl
     syscall
 
+     # Sacar primero
+    move $a0, $s0
+    jal Lista_eliminarPrimero
+
+    # Imprimir primero
+    move $a0, $s0
+    jal  Lista_primero
+    move $t0, $v0
+
+    li $v0, 4
+    la $a0, prim
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+     # Sacar primero
+    move $a0, $s0
+    jal Lista_eliminarPrimero
+
+    # Imprimir primero
+    move $a0, $s0
+    jal  Lista_primero
+    move $t0, $v0
+
+    li $v0, 4
+    la $a0, prim
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    li $v0, 4
+    la $a0, newl
+    syscall
+
 main_fin:
     li $v0, 10
     syscall
