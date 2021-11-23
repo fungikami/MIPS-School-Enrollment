@@ -315,7 +315,7 @@ main:
     # Direccion de los datos
     la $s1, buffer
 
-    li $s0, 
+    li $s0, $zero
     for_leer_solicitud:
         # Guardar carnet
         move $a0, $s1
@@ -372,6 +372,11 @@ main:
 
         # Si no se logro insertar
         bltz $v0, fin_leer_solicitud
+
+        add $s0, $s0, 1
+        li $v0, 1
+        lw $a0, $s0
+        syscall
 
         # Iterar siguiente linea
         lb $t2, ($s1)
