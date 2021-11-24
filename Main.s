@@ -207,11 +207,12 @@ main:
         li   $a2, 0
         jal guardar_dato
 
+        blez $v0, fin_leer_materias
+
         move $a0, $v0
         li   $a1, 3
         jal  atoi
 
-        blez $v0, fin_leer_materias
         move $s5, $v0
 
         # Guardar min creditos
@@ -468,9 +469,6 @@ main:
         li   $a2, 2
         syscall
 
-        # Cambiar cupos de las materias para que sean enteros:
-        # Necesario para disminuirle los cupos.
-        # Buscar para ello "atoi function in mips" puede servir.
         # Imprime Materia.cupos
         li   $v0, 15       
         move $a0, $s0
