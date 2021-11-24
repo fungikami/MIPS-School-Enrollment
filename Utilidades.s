@@ -78,7 +78,8 @@ guardar_dato_fin:
 
     jr $ra
 
-# Funcion: Compara dos strings 
+# Funcion comṕarador
+# Compara dos strings 
 # Entrada: $a0: String a comparar
 #          $a1: String a comparar
 # Salida:  $v0: 0 si a<b, 
@@ -108,6 +109,36 @@ comparador:
         li $v0, -1
 
 comparador_fin:
+    # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+
+    jr $ra
+
+# Funcion limpiarBuffer
+# Limpia el buffer (redactar)
+# Entrada: $a0: Dir. del buffer a limpiar
+#          $a1: Tamaniop del buffer a comparar (multiplo de 4)
+# Salida:  $v0: Dir. del buffer
+# Planificacion de registros:
+limpiarBuffer:
+    # Prologo
+    sw   $fp, ($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -4
+
+    srl  $a1, $a1, 2 # Divide entre 4 el tamanio del buffer
+    move $v0, $a0
+    limpiarBuffer_ciclo:
+        beqz $a1, limpiarBuffer_fin
+
+        sw $zero, ($a0)
+        
+        add $a0, $a0,  4
+        add $a1, $a1, -1
+        b limpiarBuffer_ciclo
+
+limpiarBuffer_fin:
     # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)

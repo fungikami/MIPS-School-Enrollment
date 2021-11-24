@@ -155,7 +155,7 @@ Materia_agregarEstudiante:
     jal  Par_crear
 
     # Verifica la creación del Par.
-    bgtz $v0, Materia_agregarEstudiante_fin
+    bltz $v0, Materia_agregarEstudiante_fin
     move $a1, $v0
 
     # Agrega el Par a la lista de estudiantes.

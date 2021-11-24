@@ -14,13 +14,13 @@ arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
-buscarEst:      .asciiz "15-47895" # Indice de 4.2827
+buscarEst:      .asciiz "15-20076" # Indice de 4.2827
 buscarMat:      .asciiz "CI-1804"
 
-buffer:         .space 100000 # 1Mb = 10485976
-buffer2:        .space 100000 # 1Mb
-buffer3:        .space 100000 # 1Mb
-bufferTamanio:  .word  100000
+buffer:         .space 524288 # 1Mb = 10485976
+buffer2:        .space 524288 # 1Mb
+buffer3:        .space 524288
+bufferTamanio:  .word  524288
 
 error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
@@ -301,17 +301,28 @@ main:
     bltz $v0, error
     move $a0, $v0
 
+    # --PRINT DEBUGGING --
+    # lw $a0, tablaHashEst
+    # la $a1, buscarEst
+    # jal TablaHash_obtenerValor
+
+    # lw $a0, 4($v0)
+    # li $v0, 4
+    # syscall
+    # # ------------------
+
     # Leer archivo 
     li $v0, 14
     la $a1, buffer3
     lw $a2, bufferTamanio
     syscall
-
+    
     bltz $v0, error
 
     # Cerrar el archivo
     li $v0, 16
     syscall
+
 
     # <Lista Solicitudes>.crear()
     jal Lista_crear
@@ -321,6 +332,7 @@ main:
 
     # Direccion de los datos
     la $s1, buffer3
+
 
     for_leer_solicitud:
         # Guardar carnet
@@ -345,7 +357,7 @@ main:
 
         move $s1, $v1
         add  $s1, $s1, 1 # Salta \n
-
+        
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
         move $a1, $s3
