@@ -278,12 +278,14 @@ atoi_fin:
     jr $ra
 
 # Funcion itoa
+# Convierte un entero a ASCII
 # Entrada: $a0: Entero
 #          $a1: # Caracteres a convertir
 # Salida:  $v0: ASCII null-terminated
 #          $v1: Número de caracteres escritos
 # Planificación de registros:
 # $t0: Caracter a agregar
+# $t1: -1 si el número es negativo, 0 de otra forma
 # $t4: Copia del entero
 # $t5: Dir. del buffer (para iterar)
 # $t6: 10
@@ -322,6 +324,7 @@ itoa_distinto_de_cero:
     add $t5,  $t5, 1
     abs $t4,  $t4
     add $v1,  $v1, 1
+    li  $t1,  -1
 
 itoa_escribir_pos:
     add $t5,    $t5, $a1
@@ -344,6 +347,7 @@ itoa_loop:
 
 itoa_fin:
     add $v0, $t5, 1
+    add $v0, $v0, $t1
     # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
