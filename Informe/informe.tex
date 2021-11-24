@@ -95,10 +95,16 @@
 
 \section{Pseudocódigo}
 
+Se presentan a continuación los pseudocódigos del programa que
+se desea implementar. \\
+
+Primeramente, se necesita extraer los datos necesarios de cada
+archivo de entrada, para ello, se usan tablas de hash y listas.
+
 \begin{codebox}
-   \Procname{$\proc{Main}$}
+   \Procname{$\proc{Extraer-Datos}$}
    \li \id{archivoEst} = Leer archivo de estudiantes
-   \li \id{tablaHashEst} = \textbf{new} \proc{TablaHash}(101)
+   \li \id{tablaHashEst} = \kw{new} \proc{TablaHash}(101)
 
    \li \For linea in archivoEst:
    \li \Do
@@ -106,10 +112,83 @@
       \li \id{nombre} = Guardar nombre
       \li \id{indice} = Guardar índice
       \li \id{creditosAprob} = Guardar número de créditos aprobados
-      \li \id{est} = \textbf{new} \proc{Estudiante}(\id{carnet}, \id{nombre}, \id{indice}, \id{creditosAprob})
-      \li \id{tablaHashEst}.\proc{Insertar}(\id{est})
+      \li \id{est} = \kw{new} \proc{Estudiante}(\id{carnet}, \id{nombre}, \id{indice}, \id{creditosAprob})
+      \li \id{tablaHashEst}.\proc{Insertar}(\id{carnet}, \id{est})
+      \End
+
+   \li
+   \li \id{archivoMat} = Leer archivo de materias
+   \li \id{tablaHashMat} = \kw{new} \proc{TablaHash}(101)
+   \li \id{listaMat} = \kw{new} \proc{Lista}()
+   \li \For linea in archivoMat:
+   \li \Do
+      \id{codigo} = Guardar codigo
+      \li \id{nombre} = Guardar nombre
+      \li \id{creditos} = Guardar creditos
+      \li \id{numCupos} = Guardar número de cupos
+      \li \id{minCreditos} = Guardar mínimo de créditos
+      \li \id{mat} = \kw{new} \proc{Materia}(\id{codigo}, \id{nombre}, \id{creditos}, \id{numCupos}, \id{minCreditos})
+      \li \id{tablaHashMat}.\proc{Insertar}(\id{carnet}, \id{est})
+      \li \id{listaMat}.\proc{Insertar-Ordenado}(\id{codigo})
+      \End
+
+   \li
+   \li \id{listaSol} = \kw{new} \proc{Lista}()
+   \li \id{archivoSol} = Leer archivo de solicitudes
+   \li \For linea in archivoSol:
+   \li \Do
+      \id{carnet} = Guardar carnet del estudiante
+      \li \id{est} = \id{tablaHashEst}.\proc{Obtener-Valor}(\id{carnet})
+      \li \id{codigo} = Guardar codigo de la materia
+      \li \id{mat} = \id{tablaHashMat}.\proc{Obtener-Valor}(\id{codigo})
+      \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat})
+      \li \id{listaSol}.\proc{Insertar}(\id{sol}) \label{li:Extraer-Datos-final}
       \End
    \End
    \end{codebox}
 
+   Al terminar este pseudocódigo, se debe tener una lista de solicitudes,
+   una lista de códigos de materias en orden lexicográfico, una tabla de
+   estudiantes, y una tabla de materias, la idea ahora es procesar la lista
+   de solicitudes para que cada materia tenga una lista de estudiantes inscritos.
+
+   \begin{codebox}
+      \setlinenumberplus{li:Extraer-Datos-final}{1}
+      \Procname{$\proc{Procesar-Solicitudes}$}
+      \li \For sol in listaSol:
+      \Do
+         \li \id{est} = \attrib{sol}{estudiante}
+         \li \id{mat} = \attrib{sol}{materia}
+         \li \id{mat}.\proc{Agregar-Estudiante}(\id{est}) \label{li:Procesar-Solicitudes-final}
+         \End
+      \End
+   \end{codebox}
+
+   Ahora, cada materia contiene una lista con los estudiantes inscritos. Se
+   supone que la estructura se encarga de mantener actualizado el número de
+   cupos y de agregar en orden a los estudiantes en su lista de estudiantes.
+   Así, para finalizar esta primera etapa solamente resta escribir en el
+   archivo de salida cada materia con sus estudiantes inscritos.
+
+   \begin{codebox}
+      \setlinenumberplus{li:Procesar-Solicitudes-final}{1}
+      \Procname{$\proc{Generar-Archivo-Tentativo}$}
+      \li \id{archivoTen} = Abrir archivo tentativo a escribir
+      \li \For mat in listaMat:
+      \Do
+         \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{mat}{codigo}$>$ ')
+         \li \id{archivoTen}.\proc{Escribir}(```$<$\attrib{mat}{nombre}$>$'' ')
+         \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{mat}{numCupos}$>\backslash$n')
+         
+         \li \For est in \attrib{mat}{estudiantes}:
+         \Do
+            \li \id{archivoTen}.\proc{Escribir}(`   $<$\attrib{est}{carnet}$>$ ')
+            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{nombre}$>\backslash$n') \label{li:Generar-Archivo-Tentativo-final}
+            \End
+         \End
+         \End
+      \End
+   \end{codebox}
+
+   \section{Estructuras utilizadas}
 \end{document}
