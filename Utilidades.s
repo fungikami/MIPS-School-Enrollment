@@ -242,7 +242,8 @@ atoi:
         add $v0, $v0, $t2 # $v0 = 10 * $v0
 
         # Se suma el dígito
-        add $v0, $t1, -48
+        add $t1, $t1, -48
+        add $v0, $v0, $t1
         bnez $a1, atoi_loop
 atoi_fin:
     # Epilogo
