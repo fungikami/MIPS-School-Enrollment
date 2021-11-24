@@ -421,26 +421,26 @@ Materia_imprimirEstudiantes:
         li $t8, 83      # 'S'
         beq $t7, $t8, for_imprimir_est_sig
 
-        # Imprime '('
-        li   $v0, 15       
-        move $a0, $t1
-        la   $a1, parentIzq
-        li   $a2, 2
-        syscall
+        # # Imprime '('
+        # li   $v0, 15       
+        # move $a0, $t1
+        # la   $a1, parentIzq
+        # li   $a2, 2
+        # syscall
 
-        # Imprime operacion
-        li   $v0, 15       
-        move $a0, $t1
-        la $a1, 4($t4)
-        li   $a2, 8
-        syscall
+        # # Imprime operacion
+        # li   $v0, 15       
+        # move $a0, $t1
+        # la $a1, 4($t4)
+        # li   $a2, 8
+        # syscall
 
-        # Imprime ')'
-        li   $v0, 15       
-        move $a0, $t1
-        la   $a1, parentDer
-        li   $a2, 2
-        syscall
+        # # Imprime ')'
+        # li   $v0, 15       
+        # move $a0, $t1
+        # la   $a1, parentDer
+        # li   $a2, 2
+        # syscall
 
     for_imprimir_est_sig:
         # Imprime '\n'

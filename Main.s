@@ -24,16 +24,14 @@ buffer3:        .space 524288
 bufferTamanio:  .word  524288
 
 error1:         .asciiz "Ha ocurrido un error."
-errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo."
-errorMat:       .asciiz "Materia de la solicitud no se encontro."
-errorEst:       .asciiz "Estudiante de la solicitud no se encontro."
+errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
+errorMat:       .asciiz "Materia de la solicitud no se encontro"
+errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
 ident:          .asciiz "   "  
 espC:           .asciiz " \""
 cEsp:           .asciiz "\" "
 newl:           .asciiz "\n"
-parentIzq:      .asciiz "("
-parentDer:      .asciiz ")"
 
 tablaHashEst:   .word 0
 tablaHashMat:   .word 0
@@ -266,7 +264,7 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
-    # -------- SOLICITUDES INSCRIPCION--------
+    # ------------ SOLICITUDES ---------------
 
     # Planificacion de registros:
     # $s0: 
@@ -432,7 +430,7 @@ main:
         syscall 
 
 
-    # -------- SOLICITUDES CORRECCION--------
+    # -------- SOLICITUDES CORRECCION---------------
     # Planificacion de registros:
     # $s0: 
     # $s1: Direccion del buffer
@@ -616,42 +614,48 @@ main:
     # $s4: Materia actual
 
     # Abrir archivo para escribir
-    li $v0, 13
-    la $a0, arcDef
-    li $a1, 1 
-    syscall
-    move $s0, $v0
+    # li $v0, 13
+    # la $a0, arcDef
+    # li $a1, 1 
+    # syscall
+    # move $s0, $v0
 
-    lw $s1, listaMat
-	lw $s2,  ($s1)  # Centinela de la lista
-    lw $s3, 8($s2)  # Primer nodo de la lista
+    # lw $s1, listaMat
+	# lw $s2,  ($s1)  # Centinela de la lista
+    # lw $s3, 8($s2)  # Primer nodo de la lista
 
-    for_imprimir_mat_def:
-        # while Nodo != centinela
-        beq $s2, $s3, for_imprimir_mat_def_fin
+    # for_imprimir_mat_def:
+    #     # while Nodo != centinela
+    #     beq $s2, $s3, for_imprimir_mat_def_fin
 
-        lw $a1, 4($s3)  # Codigo de la materia
+    #     lw $a1, 4($s3)  # Codigo de la materia
 
-        # Buscar Materia en la TablaHash 
-        lw $a0, tablaHashMat
-        jal TablaHash_obtenerValor # $v0: Materia
-        move $s4, $v0
+    #     # Buscar Materia en la TablaHash 
+    #     lw $a0, tablaHashMat
+    #     jal TablaHash_obtenerValor # $v0: Materia
+    #     move $s4, $v0
 
-        # Imprimir Materia y Estudiantes
-        move $a0, $s4
-        move $a1, $s0
-        jal Materia_imprimirMateria
+    #     # Imprimir Materia y Estudiantes
+    #     move $a0, $s4
+    #     move $a1, $s0
+    #     jal Materia_imprimirMateria
 
-        # Actualizamos al Nodo.siguiente
-        lw $s3, 8($s3) 
+    #     # Actualizamos al Nodo.siguiente
+    #     lw $s3, 8($s3) 
         
-        b for_imprimir_mat_def
+    #     b for_imprimir_mat_def
 
-    for_imprimir_mat_def_fin:
-        # Cerrar archivo
-        li   $v0, 16       
-        move $a0, $s0      
-        syscall         
+    # for_imprimir_mat_def_fin:
+    #     # Cerrar archivo
+    #     li   $v0, 16       
+    #     move $a0, $s0      
+    #     syscall 
+        
+    # for Materia in <TablaHash Materias>
+    # 	print Materia
+    #	for Estudiante in Materia.Estudiantes
+    #		print Estudiante.first (print Estudiante.second)
+        
 
     j fin
 
