@@ -344,104 +344,114 @@ Materia_imprimirMateria_fin:
 #            $a1: Archivo.
 # 
 # Planificación de registros:
-# $s0: Materia.
-# $s1: Archivo
-# $s2: Centinela de la lista
-# $s3: Nodo de la lista
-# $s4: Valor del nodo (Par)
-# $s5: Estudiante
+# $t0: Materia.
+# $t1: Archivo
+# $t2: Centinela de la lista
+# $t3: Nodo de la lista
+# $t4: Valor del nodo (Par)
+# $t5: Estudiante
+# $t6: Caracter del nombre del Estudiante
+# $t7:
 Materia_imprimirEstudiantes:
     # Prólogo
     sw   $fp,   ($sp)
-    sw   $s0, -4($sp)
-    sw   $s1, -8($sp)
-    sw   $s2, -12($sp)
-    sw   $s3, -16($sp)
-    sw   $s4, -20($sp)
-    sw   $s5, -24($sp)
-    sw   $s6, -28($sp)
     move $fp,    $sp
-    addi $sp,    $sp, -32
+    addi $sp,    $sp, -4
 
-    move $s0, $a0   # Lista estudiantes
-    move $s1, $a1   # Archivo
+    move $t0, $a0   # Lista estudiantes
+    move $t1, $a1   # Archivo
 
-    lw $s2,  ($s0)  # Centinela de la lista
-    lw $s3, 8($s2)  # Primer nodo de la lista
+    lw $t2,  ($t0)  # Centinela de la lista
+    lw $t3, 8($t2)  # Primer nodo de la lista
 
     for_imprimir_est:
         # while Nodo != centinela
-        beq $s2, $s3, Materia_imprimirEstudiantes_fin
+        beq $t2, $t3, Materia_imprimirEstudiantes_fin
 
-        lw $s4, 4($s3)  # Valor del nodo (Par)
-        lw $s5,  ($s4)  # Estudiante
+        lw $t4, 4($t3)  # Valor del nodo (Par)
+        lw $t5,  ($t4)  # Estudiante
 
         # Imprime '   '
         li   $v0, 15       
-        move $a0, $s1
+        move $a0, $t1
         la   $a1, ident
         li   $a2, 3
         syscall
 
         # Imprime Estudiante.carnet
         li   $v0, 15       
-        move $a0, $s1
-        lw   $a1, ($s5)
+        move $a0, $t1
+        lw   $a1, ($t5)
         li   $a2, 8
         syscall
 
         #Imprime ' "'
         li   $v0, 15       
-        move $a0, $s1
+        move $a0, $t1
         la   $a1, espC
         li   $a2, 2
         syscall
 
         #Imprime Estudiante.nombre
-        lw $s6, 4($s5)
+        lw $t6, 4($t5)
         for_letra_est:
-            lb   $a1, ($s6)
+            lb   $a1, ($t6)
             beqz $a1, for_letra_est_fin
 
             li   $v0, 15       
-            move $a0, $s1
-            move $a1, $s6
+            move $a0, $t1
+            move $a1, $t6
             li   $a2, 1
             syscall
 
-            add $s6, $s6, 1
+            add $t6, $t6, 1
             b for_letra_est
 
         for_letra_est_fin:
 
         # Imprime '" '
         li   $v0, 15       
-        move $a0, $s1
+        move $a0, $t1
         la   $a1, cEsp
         li   $a2, 2
         syscall
 
         # Imprimir operacion si es necesario
-        # lw $s7, 4($s4)
-        # beq 'S', $s7, for_imprimir_est_sig
+        lw $t7, 4($t4)
+        li $t8, 83      # 'S'
+        beq $t7, $t8, for_imprimir_est_sig
 
-        # # Imprime '('
-        # li   $v0, 15       
-        # move $a0, $s1
-        # li   $a1, '('
-        # li   $a2, 2
-        # syscall
+        # Imprime '('
+        li   $v0, 15       
+        move $a0, $t1
+        la   $a1, parentIzq
+        li   $a2, 2
+        syscall
+
+        # Imprime operacion
+        li   $v0, 15       
+        move $a0, $t1
+        la $a1, 4($t4)
+        li   $a2, 8
+        syscall
+
+        # Imprime ')'
+        li   $v0, 15       
+        move $a0, $t1
+        la   $a1, parentDer
+        li   $a2, 2
+        syscall
 
     for_imprimir_est_sig:
         # Imprime '\n'
         li   $v0, 15       
-        move $a0, $s1
+        move $a0, $t1
         la   $a1, newl
         li   $a2, 1     
         syscall
 
         # Actualizamos al Nodo.siguiente
-        lw $s3, 8($s3) 
+        lw $t3, 8($t3) 
         
         b for_imprimir_est
 
@@ -449,12 +459,5 @@ Materia_imprimirEstudiantes_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $s0, -4($sp)
-    lw   $s1, -8($sp)
-    lw   $s2, -12($sp)
-    lw   $s3, -16($sp)
-    lw   $s4, -20($sp)
-    lw   $s5, -24($sp)
-    lw   $s6, -28($sp)
 
     jr $ra
