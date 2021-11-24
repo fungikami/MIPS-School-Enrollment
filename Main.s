@@ -24,9 +24,9 @@ buffer3:        .space 524288
 bufferTamanio:  .word  524288
 
 error1:         .asciiz "Ha ocurrido un error."
-errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
-errorMat:       .asciiz "Materia de la solicitud no se encontro"
-errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
+errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo."
+errorMat:       .asciiz "Materia de la solicitud no se encontro."
+errorEst:       .asciiz "Estudiante de la solicitud no se encontro."
 
 ident:          .asciiz "   "  
 espC:           .asciiz " \""
