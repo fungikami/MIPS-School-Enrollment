@@ -252,22 +252,86 @@ atoi_fin:
 # Funcion itoa
 # Entrada: $a0: Entero
 #          $a1: # Caracteres a convertir
-# Salida:  $v0: ASCII
+# Salida:  $v0: ASCII null-terminated
+# Planificación de registros:
+# $t0: Caracter a agregar
+# $t3: Dir. del buffer a retornar
+# $t4: Copia del entero
+# $t5: Dir. del buffer (para iterar)
+# $t6: 10
 itoa:
     # Prologo
     sw   $fp, ($sp)
     move $fp,  $sp
     addi $sp,  $sp, -4
 
-    move $t1, $a0
+    move $t4, $a0
+
+    # Reserva memoria
+    li  $v0, 9
+    add $a0, $a1, 2
+    syscall
+
+    bltz $v0, itoa_fin
+    move $t3, $v0
+    move $t5, $t3
+
+    bnez $t4, itoa_distinto_de_cero  # Si el entero es distinto de cero
+    li   $t0,     '0'
+    sb   $t0,    ($t3)
+    sb   $zero, 1($t3)
+    move $v0,     $t5
+    b itoa_fin
+    
+itoa_distinto_de_cero:
+    bgtz $t4, itoa_escribir_pos
+
+    # Si es negativo, se agrega el signo y se convierte el entero a positivo
+    li  $t0,  '-'
+    sb  $t0, ($t3)
+    add $t5,  $t3, 1
+    abs $t4,  $t4, 1
+
+itoa_escribir_pos:
+    add $t5,    $t5, $a1
+    sb  $zero, ($t5) # Guarda nulo al final de la string
+    add $t5,    $t5, -1
+    li  $t6,    10
+
+itoa_loop:
+    # Se itera hasta que el entero = 0
+    div  $t4, $t6
+    mflo $t4       # $t4 = $a0 / 10
+    mfhi $t0       # $t0 = $a0 mod 10  
+
+    add $t4, $t4, 48
+    sb  $t4, ($t5) # Guarda el caracter en el buffer
+    add $t5,  $t5
+itoa_continuar:
+    move $a0, $s0  
+    jal itoa_recurse
+
+itoa_escribir:
+    add  $t1, $a1, $v0
+    addi $v0, $v0, 1    
+    addi $t2, $s1, 0x30 # convert to ASCII
+    sb   $t2, 0($t1)    # store in the buffer
+    sb   $zero, 1($t1)
+  
+itoa_fin:
+    lw   $a1, 8($fp)
+    lw   $a0, 4($fp)
+    lw   $ra, -4($fp)
+    lw   $s0, -8($fp)
+    lw   $s1, -12($fp)
+    lw   $fp, 8($sp)    
+    addi $sp, $sp, 24
+    jr $ra
 
 itoa_loop:
     div $a0, 10
     mflo $t0           
     mfhi $t1 
-
-    
-
 
 itoa_fin:
     # Epilogo
