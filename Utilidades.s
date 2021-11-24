@@ -144,7 +144,7 @@ guardar_dato_fin:
 
     jr $ra
 
-# Funcion comṕarador
+# Funcion comparador
 # Compara dos strings 
 # Entrada: $a0: String a comparar
 #          $a1: String a comparar

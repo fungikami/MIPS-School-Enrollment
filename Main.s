@@ -6,12 +6,12 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -472,28 +472,22 @@ main:
         la   $a1, espC
         li   $a2, 2
         syscall
+        
+        lw $s5, 4($s4)
+        for_letra:
+            lb   $a1, ($s5)
+            beqz $a1, for_letra_fin
 
-        # Imprime Materia.nombre
-        li   $v0, 15       
-        move $a0, $s0
-        lw   $a1, 4($s4)
-        li   $a2, 30
-        syscall
+            li   $v0, 15       
+            move $a0, $s0
+            move $a1, $s5
+            li   $a2, 1
+            syscall
 
-        # la $s5, 4($s4)
-        # for_letra:
-        #     lbu   $a1, 0($s5)
-        #     beqz $a1, for_letra_fin
+            add $s5, $s5, 1
+            b for_letra
 
-        #     li   $v0, 15       
-        #     move $a0, $s0
-        #     li   $a2, 1
-        #     syscall
-
-        #     add $s5, $s5, 1
-        #     b for_letra
-
-        # for_letra_fin:
+        for_letra_fin:
 
         # Imprime '" '
         li   $v0, 15       
