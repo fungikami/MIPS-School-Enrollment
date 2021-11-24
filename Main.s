@@ -6,19 +6,17 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
-buffer:         .space 524288 # 1Mb = 10485976
-buffer2:        .space 524288 # 1Mb
-buffer3:        .space 524288
-bufferTamanio:  .word  524288
+buffer:         .space 2097152 # 1Mb = 10485976 (se reservan 2)
+bufferTamanio:  .word  2097152
 
 error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
@@ -148,7 +146,7 @@ main:
 
     # Abrir y leer el archivo
     la $a0, arcMat
-    la $a1, buffer2
+    la $a1, buffer
     lw $a2, bufferTamanio
     jal leer_archivo
     bltz $v0, error
@@ -165,7 +163,7 @@ main:
     sw   $v0, listaMat
 
     # Direccion de los datos
-    la $s0, buffer2
+    la $s0, buffer
 
     for_leer_materias:
         # Guardar codigo
@@ -271,7 +269,7 @@ main:
     
     # Abrir y leer el archivo
     la $a0, arcIns
-    la $a1, buffer3
+    la $a1, buffer
     lw $a2, bufferTamanio
     jal leer_archivo
     bltz $v0, error
@@ -283,7 +281,7 @@ main:
     sw $v0, listaSolIns
 
     # Direccion de los datos
-    la $s1, buffer3
+    la $s1, buffer
 
     for_leer_solicitud:
         # Guardar carnet
@@ -437,7 +435,7 @@ main:
     
     # Abre y lee un archivo
     la $a0, arcCor
-    la $a1, buffer3
+    la $a1, buffer
     lw $a2, bufferTamanio
     jal leer_archivo
     bltz $v0, error
@@ -449,7 +447,7 @@ main:
     sw $v0, listaSolCor
 
     # Direccion de los datos
-    la $s1, buffer3
+    la $s1, buffer
 
     for_leer_sol_cor:
         # Guardar carnet

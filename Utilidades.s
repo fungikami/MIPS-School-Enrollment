@@ -23,11 +23,6 @@ leer_archivo:
     move $t1, $a1   # Buffer
     move $t2, $a2   # Tamanio Buffer
 
-    # Limpiar Buffer
-    # move $a0, $t1
-    # move $a1, $t2
-    # jal limpiarBuffer
-
     # Abrir archivo para leer
     li $v0, 13
     move $a0, $t0
@@ -44,6 +39,9 @@ leer_archivo:
     syscall
 
     bltz $v0, leer_archivo_fin
+
+    add $t1, $t1, $v0
+    sb $zero, ($t1) # Termina el buffer con un null
 
     # Cerrar el archivo
     li $v0, 16
@@ -297,6 +295,7 @@ itoa:
 
     move $t4, $a0
     move $v1, $zero
+    move $t1, $zero
 
     # Reserva memoria
     li  $v0, 9
