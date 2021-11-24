@@ -374,23 +374,7 @@ main:
         lw $a1,  ($s3)  # Estudiante
         lw $a2, 8($s3)  # operacion
         jal Materia_agregarEstudiante
-
-        # # IMPRIMIR ULTIMO ESTUDIANTE AGG -------- BORRAR/DEBUGGING (YA SIRVE)
-        # lw $a0,  4($s3) # Materia  
-        # lw $a0, 20($a0) # Materia.estudiantes
         
-        # jal Lista_ultimo # $v0 = Par(Est, Op)
-
-        # lw $a0, ($v0)   # Estudiante
-        # lw $a0, ($a0)   # Carnet
-        # li $v0,  4
-        # syscall
-
-        # li $v0, 4
-        # la $a0, newl
-        # syscall
-        # ---------------------------------------------------------------------
-
         # Actualizamos al Nodo.siguiente
         lw $s2, 8($s2) 
         b for_solicitud
