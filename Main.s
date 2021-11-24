@@ -6,12 +6,12 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -27,6 +27,7 @@ error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
+ident:          .asciiz "   "  
 espC:           .asciiz " \""
 cEsp:           .asciiz "\" "
 newl:           .asciiz "\n"
@@ -374,7 +375,7 @@ main:
         lw $a1,  ($s3)  # Estudiante
         lw $a2, 8($s3)  # operacion
         jal Materia_agregarEstudiante
-        
+
         # Actualizamos al Nodo.siguiente
         lw $s2, 8($s2) 
         b for_solicitud
@@ -416,68 +417,9 @@ main:
         jal TablaHash_obtenerValor # $v0: Materia
         move $s4, $v0
 
-        # Imprime Materia.codigo
-        li   $v0, 15       
-        move $a0, $s0
-        lw   $a1, ($s4)
-        li   $a2, 7
-        syscall
-        
-        # Imprime ' "'
-        li   $v0, 15       
-        move $a0, $s0
-        la   $a1, espC
-        li   $a2, 2
-        syscall
-        
-        lw $s5, 4($s4)
-        for_letra:
-            lb   $a1, ($s5)
-            beqz $a1, for_letra_fin
-
-            li   $v0, 15       
-            move $a0, $s0
-            move $a1, $s5
-            li   $a2, 1
-            syscall
-
-            add $s5, $s5, 1
-            b for_letra
-
-        for_letra_fin:
-
-        # Imprime '" '
-        li   $v0, 15       
-        move $a0, $s0
-        la   $a1, cEsp
-        li   $a2, 2
-        syscall
-
-        # Imprime Materia.cupos
-        lw   $a0, 12($s4)
-        li   $a1, 3
-
-        jal itoa
-        move $a1, $v0
-        move $a2, $v1
-
-        move $a0, $s0
-        li   $v0, 15 
-        syscall
-
-        # Imprime '\n'
-        li   $v0, 15       
-        move $a0, $s0
-        la   $a1, newl
-        li   $a2, 1     
-        syscall
-
-        for_imprimir_est:
-        #     # Escribir Estudiante
-        #     li   $v0, 15       
-        #     move $a0, $s0
-        #     lw   $a1, 
-        #     li   $a2, 
+        move $a0, $s4
+        move $a1, $s0
+        jal Materia_imprimirMateria
 
         # Actualizamos al Nodo.siguiente
         lw $s3, 8($s3) 

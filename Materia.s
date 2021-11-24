@@ -199,3 +199,222 @@ Materia_eliminarEstudiante:
     lw   $t0, 12($s0)
     addi $t0,    $t0, -1
     sw   $t0, 12($s0)
+
+Materia_eliminarEstudiante_fin:
+    # Epílogo
+    move $sp,  $fp
+    lw   $fp, ($sp)
+
+    jr $ra
+
+
+# Función imprimirMateria
+# Marca un estudiante de la lista de estudiantes de la materia 
+# como eliminado.
+# Entrada:   $a0: Materia.
+#            $a1: Archivo.
+# 
+# Planificación de registros:
+# $s0: Materia.
+# $s1: Archivo
+# $s2: Caracter actual del nombre de materia
+Materia_imprimirMateria:
+    # Prólogo
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    sw   $s0, -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -16($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -20
+
+    move $s0, $a0
+    move $s1, $a1 
+
+    # Imprime Materia.codigo
+    li   $v0, 15       
+    move $a0, $s1
+    lw   $a1, ($s0)
+    li   $a2, 7
+    syscall
+    
+    # Imprime ' "'
+    li   $v0, 15       
+    move $a0, $s1
+    la   $a1, espC
+    li   $a2, 2
+    syscall
+    
+    # Imprime Materia.nombre
+    lw $s2, 4($s0)
+    for_letra:
+        lb   $a1, ($s2)
+        beqz $a1, for_letra_fin
+
+        li   $v0, 15       
+        move $a0, $s1
+        move $a1, $s2
+        li   $a2, 1
+        syscall
+
+        add $s2, $s2, 1
+        b for_letra
+
+    for_letra_fin:
+
+    # Imprime '" '
+    li   $v0, 15       
+    move $a0, $s1
+    la   $a1, cEsp
+    li   $a2, 2
+    syscall
+
+    # Imprime Materia.cupos
+    lw   $a0, 12($s0)
+    li   $a1, 3
+
+    jal itoa
+    move $a1, $v0
+    move $a2, $v1
+
+    move $a0, $s1
+    li   $v0, 15 
+    syscall
+
+    # Imprime '\n'
+    li   $v0, 15       
+    move $a0, $s1
+    la   $a1, newl
+    li   $a2, 1     
+    syscall
+
+    # Imprime estudiantes
+    lw   $a0, 20($s0)
+    move $a1, $s1
+    jal Materia_imprimirEstudiantes
+
+    # Imprime '\n'
+    li   $v0, 15       
+    move $a0, $s1
+    la   $a1, newl
+    li   $a2, 1     
+    syscall
+
+Materia_imprimirMateria_fin:
+    # Epílogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $ra, -4($sp)
+    lw   $s0, -8($sp)
+    lw   $s1, -12($sp)
+    lw   $s2, -16($sp)
+
+    jr $ra
+
+# Función imprimirEstudiantes
+# Marca un estudiante de la lista de estudiantes de la materia 
+# como eliminado.
+# Entrada:   $a0: Lista de Estudiantes.
+#            $a1: Archivo.
+# 
+# Planificación de registros:
+# $s0: Materia.
+# $s1: Archivo
+# $s2: Caracter actual del nombre de materia
+Materia_imprimirEstudiantes:
+    # Prólogo
+    sw   $fp,   ($sp)
+    sw   $s0, -4($sp)
+    sw   $s1, -8($sp)
+    sw   $s2, -12($sp)
+    sw   $s3, -16($sp)
+    sw   $s4, -20($sp)
+    sw   $s5, -24($sp)
+    sw   $s6, -28($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -32
+
+    move $s0, $a0   # Lista estudiantes
+    move $s1, $a1   # Archivo
+
+    lw $s2,  ($s0)  # Centinela de la lista
+    lw $s3, 8($s2)  # Primer nodo de la lista
+
+    for_imprimir_est:
+        # while Nodo != centinela
+        beq $s2, $s3, Materia_imprimirEstudiantes_fin
+
+        lw $s4, 4($s3)  # Valor del nodo (Par)
+        lw $s5,  ($s4)  # Estudiante
+
+        # Imprime '   '
+        li   $v0, 15       
+        move $a0, $s1
+        la   $a1, ident
+        li   $a2, 3
+        syscall
+
+        # Imprime Estudiante.carnet
+        li   $v0, 15       
+        move $a0, $s1
+        lw   $a1, ($s5)
+        li   $a2, 8
+        syscall
+
+        #Imprime ' "'
+        li   $v0, 15       
+        move $a0, $s1
+        la   $a1, espC
+        li   $a2, 2
+        syscall
+
+        #Imprime Estudiante.nombre
+        lw $s6, 4($s5)
+        for_letra_est:
+            lb   $a1, ($s6)
+            beqz $a1, for_letra_est_fin
+
+            li   $v0, 15       
+            move $a0, $s1
+            move $a1, $s6
+            li   $a2, 1
+            syscall
+
+            add $s6, $s6, 1
+            b for_letra_est
+
+        for_letra_est_fin:
+
+        # Imprime '" '
+        li   $v0, 15       
+        move $a0, $s1
+        la   $a1, cEsp
+        li   $a2, 2
+        syscall
+
+        # Imprime '\n'
+        li   $v0, 15       
+        move $a0, $s1
+        la   $a1, newl
+        li   $a2, 1     
+        syscall
+
+        # Actualizamos al Nodo.siguiente
+        lw $s3, 8($s3) 
+        
+        b for_imprimir_est
+
+
+Materia_imprimirEstudiantes_fin:
+    # Epílogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+    lw   $s0, -4($sp)
+    lw   $s1, -8($sp)
+    lw   $s2, -12($sp)
+    lw   $s3, -16($sp)
+    lw   $s4, -20($sp)
+    lw   $s5, -24($sp)
+    lw   $s6, -28($sp)
+
+    jr $ra
