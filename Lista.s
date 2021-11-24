@@ -122,7 +122,7 @@ Lista_insertar_fin:
 # Entrada: $a0: Lista
 #          $a1: valor del elemento a insertar.
 #          $a2: función de comparación.
-#               (a, b -> bool: 0 si a a<b, 1 de otra forma)
+#               (a, b -> bool: 0 si a<b, 1 de otra forma)
 # Salida: Ñ
 #
 # Planificacion de registros:

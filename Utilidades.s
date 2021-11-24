@@ -78,3 +78,38 @@ guardar_dato_fin:
 
     jr $ra
 
+# Funcion: Compara dos strings 
+# Entrada: $a0: String a comparar
+#          $a1: String a comparar
+# Salida:  $v0: 0 si a<b, 
+#               1 de otra forma   
+# Planificacion de registros:
+comparador:
+    # Prologo
+    sw   $fp, ($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -4
+
+    move $v0, $zero
+    comparador_loop:
+        lb $t0, ($a0)
+        lb $t1, ($a1)
+
+        # Si a < b, finaliza 
+        blt $t0, $t1, comparador_fin
+
+        addi $a0, $a0, 1
+        addi $a1, $a1, 1
+
+        # Si a == b, revisar el siguiente
+        beq $t0, $t1, comparador_loop
+
+        # Si a > b, retorna -1
+        li $v0, -1
+
+comparador_fin:
+    # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+
+    jr $ra

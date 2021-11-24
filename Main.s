@@ -5,9 +5,9 @@
 
         .data
 
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "ejemplo-SolCorreccion.txt"
 arcTen:         .asciiz "ejemplo-InsTentativa.txt"
 arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
@@ -32,20 +32,19 @@ tablaHashEst:   .word 0
 tablaHashMat:   .word 0
 listaSolIns:    .word 0
 listaSolCor:    .word 0
-
+listaMat:       .word 0
         .text
 main:
 
     # ------------ ESTUDIANTES ---------------
 
-    # Planificacsion de registros:
-    # $s0: Archivo (identificador)
-    # $s1: Direccion del buffer
-    # $s2: TablaHash Estudiantes
-    # $s3: Direccion carnet
-    # $s4: Direccion nombre
-    # $s5: Direccion indice
-    # $s6: Direccion credito
+    # Planificacsion de registros: 
+    # $s0: Direccion del buffer
+    # $s1: TablaHash Estudiantes
+    # $s2: Direccion carnet
+    # $s3: Direccion nombre
+    # $s4: Direccion indice
+    # $s5: Direccion credito
 
     # Abrir archivo para leer
     li $v0, 13
@@ -73,22 +72,22 @@ main:
     jal TablaHash_crear
 
     # Guardar TablaHash Estudiante
-    move $s2, $v0
-    sw   $s2, tablaHashEst
+    move $s1, $v0
+    sw   $s1, tablaHashEst
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s0, buffer
 
     for_leer_estudiantes:
 
         # Guardar el carnet
-        move $a0, $s1
+        move $a0, $s0
         li   $a1, 8
         li   $a2, 1
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
-        move $s3, $v0
+        move $s2, $v0
 
         add $v1, $v1, 1 # Saltar comilla
 
@@ -99,7 +98,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
-        move $s4, $v0
+        move $s3, $v0
 
         add $v1, $v1, 1 # Saltar comilla
 
@@ -110,7 +109,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
-        move $s5, $v0
+        move $s4, $v0
 
         # Guardar creditos aprobados
         move $a0, $v1
@@ -119,21 +118,19 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
-        move $s6, $v0
+        move $s5, $v0
 
-        move $s1, $v1
-        add $s1, $s1, 1 # Salta \n
+        move $s0, $v1
+        add  $s0, $s0, 1 # Salta \n
 
         # Crear Estudiante
-        move $a0, $s3
-        move $s7, $s3  # Borrar
-        
-        move $a1, $s4
-        move $a2, $s5
-        move $a3, $s6
+        move $a0, $s2
+        move $a1, $s3
+        move $a2, $s4
+        move $a3, $s5
         jal Estudiante_crear
 
-        move $a0,  $s2  # Tabla
+        move $a0,  $s1  # Tabla
         lw   $a1, ($v0) # Clave
         move $a2,  $v0  # Valor
         
@@ -144,7 +141,7 @@ main:
         bltz $v0, fin_leer_estudiantes 
         
         # Iterar siguiente linea
-        lb $t2, ($s1)
+        lb   $t2, ($s0)
         bnez $t2, for_leer_estudiantes      # Nulo
         bne  $t2, 10, for_leer_estudiantes  # Salto de linea
         bne  $t2, 11, for_leer_estudiantes  # Tab vertical
@@ -154,14 +151,14 @@ main:
     # ------------ MATERIAS ---------------
     
     # Planificacion de registros:
-    # $s0: Archivo (identificador)
-    # $s1: Direccion del buffer
-    # $s2: TablaHash Materias
-    # $s3: Direccion codigo
-    # $s4: Direccion nombre 
-    # $s5: Direccion credito
-    # $s6: Direccion cupos
-    # $s7: Direccion min creditos
+    # $s0: Direccion del buffer
+    # $s1: TablaHash Materias
+    # $s2: Direccion codigo
+    # $s3: Direccion nombre 
+    # $s4: Direccion credito
+    # $s5: Direccion cupos
+    # $s6: Direccion min creditos
+    # $s7: Lista de codigos de Materias
 
     # Abrir archivo para leer
     li $v0, 13
@@ -189,21 +186,26 @@ main:
     jal TablaHash_crear
 
     # Guardar TablaHash Materia
-    move $s2, $v0
-    sw   $s2, tablaHashMat
+    move $s1, $v0
+    sw   $s1, tablaHashMat
+
+    # Lista codigos de materias
+    jal  Lista_crear
+    move $s7, $v0
+    sw   $s7, listaMat
 
     # Direccion de los datos
-    la $s1, buffer2
+    la $s0, buffer2
 
     for_leer_materias:
         # Guardar codigo
-        move $a0, $s1
+        move $a0, $s0
         li   $a1, 7
         li   $a2, 1
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s3, $v0
+        move $s2, $v0
 
         add $v1, $v1, 1 # Saltar comilla
 
@@ -214,7 +216,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s4, $v0
+        move $s3, $v0
 
         add $v1, $v1, 1 # Saltar comilla
         
@@ -225,7 +227,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s5, $v0
+        move $s4, $v0
 
         # Guardar numero de cupos
         move $a0, $v1
@@ -234,7 +236,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s6, $v0
+        move $s5, $v0
 
         # Guardar min creditos
         move $a0, $v1
@@ -243,25 +245,25 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s6, $v0
+        move $s5, $v0
 
-        move $s1, $v1
-        add $s1, $s1, 1 # Salta \n
+        move $s0, $v1
+        add $s0, $s0, 1 # Salta \n
 
         # Crear Materia
-        move $a0,  $s3
-        move $a1,  $s4
-        move $a2,  $s5
-        move $a3,  $s6
-        sw   $s7, ($sp)
+        move $a0,  $s2
+        move $a1,  $s3
+        move $a2,  $s4
+        move $a3,  $s5
+        sw   $s6, ($sp)
         add  $sp,  $sp, -4
 
         jal Materia_crear
 
-        lw   $s7, ($sp)
+        lw   $s6, ($sp)
         add  $sp,  $sp, 4
 
-        move $a0,  $s2  # Tabla
+        move $a0,  $s1  # Tabla
         lw   $a1, ($v0) # Clave
         move $a2,  $v0  # Valor
         
@@ -270,9 +272,15 @@ main:
 
         # Si no se logro insertar
         bltz $v0, fin_leer_materias
+
+        # Insertar en Lista de codigos de Materias
+        move $a0, $s7
+        move $a1, $s2
+        la   $a2, comparador
+        jal Lista_insertarOrdenado
         
         # Iterar siguiente linea
-        lb $t2, ($s1)
+        lb   $t2, ($s0)
         bnez $t2, for_leer_materias         # Nulo
         bne  $t2, 10, fin_leer_materias     # Salto de linea
         bne  $t2, 11, fin_leer_materias     # Tab vertical
@@ -314,8 +322,7 @@ main:
     jal Lista_crear
 
     # Guardar la lista
-    move $s2, $v0
-    sw   $s2, listaSolIns
+    sw   $v0, listaSolIns
 
     # Direccion de los datos
     la $s1, buffer3
@@ -367,10 +374,10 @@ main:
         move $a1, $s4
         li   $a2, 83
 
-        jal Solicitud_crear
+        jal Solicitud_crear # Se crea bien la sol. (verificado)
 
         # Insertar solicitud en listaSol
-        move $a0, $s2
+        lw   $a0, listaSolIns
         move $a1, $v0
         jal Lista_insertar
 
@@ -378,29 +385,19 @@ main:
         bltz $v0, fin_leer_solicitud
 
         # Iterar siguiente linea
-        lb $t2, ($s1)
+        lb   $t2, ($s1)
         bnez $t2, for_leer_solicitud         # Nulo
         bne  $t2, 10, fin_leer_solicitud     # Salto de linea
         bne  $t2, 11, fin_leer_solicitud     # Tab vertical
         bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
-    fin_leer_solicitud:
-        lw $a0, listaSolIns
-
-        lw $a0, ($v0)
-        li $v0, 4
-        syscall
-
+    fin_leer_solicitud: 
     # ---------------- INSCRIPCION ------------------
     # Planificacion de registros:
     # $s0: Lista de Solicitud de inscripcion
     # $s1: Centinela de Lista
     # $s2: Nodo de Lista
     # $s3: valor del nodo (Solicitud)
-
-    # for solicitud in <Lista Solicitudes>
-    #     solicitud.Materia.Estudiantes.insertar(Pair<solicitud.Estudiante, Op.>)
-    #     solicitud.Materia.cupo--
 
     lw $s0, listaSolIns
     lw $s1,  ($s0)  # Centinela de la lista
@@ -413,10 +410,19 @@ main:
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
 
         # Insertar Estudiante en la lista de Materia
-        lw $a0,  ($s3)  # Estudiante
-        lw $a1, 4($s3)  # Materia
+        lw $a0, 4($s3)  # Materia
+        lw $a1,  ($s3)  # Estudiante
         lw $a2, 8($s3)  # operacion
         jal Materia_agregarEstudiante
+
+        lw $a0,  4($s3) # Materia
+        lw $a0, 20($s3) # Materia.estudiantes
+        jal Lista_ultimo
+        lw $a0, ($v0)   # Par(Est, Op)
+        lw $a0, ($a0)   # Estudiante
+        lw $a0, ($a0)   # Carnet
+        li $v0,  4
+        syscall
 
         # Actualizamos al Nodo.siguiente
         lw $s2, 8($s2) 
@@ -429,7 +435,7 @@ main:
     # ------------- ARCHIVO TENTATIVO --------------------
 
     # Planificacion de registros:
-    # $s1: Archivo (descriptor)
+    # $s0: Archivo (descriptor)
     # $s1: 
     # $s2: 
     # $s3: 
@@ -446,9 +452,8 @@ main:
     syscall
     move $s0, $v0
 
-    #
+    lw $s1, listaMat
     for_imprimir_mat:
-
         # Escribir Materia
         # li   $v0, 15       
         # move $a0, $s0
@@ -456,7 +461,6 @@ main:
         # li   $a2, 
 
         for_imprimir_est:
-
             # Escribir Estudiante
             # li   $v0, 15       
             # move $a0, $s0
