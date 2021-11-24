@@ -51,7 +51,7 @@ main:
     # $s4: Direccion indice
     # $s5: Direccion credito
 
-    # Abre y lee un archivo
+    # Abrir y leer el archivo
     la $a0, arcEst
     la $a1, buffer
     lw $a2, bufferTamanio
@@ -148,7 +148,7 @@ main:
     # $s5: Direccion cupos
     # $s6: Direccion min creditos
 
-    # Abre y lee un archivo
+    # Abrir y leer el archivo
     la $a0, arcMat
     la $a1, buffer2
     lw $a2, bufferTamanio
@@ -298,7 +298,7 @@ main:
     # li $v0, 16
     # syscall
 
-    # Abre y lee un archivo
+    # Abrir y leer el archivo
     la $a0, arcIns
     la $a1, buffer3
     lw $a2, bufferTamanio
