@@ -181,6 +181,34 @@ comparador_fin:
 
     jr $ra
 
+# Funcion comparador
+# Compara dos strings 
+# Entrada: $a0: Par a comparar
+#          $a1: Par a comparar
+# Salida:  $v0: 0 si a<b, 
+#               1 de otra forma   
+# Planificacion de registros:
+comparador_pares:
+    # Prologo
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -8
+
+    lw $a0, ($a0)
+    lw $a0, ($a0)
+    lw $a1, ($a1)
+    lw $a1, ($a1)
+    jal comparador
+
+comparador_pares_fin:
+    # Epilogo
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
+
+    jr $ra
+
 # Funcion limpiarBuffer
 # Limpia el buffer (redactar)
 # Entrada: $a0: Dir. del buffer a limpiar

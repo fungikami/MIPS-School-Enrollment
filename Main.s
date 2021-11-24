@@ -390,11 +390,6 @@ main:
     # $s3: Nodo de la lista 
     # $s4: Materia actual
 
-    # for Materia in <TablaHash Materias>
-    # 	print Materia
-    #	for Estudiante in Materia.Estudiantes
-    #		print Estudiante.primero
-
     # Abrir archivo para escribir
     li $v0, 13
     la $a0, arcTen

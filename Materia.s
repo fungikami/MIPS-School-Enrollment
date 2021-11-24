@@ -161,7 +161,8 @@ Materia_agregarEstudiante:
     # Agrega el Par a la lista de estudiantes.
     move $a0,    $s0
     lw   $a0, 20($a0)
-    jal Lista_insertar
+    la   $a2, comparador_pares
+    jal Lista_insertarOrdenado
 
     # Disminuye por uno el número de cupos.
     lw   $t0, 12($s0)
@@ -320,7 +321,10 @@ Materia_imprimirMateria_fin:
 # Planificación de registros:
 # $s0: Materia.
 # $s1: Archivo
-# $s2: Caracter actual del nombre de materia
+# $s2: Centinela de la lista
+# $s3: Nodo de la lista
+# $s4: Valor del nodo (Par)
+# $s5: Estudiante
 Materia_imprimirEstudiantes:
     # Prólogo
     sw   $fp,   ($sp)
@@ -392,6 +396,18 @@ Materia_imprimirEstudiantes:
         li   $a2, 2
         syscall
 
+        # Imprimir operacion si es necesario
+        # lw $s7, 4($s4)
+        # beq 'S', $s7, for_imprimir_est_sig
+
+        # # Imprime '('
+        # li   $v0, 15       
+        # move $a0, $s1
+        # li   $a1, '('
+        # li   $a2, 2
+        # syscall
+
+    for_imprimir_est_sig:
         # Imprime '\n'
         li   $v0, 15       
         move $a0, $s1
@@ -403,7 +419,6 @@ Materia_imprimirEstudiantes:
         lw $s3, 8($s3) 
         
         b for_imprimir_est
-
 
 Materia_imprimirEstudiantes_fin:
     # Epílogo
