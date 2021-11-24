@@ -97,7 +97,17 @@
 
 \begin{codebox}
    \Procname{$\proc{Main}$}
-   \li Abrir archivo
+   \li \id{archivoEst} = Leer archivo de estudiantes
+   \li \id{tablaHashEst} = \textbf{new} \proc{TablaHash}(101)
+
+   \li \For linea in archivoEst:
+   \li \Do
+      \id{carnet} = Guardar carnet
+      \li \id{nombre} = Guardar nombre
+      \li \id{indice} = Guardar índice
+      \li \id{creditosAprob} = Guardar número de créditos aprobados
+      \li \id{est} = \textbf{new} \proc{Estudiante}(carnet, nombre, indice, creditosAprob)
+   \End
    \End
    \end{codebox}
 
