@@ -210,3 +210,43 @@ limpiarBuffer_fin:
     lw   $fp,    ($sp)
 
     jr $ra
+
+# Funcion atoi
+# Limpia el buffer (redactar)
+# Entrada: $a0: String
+#          $a1: # Caracteres a convertir
+# Salida:  $v0: 
+# Planificacion de registros:
+#
+atoi:
+    # Prologo
+    sw   $fp, ($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -4
+
+    move $v0, $zero
+    move $t0, $a0
+    
+    atoi_loop:
+        lb $t1, ($t0)
+
+        add  $t0, $t0,  1
+        add  $a1, $a1, -1
+        
+        blt  $t1, 48, atoi_loop # Caracter es < '0'
+        bgt  $t1, 57, atoi_loop # Caracter es > '9'
+
+        # Se multiplica $v0*10
+        sll $t2, $v0, 3   # $t2 = 8  * $v0
+        sll $v0, $v0, 1   # $v0 = 2  * $v0
+        add $v0, $v0, $t2 # $v0 = 10 * $v0
+
+        # Se suma el dígito
+        add $v0, $t1, -48
+        bnez $a1, atoi_loop
+atoi_fin:
+    # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+
+    jr $ra

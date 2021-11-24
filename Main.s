@@ -207,6 +207,10 @@ main:
         li   $a2, 0
         jal guardar_dato
 
+        move $a0, $v0
+        li   $a1, 3
+        jal  atoi
+
         blez $v0, fin_leer_materias
         move $s5, $v0
 
@@ -266,38 +270,6 @@ main:
     # $s3: Estudiante
     # $s4: Materia
     
-    # # Abrir archivo para leer
-    # li $v0, 13
-    # la $a0, arcIns
-    # li $a1, 0 
-    # syscall
-
-    # # Si hubo un error en la lectura del archivo
-    # bltz $v0, error
-    # move $a0, $v0
-
-    # # --PRINT DEBUGGING --
-    # # lw $a0, tablaHashEst
-    # # la $a1, buscarEst
-    # # jal TablaHash_obtenerValor
-
-    # # lw $a0, 4($v0)
-    # # li $v0, 4
-    # # syscall
-    # # # ------------------
-
-    # # Leer archivo 
-    # li $v0, 14
-    # la $a1, buffer3
-    # lw $a2, bufferTamanio
-    # syscall
-    
-    # bltz $v0, error
-
-    # # Cerrar el archivo
-    # li $v0, 16
-    # syscall
-
     # Abrir y leer el archivo
     la $a0, arcIns
     la $a1, buffer3
