@@ -3,6 +3,61 @@
 # Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
+
+# Funcion: Abre y lee un archivo
+# Entrada: $a0: Archivo.
+#          $a1: Buffer.
+#          $a2: Tamanio Buffer
+# Salida:  $v0: negativo si no logro leer archivo     
+# Planificacion de registros:
+# $t0: buffer
+# $t1: archivo
+leer_archivo: 
+    # Prologo
+	sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+	move $fp,    $sp
+	addi $sp,    $sp, -8
+
+    move $t0, $a0   # Archivo
+    move $t1, $a1   # Buffer
+    move $t2, $a2   # Tamanio Buffer
+
+    # Limpiar Buffer
+    # move $a0, $t1
+    # move $a1, $t2
+    # jal limpiarBuffer
+
+    # Abrir archivo para leer
+    li $v0, 13
+    move $a0, $t0
+    li $a1, 0
+    syscall
+
+    bltz $v0, leer_archivo_fin
+    move $a0, $v0
+
+    # Leer archivo
+    li $v0, 14
+    move $a1, $t1
+    move $a2, $t2
+    syscall
+
+    bltz $v0, leer_archivo_fin
+
+    # Cerrar el archivo
+    li $v0, 16
+    syscall
+
+leer_archivo_fin:
+    # Epilogo
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
+
+    jr $ra
+
+
 # Funcion: Reserva memoria y guarda un dato dado
 # Entrada: $a0: Buffer.
 #          $a1: Tamanio del dato.
@@ -36,6 +91,10 @@ guardar_dato:
     beqz $a2, guardar_hasta_tamanio
 
     # Si se debe iterar hasta comilla
+    # lb $t3, ($t0)
+    # sb $t3, ($t2)
+    # add $t0, $t0, 1
+    # add $t2, $t2, 1
     guardar_hasta_comilla:
         lb $t3, ($t0)
 
@@ -49,6 +108,13 @@ guardar_dato:
         add $t2, $t2, 1
 
         b guardar_hasta_comilla
+    
+    # guardar_hasta_comilla_fin:
+    #     lb $t3, ($t0)
+    #     sb $t3, ($t2)
+    #     add $t0, $t0, 1
+    #     add $t2, $t2, 1
+    #     b guardar_dato_exitoso
 
     guardar_hasta_tamanio:
         lb $t3, ($t0)

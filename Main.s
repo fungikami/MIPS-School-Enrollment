@@ -4,13 +4,14 @@
 # Fecha: 25-nov-2021
 
         .data
-
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
+# chus/Documents 
+# fung/Downloads
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -35,6 +36,8 @@ tablaHashMat:   .word 0
 listaSolIns:    .word 0
 listaSolCor:    .word 0
 listaMat:       .word 0
+listaInsCor:    .word 0
+
         .text
 main:
 
@@ -48,26 +51,12 @@ main:
     # $s4: Direccion indice
     # $s5: Direccion credito
 
-    # Abrir archivo para leer
-    li $v0, 13
+    # Abre y lee un archivo
     la $a0, arcEst
-    li $a1, 0
-    syscall
-
-    bltz $v0, error
-    move $a0, $v0
-
-    # Leer archivo
-    li $v0, 14
     la $a1, buffer
     lw $a2, bufferTamanio
-    syscall
-
+    jal leer_archivo
     bltz $v0, error
-
-    # Cerrar el archivo
-    li $v0, 16
-    syscall
 
     # <TablaHash Estudiantes>.crear()
     lw  $a0, tamanioTablaHash
@@ -83,7 +72,7 @@ main:
         # Guardar el carnet
         move $a0, $s0
         li   $a1, 8
-        li   $a2, 1
+        li   $a2, 0
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
@@ -159,26 +148,12 @@ main:
     # $s5: Direccion cupos
     # $s6: Direccion min creditos
 
-    # Abrir archivo para leer
-    li $v0, 13
+    # Abre y lee un archivo
     la $a0, arcMat
-    li $a1, 0 
-    syscall
-
-    bltz $v0, error
-    move $a0, $v0
-
-    # Leer archivo
-    li $v0, 14
     la $a1, buffer2
     lw $a2, bufferTamanio
-    syscall
-
+    jal leer_archivo
     bltz $v0, error
-
-    # Cerrar el archivo
-    li $v0, 16
-    syscall
 
     # <TablaHash Materias>.crear()
     lw  $a0, tamanioTablaHash
@@ -198,7 +173,7 @@ main:
         # Guardar codigo
         move $a0, $s0
         li   $a1, 7
-        li   $a2, 1
+        li   $a2, 0
         jal guardar_dato
 
         blez $v0, fin_leer_materias
@@ -291,48 +266,53 @@ main:
     # $s3: Estudiante
     # $s4: Materia
     
-    # Abrir archivo para leer
-    li $v0, 13
-    la $a0, arcIns
-    li $a1, 0 
-    syscall
-
-    # Si hubo un error en la lectura del archivo
-    bltz $v0, error
-    move $a0, $v0
-
-    # --PRINT DEBUGGING --
-    # lw $a0, tablaHashEst
-    # la $a1, buscarEst
-    # jal TablaHash_obtenerValor
-
-    # lw $a0, 4($v0)
-    # li $v0, 4
+    # # Abrir archivo para leer
+    # li $v0, 13
+    # la $a0, arcIns
+    # li $a1, 0 
     # syscall
-    # # ------------------
 
-    # Leer archivo 
-    li $v0, 14
+    # # Si hubo un error en la lectura del archivo
+    # bltz $v0, error
+    # move $a0, $v0
+
+    # # --PRINT DEBUGGING --
+    # # lw $a0, tablaHashEst
+    # # la $a1, buscarEst
+    # # jal TablaHash_obtenerValor
+
+    # # lw $a0, 4($v0)
+    # # li $v0, 4
+    # # syscall
+    # # # ------------------
+
+    # # Leer archivo 
+    # li $v0, 14
+    # la $a1, buffer3
+    # lw $a2, bufferTamanio
+    # syscall
+    
+    # bltz $v0, error
+
+    # # Cerrar el archivo
+    # li $v0, 16
+    # syscall
+
+    # Abre y lee un archivo
+    la $a0, arcIns
     la $a1, buffer3
     lw $a2, bufferTamanio
-    syscall
-    
+    jal leer_archivo
     bltz $v0, error
-
-    # Cerrar el archivo
-    li $v0, 16
-    syscall
-
 
     # <Lista Solicitudes>.crear()
     jal Lista_crear
 
     # Guardar la lista
-    sw   $v0, listaSolIns
+    sw $v0, listaSolIns
 
     # Direccion de los datos
     la $s1, buffer3
-
 
     for_leer_solicitud:
         # Guardar carnet
@@ -441,6 +421,7 @@ main:
         # Actualizamos al Nodo.siguiente
         lw $s2, 8($s2) 
         b for_solicitud
+
     for_solicitud_end:
     # ------------- ARCHIVO TENTATIVO --------------------
 
@@ -496,8 +477,23 @@ main:
         li   $v0, 15       
         move $a0, $s0
         lw   $a1, 4($s4)
-        li   $a2, 20
+        li   $a2, 30
         syscall
+
+        # la $s5, 4($s4)
+        # for_letra:
+        #     lbu   $a1, 0($s5)
+        #     beqz $a1, for_letra_fin
+
+        #     li   $v0, 15       
+        #     move $a0, $s0
+        #     li   $a2, 1
+        #     syscall
+
+        #     add $s5, $s5, 1
+        #     b for_letra
+
+        # for_letra_fin:
 
         # Imprime '" '
         li   $v0, 15       
@@ -520,7 +516,7 @@ main:
         li   $v0, 15       
         move $a0, $s0
         la   $a1, newl
-        li   $a2, 2
+        li   $a2, 1     
         syscall
 
         for_imprimir_est:
@@ -543,31 +539,181 @@ main:
 
 
     # -------- SOLICITUDES CORRECCION---------------
-    # Abrir archivo
-
-    # Verificar $v0
-    # Leer archivo ($v0=14) ($a0=$v0)
-    # Verificar $v0
+    # Planificacion de registros:
+    # $s0: 
+    # $s1: Direccion del buffer
+    # $s2: TablaHash Materias
+    # $s3: Estudiante
+    # $s4: Materia
+    # $s5: operacion
+    
+    # Abre y lee un archivo
+    la $a0, arcCor
+    la $a1, buffer3
+    lw $a2, bufferTamanio
+    jal leer_archivo
+    bltz $v0, error
 
     # <Lista Solicitudes>.crear()
+    jal Lista_crear
 
-    # Por cada linea:
-        # syscall 9 (9 bytes) [verificar]
-        # Crear solicitud
-        # 8 chars:
-            # Guardar carnet
-            #  Estudiante = <TablaHash Estudiante>.buscar[carnet]
-    # 7 chars:
-            # Guardar codigo
-            # Materia = <TablaHash Materias>.buscar([cedigo])
-    # 1 char:
-        # Guardar operacien
-    # Crear Solicitud(Estudiante, Materia, op)
-    # <Lista Solicitudes>.insertar(Solicitud)
+    # Guardar la lista
+    sw $v0, listaSolCor
 
+    # Direccion de los datos
+    la $s1, buffer3
 
+    for_leer_sol_cor:
+        # Guardar carnet
+        move $a0, $s1
+        li   $a1, 8
+        li   $a2, 0
+        jal guardar_dato
+
+        # Verificar si se guardo carnet
+        blez $v0, fin_leer_sol_cor
+        move $s3, $v0
+
+        # Guardar codigo
+        move $a0, $v1
+        li   $a1, 7
+        li   $a2, 0
+        jal guardar_dato
+
+        # Verificar si se guardo codigo
+        blez $v0, fin_leer_sol_cor
+        move $s4, $v0
+
+        # Guardar operacion
+        move $a0, $v1
+        li   $a1, 1
+        li   $a2, 0
+        jal guardar_dato
+
+        # Verificar si se guardo operacion
+        blez $v0, fin_leer_sol_cor
+        move $s5, $v0
+
+        move $s1, $v1
+        add  $s1, $s1, 1 # Salta \n
+        
+        # Buscar carnet en la TablaHash
+        lw   $a0, tablaHashEst
+        move $a1, $s3
+        jal TablaHash_obtenerValor
+
+        # Si no se encontro carnet en la TablaHash
+        beqz $v0, errorEstudiante
+        move $s3, $v0
+
+        # Buscar codigo en la TablaHash
+        lw   $a0, tablaHashMat
+        move $a1, $s4
+        jal TablaHash_obtenerValor
+
+        # Si no se encontro codigo en la TablaHash
+        beqz $v0, errorMateria
+        move $s4, $v0
+
+        # Crear Solicitud(Estudiante, Materia, op)
+        move $a0, $s3
+        move $a1, $s4
+        move $a2, $s5
+
+        jal Solicitud_crear 
+
+        # Insertar solicitud en listaSol
+        lw   $a0, listaSolCor
+        move $a1, $v0
+        jal Lista_insertar
+
+        # Si no se logro insertar
+        bltz $v0, fin_leer_sol_cor
+
+        # Iterar siguiente linea
+        lb   $t2, ($s1)
+        bnez $t2, fin_leer_sol_cor         # Nulo
+        bne  $t2, 10, fin_leer_sol_cor     # Salto de linea
+        bne  $t2, 11, fin_leer_sol_cor     # Tab vertical
+        bne  $t2, 32, fin_leer_sol_cor     # Espacio en blanco
+
+    fin_leer_sol_cor:
     # ---------------- CORRECCION ------------------
-    # <ColaDePrioridad(min) Inscribir>.crear()
+    # Planificacion de registros:
+    # $s0: Lista de Solicitud de correccion
+    # $s1: Centinela de Lista
+    # $s2: Nodo de Lista
+    # $s3: valor del nodo (Solicitud)
+    # $s4: operacion de la Solicitud
+    # $s5: Lista de Estudiantes de la Materia
+    # $s6: Centinela de Lista de Estudiantes
+    # $s7: Nodo de Lista de Estudiantes
+    # $t0: Valor del nodo (Par)
+    # $t1: Estudiante del par
+    # $t2: Estudiante de la solicitud
+
+    # # Lista inscripciones en correccion
+    # jal Lista_crear
+    # sw $v0, listaInsCor
+
+    # lw $s0, listaSolCor
+    # lw $s1,  ($s0)  # Centinela de la lista
+    # lw $s2, 8($s1)  # Primer nodo de la lista
+
+    # for_solicitud_cor:
+    #     # while Nodo != centinela
+    #     beq $s2, $s1, for_solicitud_end
+
+    #     lw $s3, 4($s2)  # Valor del nodo (Solicitud)
+    #     lw $s4, 8($s3)  # operacion de Solicitud
+
+    #     # Si operacion == 'I'
+    #     beq $s4, 73, solicitud_inscribir
+
+    #     # Si operacion == 'E'
+    #     beq $s4, 69, solicitud_eliminar
+
+    #     solicitud_eliminar:
+    #         # Buscar materia en la TablaHash
+    #         lw $a0, tablaHashMat
+    #         lw $a1, 4($s3)              # Materia de la solicitud
+    #         lw $a1, ($a1)               # Codigo de la materia
+    #         jal TablaHash_obtenerValor  # $v0: Materia
+
+    #         lw $s5, 20($v0) # Lista estudiantes de Materia
+    #         lw $s6,  ($s5)  # Centinela de la lista
+    #         lw $s7, 8($s6)  # Primer nodo de la lista
+
+    #         for_est_mat:
+    #             # while Nodo != centinela
+    #             beq $s6, $s7, for_imprimir_mat_fin
+
+    #             lw $t0, 4($s7)      # Valor del nodo (Par)
+
+    #             # Si par.primero == solicitud.Estudiante
+    #             # modificamos la operacion a 'E'
+    #             lw $t1, ($t0)       # Estudiante del par
+    #             lw $t2, ($s3)       # Estudiante de la solicitud
+    #             beq $t1, $t2, modificar_operacion
+
+    #             # Actualizamos al Nodo.siguiente
+    #             lw $s7, 8($s7)
+    #             b for_est_mat
+
+    #             modificar_operacion:
+    #                 sb 69, 8($s3)
+
+    #         for_est_fin:
+    #             b for_solicitud_sig
+
+    #     solicitud_inscribir:
+
+
+    #     for_solicitud_sig:
+    #         # Actualizamos al Nodo.siguiente
+    #         lw $s2, 8($s2) 
+    #         b for_solicitud_cor
+
 
     # for solicitud in <Lista Solicitudes>
     #     Si solicitud.op == ‘E’
