@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1637778307 "/home/chus/Documents/Orga/proyecto1/Informe/informe.tex" "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.pdf" "informe" 1637778308
+["pdflatex"] 1637778503 "/home/chus/Documents/Orga/proyecto1/Informe/informe.tex" "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.pdf" "informe" 1637778504
   "/etc/texmf/web2c/texmf.cnf" 1635882528 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.aux" 1637778308 295 b97207dc22dd15c459bcb62eadd7e201 ""
-  "/home/chus/Documents/Orga/proyecto1/Informe/informe.tex" 1637778306 3832 bd04c6f538e35a71befd0bbbc750ca10 ""
+  "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.aux" 1637778504 295 b97207dc22dd15c459bcb62eadd7e201 ""
+  "/home/chus/Documents/Orga/proyecto1/Informe/informe.tex" 1637778502 3909 de440f2dae9c4f6d453c45f4cea8a478 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -87,13 +87,13 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1613593815 38841 799d1dd9682a55ce442e10c99777ecc1 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1636711759 5160710 ecf427ae8fa19139d8691f526e47bb9b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1636711802 2570547 3baa0538d47da08acabd0d6ad8bd7087 ""
-  "aux/informe.aux" 1637778308 295 b97207dc22dd15c459bcb62eadd7e201 "pdflatex"
+  "aux/informe.aux" 1637778504 295 b97207dc22dd15c459bcb62eadd7e201 "pdflatex"
   "clrscode3e.sty" 1637743846 15011 8771cee84eb571564c963f8926641deb ""
-  "informe.tex" 1637778306 3832 bd04c6f538e35a71befd0bbbc750ca10 ""
+  "informe.tex" 1637778502 3909 de440f2dae9c4f6d453c45f4cea8a478 ""
   "logo.png" 1637695130 94723 c93b8e4a4ed94178db118c57e52b3c6e ""
   (generated)
-  "aux/informe.aux"
   "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.pdf"
+  "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.log"
   "aux/informe.pdf"
   "aux/informe.log"
-  "/home/chus/Documents/Orga/proyecto1/Informe/aux/informe.log"
+  "aux/informe.aux"
