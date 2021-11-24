@@ -9,7 +9,7 @@ arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes
 arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
 arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "ejemplo-InsTentativa.txt"
+arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
 arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
@@ -26,6 +26,8 @@ error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
+espC:           .asciiz " \""
+cEsp:           .asciiz "\" "
 newl:           .asciiz "\n"
 
 tablaHashEst:   .word 0
@@ -156,7 +158,6 @@ main:
     # $s4: Direccion credito
     # $s5: Direccion cupos
     # $s6: Direccion min creditos
-    # $s7: Lista de codigos de Materias
 
     # Abrir archivo para leer
     li $v0, 13
@@ -188,8 +189,7 @@ main:
 
     # Lista codigos de materias
     jal  Lista_crear
-    move $s7, $v0
-    sw   $s7, listaMat
+    sw   $v0, listaMat
 
     # Direccion de los datos
     la $s0, buffer2
@@ -269,7 +269,7 @@ main:
         bltz $v0, fin_leer_materias
 
         # Insertar en Lista de codigos de Materias
-        move $a0, $s7
+        lw $a0, listaMat
         move $a1, $s2
         la   $a2, comparador
         jal Lista_insertarOrdenado
@@ -421,24 +421,27 @@ main:
         lw $a1,  ($s3)  # Estudiante
         lw $a2, 8($s3)  # operacion
         jal Materia_agregarEstudiante
-        # Mat 10042034 ListaEst 10041FE8 Sol 10042710
-        lw $a0,  4($s3) # Materia  
-        lw $a0, 20($a0) # Materia.estudiantes
-        jal Lista_ultimo
-        lw $a0, ($v0)   # Par(Est, Op)
-        lw $a0, ($a0)   # Estudiante
-        lw $a0, ($a0)   # Carnet
-        li $v0,  4
-        syscall
+
+        # # IMPRIMIR ULTIMO ESTUDIANTE AGG -------- BORRAR/DEBUGGING (YA SIRVE)
+        # lw $a0,  4($s3) # Materia  
+        # lw $a0, 20($a0) # Materia.estudiantes
+        
+        # jal Lista_ultimo # $v0 = Par(Est, Op)
+
+        # lw $a0, ($v0)   # Estudiante
+        # lw $a0, ($a0)   # Carnet
+        # li $v0,  4
+        # syscall
+
+        # li $v0, 4
+        # la $a0, newl
+        # syscall
+        # ---------------------------------------------------------------------
 
         # Actualizamos al Nodo.siguiente
         lw $s2, 8($s2) 
-        
         b for_solicitud
-
     for_solicitud_end:
-
-
     # ------------- ARCHIVO TENTATIVO --------------------
 
     # Planificacion de registros:
@@ -446,7 +449,7 @@ main:
     # $s1: Lista de codigos
     # $s2: Centinela de la lista
     # $s3: Nodo de la lista 
-    # $s4: 
+    # $s4: Materia actual
 
     # for Materia in <TablaHash Materias>
     # 	print Materia
@@ -461,32 +464,71 @@ main:
     move $s0, $v0
 
     lw $s1, listaMat
-    lw $s2,  ($s0)  # Centinela de la lista
+	lw $s2,  ($s1)  # Centinela de la lista
     lw $s3, 8($s2)  # Primer nodo de la lista
 
     for_imprimir_mat:
         # while Nodo != centinela
         beq $s2, $s3, for_imprimir_mat_fin
 
-        #lw $s4, 4($s3)  # Valor del nodo
+        lw $a1, 4($s3)  # Codigo de la materia
 
         # Buscar Materia en la TablaHash 
-        # lw $a0, tablaHashMat
-        # lw $a1, ($s4) # Codigo
-        # jal TablaHash_obtenerValor
+        lw $a0, tablaHashMat
+        jal TablaHash_obtenerValor # $v0: Materia
+        move $s4, $v0
 
-        # Escribir Materia
-        # li   $v0, 15       
-        # move $a0, $s0
-        # lw   $a1, 
-        # li   $a2, 
+        # Imprime Materia.codigo
+        li   $v0, 15       
+        move $a0, $s0
+        lw   $a1, ($s4)
+        li   $a2, 7
+        syscall
+        
+        # Imprime ' "'
+        li   $v0, 15       
+        move $a0, $s0
+        la   $a1, espC
+        li   $a2, 2
+        syscall
+
+        # Imprime Materia.nombre
+        li   $v0, 15       
+        move $a0, $s0
+        lw   $a1, 4($s4)
+        li   $a2, 20
+        syscall
+
+        # Imprime '" '
+        li   $v0, 15       
+        move $a0, $s0
+        la   $a1, cEsp
+        li   $a2, 2
+        syscall
+
+        # Cambiar cupos de las materias para que sean enteros:
+        # Necesario para disminuirle los cupos.
+        # Buscar para ello "atoi function in mips" puede servir.
+        # Imprime Materia.cupos
+        li   $v0, 15       
+        move $a0, $s0
+        lw   $a1, 12($s4)
+        li   $a2, 20
+        syscall
+
+        # Imprime '\n'
+        li   $v0, 15       
+        move $a0, $s0
+        la   $a1, newl
+        li   $a2, 2
+        syscall
 
         for_imprimir_est:
-            # Escribir Estudiante
-            # li   $v0, 15       
-            # move $a0, $s0
-            # lw   $a1, 
-            # li   $a2, 
+        #     # Escribir Estudiante
+        #     li   $v0, 15       
+        #     move $a0, $s0
+        #     lw   $a1, 
+        #     li   $a2, 
 
         # Actualizamos al Nodo.siguiente
         lw $s3, 8($s3) 

@@ -106,7 +106,7 @@ comparador:
         beq $t0, $t1, comparador_loop
 
         # Si a > b, retorna -1
-        li $v0, -1
+        li $v0, 1
 
 comparador_fin:
     # Epilogo
