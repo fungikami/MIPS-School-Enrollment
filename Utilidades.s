@@ -212,12 +212,9 @@ limpiarBuffer_fin:
     jr $ra
 
 # Funcion atoi
-# Limpia el buffer (redactar)
-# Entrada: $a0: String
+# Entrada: $a0: ASCII
 #          $a1: # Caracteres a convertir
-# Salida:  $v0: 
-# Planificacion de registros:
-#
+# Salida:  $v0: Entero
 atoi:
     # Prologo
     sw   $fp, ($sp)
@@ -245,6 +242,33 @@ atoi:
         add $v0, $t1, -48
         bnez $a1, atoi_loop
 atoi_fin:
+    # Epilogo
+    move $sp,     $fp
+    lw   $fp,    ($sp)
+
+    jr $ra
+
+# Funcion itoa
+# Entrada: $a0: Entero
+#          $a1: # Caracteres a convertir
+# Salida:  $v0: ASCII
+itoa:
+    # Prologo
+    sw   $fp, ($sp)
+    move $fp,  $sp
+    addi $sp,  $sp, -4
+
+    move $t1, $a0
+
+itoa_loop:
+    div $a0, 10
+    mflo $t0           
+    mfhi $t1 
+
+    
+
+
+itoa_fin:
     # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
