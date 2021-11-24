@@ -10,8 +10,11 @@ arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes
 arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
 arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+#arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsTentativa.txt"
+#arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+
 arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -21,6 +24,7 @@ buffer3:        .space 524288
 bufferTamanio:  .word  524288
 
 error1:         .asciiz "Ha ocurrido un error."
+errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
@@ -28,6 +32,8 @@ ident:          .asciiz "   "
 espC:           .asciiz " \""
 cEsp:           .asciiz "\" "
 newl:           .asciiz "\n"
+parentIzq:      .asciiz "("
+parentDer:      .asciiz ")"
 
 tablaHashEst:   .word 0
 tablaHashMat:   .word 0
@@ -41,7 +47,7 @@ main:
 
     # ------------ ESTUDIANTES ---------------
 
-    # Planificacsion de registros: 
+    # Planificacion de registros: 
     # $s0: Direccion del buffer
     # $s1: TablaHash Estudiantes
     # $s2: Direccion carnet
@@ -54,7 +60,7 @@ main:
     la $a1, buffer
     lw $a2, bufferTamanio
     jal leer_archivo
-    bltz $v0, error
+    bltz $v0, errorArchivo
 
     # <TablaHash Estudiantes>.crear()
     lw  $a0, tamanioTablaHash
@@ -151,7 +157,7 @@ main:
     la $a1, buffer2
     lw $a2, bufferTamanio
     jal leer_archivo
-    bltz $v0, error
+    bltz $v0, errorArchivo
 
     # <TablaHash Materias>.crear()
     lw  $a0, tamanioTablaHash
@@ -260,7 +266,7 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
-    # ------------ SOLICITUDES ---------------
+    # -------- SOLICITUDES INSCRIPCION--------
 
     # Planificacion de registros:
     # $s0: 
@@ -274,7 +280,7 @@ main:
     la $a1, buffer3
     lw $a2, bufferTamanio
     jal leer_archivo
-    bltz $v0, error
+    bltz $v0, errorArchivo
 
     # <Lista Solicitudes>.crear()
     jal Lista_crear
@@ -426,7 +432,7 @@ main:
         syscall 
 
 
-    # -------- SOLICITUDES CORRECCION---------------
+    # -------- SOLICITUDES CORRECCION--------
     # Planificacion de registros:
     # $s0: 
     # $s1: Direccion del buffer
@@ -440,7 +446,7 @@ main:
     la $a1, buffer3
     lw $a2, bufferTamanio
     jal leer_archivo
-    bltz $v0, error
+    bltz $v0, errorArchivo
 
     # <Lista Solicitudes>.crear()
     jal Lista_crear
@@ -507,7 +513,6 @@ main:
         move $a0, $s3
         move $a1, $s4
         move $a2, $s5
-
         jal Solicitud_crear 
 
         # Insertar solicitud en listaSol
@@ -533,12 +538,7 @@ main:
     # $s2: Nodo de Lista
     # $s3: valor del nodo (Solicitud)
     # $s4: operacion de la Solicitud
-    # $s5: Lista de Estudiantes de la Materia
-    # $s6: Centinela de Lista de Estudiantes
-    # $s7: Nodo de Lista de Estudiantes
-    # $t0: Valor del nodo (Par)
-    # $t1: Estudiante del par
-    # $t2: Estudiante de la solicitud
+    # $s5: Auxiliar
 
     # Lista inscripciones en correccion
     jal Lista_crear
@@ -563,16 +563,20 @@ main:
         li  $s5, 69
         beq $s4, $s5, solicitud_eliminar
 
+        # Cambiar la operacion de la inscripcion
         solicitud_eliminar:
-            # Cambiar la operacion de la inscripcion
             lw $a0, 4($s3)   # Materia
             lw $a1,  ($s3)   # Estudiante
             jal Materia_eliminarEstudiante
 
             b for_solicitud_sig
 
+        # Insertar Estudiante en la lista de Materia
         solicitud_inscribir:
-
+            lw $a0, 4($s3)  # Materia 
+            lw $a1,  ($s3)  # Estudiante
+            lw $a2, 8($s3)  # operacion
+            jal Materia_agregarEstudiante
 
         for_solicitud_sig:
             # Actualizamos al Nodo.siguiente
@@ -580,6 +584,7 @@ main:
             b for_solicitud_cor
 
     for_solicitud_cor_end:
+
 
     # for solicitud in <Lista Solicitudes>
     #     Si solicitud.op == ‘E’
@@ -603,17 +608,62 @@ main:
     # check every subject have more than -1 kupos
 
     # ------------- ARCHIVO DEFINITIVO --------------------
-    # for Materia in <TablaHash Materias>
-    # 	print Materia
-    #	for Estudiante in Materia.Estudiantes
-    #		print Estudiante.first (print Estudiante.second)
+    # Planificacion de registros:
+    # $s0: Archivo (descriptor)
+    # $s1: Lista de codigos
+    # $s2: Centinela de la lista
+    # $s3: Nodo de la lista 
+    # $s4: Materia actual
+
+    # Abrir archivo para escribir
+    li $v0, 13
+    la $a0, arcDef
+    li $a1, 1 
+    syscall
+    move $s0, $v0
+
+    lw $s1, listaMat
+	lw $s2,  ($s1)  # Centinela de la lista
+    lw $s3, 8($s2)  # Primer nodo de la lista
+
+    for_imprimir_mat_def:
+        # while Nodo != centinela
+        beq $s2, $s3, for_imprimir_mat_def_fin
+
+        lw $a1, 4($s3)  # Codigo de la materia
+
+        # Buscar Materia en la TablaHash 
+        lw $a0, tablaHashMat
+        jal TablaHash_obtenerValor # $v0: Materia
+        move $s4, $v0
+
+        # Imprimir Materia y Estudiantes
+        move $a0, $s4
+        move $a1, $s0
+        jal Materia_imprimirMateria
+
+        # Actualizamos al Nodo.siguiente
+        lw $s3, 8($s3) 
         
+        b for_imprimir_mat_def
+
+    for_imprimir_mat_def_fin:
+        # Cerrar archivo
+        li   $v0, 16       
+        move $a0, $s0      
+        syscall         
 
     j fin
 
 error:
     li $v0, 4
     la $a0, error1
+    syscall
+    b fin
+
+errorArchivo:
+    li $v0, 4
+    la $a0, errorArc
     syscall
     b fin
 
