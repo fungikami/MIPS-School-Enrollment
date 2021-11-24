@@ -454,10 +454,15 @@ main:
         syscall
 
         # Imprime Materia.cupos
-        li   $v0, 15       
+        lw   $a0, 12($s4)
+        li   $a1, 3
+
+        jal itoa
+        move $a1, $v0
+        move $a2, $v1
+
         move $a0, $s0
-        lw   $a1, 12($s4)
-        li   $a2, 20
+        li   $v0, 15 
         syscall
 
         # Imprime '\n'
@@ -704,7 +709,6 @@ errorEstudiante:
     la $a0, errorEst
     syscall
     b fin
-
 
 errorMateria:
     li $v0, 4
