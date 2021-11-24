@@ -70,7 +70,8 @@ Materia_crear:
     lw $a0,  4($fp)
     sw $a0, 16($s1) # minCreditos
     sw $v0, 20($s1) # Lista de estudiantes 
-
+    
+    move $v0, $s1
 Materia_crear_fin:
     # Epilogo
     move $sp,     $fp

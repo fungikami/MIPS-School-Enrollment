@@ -15,12 +15,12 @@ arcDef:         .asciiz "ejemplo-InsDefinitiva.txt"
 tamanioTablaHash:   .word 100
 
 buscarEst:      .asciiz "15-47895" # Indice de 4.2827
-buscarMat:      .asciiz "CI-2875"
+buscarMat:      .asciiz "CI-1804"
 
-buffer:         .space 1048576 # 1Mb
-buffer2:        .space 1048576 # 1Mb
-buffer3:        .space 1048576 # 1Mb
-bufferTamanio:  .word  1048576
+buffer:         .space 100000 # 1Mb = 10485976
+buffer2:        .space 100000 # 1Mb
+buffer3:        .space 100000 # 1Mb
+bufferTamanio:  .word  100000
 
 error1:         .asciiz "Ha ocurrido un error."
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
@@ -78,7 +78,6 @@ main:
     la $s0, buffer
 
     for_leer_estudiantes:
-
         # Guardar el carnet
         move $a0, $s0
         li   $a1, 8
@@ -129,9 +128,9 @@ main:
         move $a3, $s5
         jal Estudiante_crear
 
-        lw   $a0,  tablaHashEst  # Tabla
-        lw   $a1, ($v0) # Clave
-        move $a2,  $v0  # Valor
+        lw   $a0, tablaHashEst  # Tabla
+        lw   $a1, ($v0)         # Clave
+        move $a2,  $v0          # Valor
         
         # Guardar el estudiante en la tabla
         jal TablaHash_insertar
@@ -243,7 +242,7 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
-        move $s5, $v0
+        move $s6, $v0
 
         move $s0, $v1
         add $s0, $s0, 1 # Salta \n
@@ -257,8 +256,6 @@ main:
         add  $sp,  $sp, -4
 
         jal Materia_crear
-
-        lw   $s6, ($sp)
         add  $sp,  $sp, 4
 
         lw   $a0, tablaHashMat # Tabla
@@ -285,13 +282,6 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
-        lw $a0, tablaHashMat
-        la $a1, buscarMat
-        jal TablaHash_obtenerValor
-
-        lw $a0, 4($v0)
-        li $v0, 4
-        syscall
     # ------------ SOLICITUDES ---------------
 
     # Planificacion de registros:
