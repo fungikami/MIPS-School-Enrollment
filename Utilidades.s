@@ -188,7 +188,7 @@ comparador_fin:
 # Salida:  $v0: 0 si a<b, 
 #               1 de otra forma   
 # Planificacion de registros:
-comparador_pares:
+comparador_carnet:
     # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
@@ -201,7 +201,7 @@ comparador_pares:
     lw $a1, ($a1)
     jal comparador
 
-comparador_pares_fin:
+comparador_carnet_fin:
     # Epilogo
     move $sp,    $fp
     lw   $fp,   ($sp)

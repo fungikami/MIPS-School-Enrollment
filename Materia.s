@@ -161,7 +161,7 @@ Materia_agregarEstudiante:
     # Agrega el Par a la lista de estudiantes.
     move $a0,    $s0
     lw   $a0, 20($a0)
-    la   $a2, comparador_pares
+    la   $a2, comparador_carnet
     jal Lista_insertarOrdenado
 
     # Disminuye por uno el número de cupos.
@@ -185,21 +185,46 @@ Materia_agregarEstudiante_fin:
 #            $a1: Estudiante.
 # 
 # Planificación de registros:
-# $s0: Materia.
+# $t0: Lista de estudiantes de Materia
+# $t1: Centinela de la Lista.
+# $t2: Nodo de la Lista.
+# $t3: Valor del nodo (Par).
+# $t4: Estudiante del Par.
+# $t5: Auxiliar.
 Materia_eliminarEstudiante:
     # Prólogo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
 
-    # for par in Materia.estudiantes
-    #   if par.primero = Estudiante
-    #       par.segundo = 'E'
+    lw $t0, 20($a0)  # Lista estudiantes de Materia
+    lw $t1,   ($t0)  # Centinela de la lista
+    lw $t2,  8($t1)  # Primer nodo de la lista
 
-    # Aumenta por uno el número de cupos.
-    lw   $t0, 12($s0)
-    addi $t0,    $t0, -1
-    sw   $t0, 12($s0)
+    for_est_mat:
+        # while Nodo != centinela
+        beq $t1, $t2, for_est_mat_fin
+
+        lw $t3, 4($t2)      # Valor del nodo (Par)
+        lw $t4,  ($t3)      # Estudiante del par
+
+        # Si par.Estudiante == solicitud.Estudiante
+        # modificamos la operacion a 'E'
+        beq $t4, $a1, eliminar_operacion
+
+        # Actualizamos al Nodo.siguiente
+        lw $t2, 8($t2)
+        b for_est_mat
+
+        eliminar_operacion:
+            li $t5, 69
+            sb $t5, 4($t3)
+
+    for_est_mat_fin:
+        # Disminuye por uno el número de cupos.
+        lw   $t5, 12($a0)
+        addi $t5,    $t5, -1
+        sw   $t5, 12($a0)
 
 Materia_eliminarEstudiante_fin:
     # Epílogo

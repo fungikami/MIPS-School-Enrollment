@@ -15,9 +15,6 @@ arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefiniti
 
 tamanioTablaHash:   .word 100
 
-buscarEst:      .asciiz "15-20076" # Indice de 4.2827
-buscarMat:      .asciiz "CI-1804"
-
 buffer:         .space 524288 # 1Mb = 10485976
 buffer2:        .space 524288 # 1Mb
 buffer3:        .space 524288
@@ -412,6 +409,7 @@ main:
         jal TablaHash_obtenerValor # $v0: Materia
         move $s4, $v0
 
+        # Imprimir Materia y Estudiantes
         move $a0, $s4
         move $a1, $s0
         jal Materia_imprimirMateria
@@ -422,10 +420,10 @@ main:
         b for_imprimir_mat
 
     for_imprimir_mat_fin:
-    # Cerrar archivo
-    li   $v0, 16       
-    move $a0, $s0      
-    syscall 
+        # Cerrar archivo
+        li   $v0, 16       
+        move $a0, $s0      
+        syscall 
 
 
     # -------- SOLICITUDES CORRECCION---------------
@@ -542,68 +540,46 @@ main:
     # $t1: Estudiante del par
     # $t2: Estudiante de la solicitud
 
-    # # Lista inscripciones en correccion
-    # jal Lista_crear
-    # sw $v0, listaInsCor
+    # Lista inscripciones en correccion
+    jal Lista_crear
+    sw $v0, listaInsCor
 
-    # lw $s0, listaSolCor
-    # lw $s1,  ($s0)  # Centinela de la lista
-    # lw $s2, 8($s1)  # Primer nodo de la lista
+    lw $s0, listaSolCor
+    lw $s1,  ($s0)  # Centinela de la lista
+    lw $s2, 8($s1)  # Primer nodo de la lista
 
-    # for_solicitud_cor:
-    #     # while Nodo != centinela
-    #     beq $s2, $s1, for_solicitud_end
+    for_solicitud_cor:
+        # while Nodo != centinela
+        beq $s2, $s1, for_solicitud_cor_end
 
-    #     lw $s3, 4($s2)  # Valor del nodo (Solicitud)
-    #     lw $s4, 8($s3)  # operacion de Solicitud
+        lw $s3, 4($s2)  # Valor del nodo (Solicitud)
+        lw $s4, 8($s3)  # operacion de Solicitud
 
-    #     # Si operacion == 'I'
-    #     beq $s4, 73, solicitud_inscribir
+        # Si operacion == 'I'
+        li  $s5, 73 
+        beq $s4, $s5, solicitud_inscribir
 
-    #     # Si operacion == 'E'
-    #     beq $s4, 69, solicitud_eliminar
+        # Si operacion == 'E'
+        li  $s5, 69
+        beq $s4, $s5, solicitud_eliminar
 
-    #     solicitud_eliminar:
-    #         # Buscar materia en la TablaHash
-    #         lw $a0, tablaHashMat
-    #         lw $a1, 4($s3)              # Materia de la solicitud
-    #         lw $a1, ($a1)               # Codigo de la materia
-    #         jal TablaHash_obtenerValor  # $v0: Materia
+        solicitud_eliminar:
+            # Cambiar la operacion de la inscripcion
+            lw $a0, 4($s3)   # Materia
+            lw $a1,  ($s3)   # Estudiante
+            jal Materia_eliminarEstudiante
 
-    #         lw $s5, 20($v0) # Lista estudiantes de Materia
-    #         lw $s6,  ($s5)  # Centinela de la lista
-    #         lw $s7, 8($s6)  # Primer nodo de la lista
+            b for_solicitud_sig
 
-    #         for_est_mat:
-    #             # while Nodo != centinela
-    #             beq $s6, $s7, for_imprimir_mat_fin
-
-    #             lw $t0, 4($s7)      # Valor del nodo (Par)
-
-    #             # Si par.primero == solicitud.Estudiante
-    #             # modificamos la operacion a 'E'
-    #             lw $t1, ($t0)       # Estudiante del par
-    #             lw $t2, ($s3)       # Estudiante de la solicitud
-    #             beq $t1, $t2, modificar_operacion
-
-    #             # Actualizamos al Nodo.siguiente
-    #             lw $s7, 8($s7)
-    #             b for_est_mat
-
-    #             modificar_operacion:
-    #                 sb 69, 8($s3)
-
-    #         for_est_fin:
-    #             b for_solicitud_sig
-
-    #     solicitud_inscribir:
+        solicitud_inscribir:
 
 
-    #     for_solicitud_sig:
-    #         # Actualizamos al Nodo.siguiente
-    #         lw $s2, 8($s2) 
-    #         b for_solicitud_cor
+        for_solicitud_sig:
+            # Actualizamos al Nodo.siguiente
+            lw $s2, 8($s2) 
+            b for_solicitud_cor
 
+    for_solicitud_cor_end:
 
     # for solicitud in <Lista Solicitudes>
     #     Si solicitud.op == ‘E’
