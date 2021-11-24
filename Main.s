@@ -72,8 +72,7 @@ main:
     jal TablaHash_crear
 
     # Guardar TablaHash Estudiante
-    move $s1, $v0
-    sw   $s1, tablaHashEst
+    sw $v0, tablaHashEst
 
     # Direccion de los datos
     la $s0, buffer
@@ -130,7 +129,7 @@ main:
         move $a3, $s5
         jal Estudiante_crear
 
-        move $a0,  $s1  # Tabla
+        lw   $a0,  tablaHashEst  # Tabla
         lw   $a1, ($v0) # Clave
         move $a2,  $v0  # Valor
         
@@ -186,8 +185,7 @@ main:
     jal TablaHash_crear
 
     # Guardar TablaHash Materia
-    move $s1, $v0
-    sw   $s1, tablaHashMat
+    sw $v0, tablaHashMat
 
     # Lista codigos de materias
     jal  Lista_crear
@@ -263,9 +261,9 @@ main:
         lw   $s6, ($sp)
         add  $sp,  $sp, 4
 
-        move $a0,  $s1  # Tabla
-        lw   $a1, ($v0) # Clave
-        move $a2,  $v0  # Valor
+        lw   $a0, tablaHashMat # Tabla
+        lw   $a1, ($v0)        # Clave
+        move $a2,  $v0         # Valor
         
         # Guardar la materia en la tabla
         jal TablaHash_insertar
@@ -287,6 +285,13 @@ main:
         bne  $t2, 32, fin_leer_materias     # Espacio en blanco
               
     fin_leer_materias:
+        lw $a0, tablaHashMat
+        la $a1, buscarMat
+        jal TablaHash_obtenerValor
+
+        lw $a0, 4($v0)
+        li $v0, 4
+        syscall
     # ------------ SOLICITUDES ---------------
 
     # Planificacion de registros:
@@ -391,7 +396,7 @@ main:
         bne  $t2, 11, fin_leer_solicitud     # Tab vertical
         bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
 
-    fin_leer_solicitud: 
+    fin_leer_solicitud:
     # ---------------- INSCRIPCION ------------------
     # Planificacion de registros:
     # $s0: Lista de Solicitud de inscripcion
@@ -410,13 +415,13 @@ main:
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
 
         # Insertar Estudiante en la lista de Materia
-        lw $a0, 4($s3)  # Materia
+        lw $a0, 4($s3)  # Materia 
         lw $a1,  ($s3)  # Estudiante
         lw $a2, 8($s3)  # operacion
         jal Materia_agregarEstudiante
-
-        lw $a0,  4($s3) # Materia
-        lw $a0, 20($s3) # Materia.estudiantes
+        # Mat 10042034 ListaEst 10041FE8 Sol 10042710
+        lw $a0,  4($s3) # Materia  
+        lw $a0, 20($a0) # Materia.estudiantes
         jal Lista_ultimo
         lw $a0, ($v0)   # Par(Est, Op)
         lw $a0, ($a0)   # Estudiante
@@ -436,9 +441,10 @@ main:
 
     # Planificacion de registros:
     # $s0: Archivo (descriptor)
-    # $s1: 
-    # $s2: 
-    # $s3: 
+    # $s1: Lista de codigos
+    # $s2: Centinela de la lista
+    # $s3: Nodo de la lista 
+    # $s4: 
 
     # for Materia in <TablaHash Materias>
     # 	print Materia
@@ -453,7 +459,20 @@ main:
     move $s0, $v0
 
     lw $s1, listaMat
+    lw $s2,  ($s0)  # Centinela de la lista
+    lw $s3, 8($s2)  # Primer nodo de la lista
+
     for_imprimir_mat:
+        # while Nodo != centinela
+        beq $s2, $s3, for_imprimir_mat_fin
+
+        #lw $s4, 4($s3)  # Valor del nodo
+
+        # Buscar Materia en la TablaHash 
+        # lw $a0, tablaHashMat
+        # lw $a1, ($s4) # Codigo
+        # jal TablaHash_obtenerValor
+
         # Escribir Materia
         # li   $v0, 15       
         # move $a0, $s0
@@ -466,8 +485,13 @@ main:
             # move $a0, $s0
             # lw   $a1, 
             # li   $a2, 
-    
 
+        # Actualizamos al Nodo.siguiente
+        lw $s3, 8($s3) 
+        
+        b for_imprimir_mat
+
+    for_imprimir_mat_fin:
     # Cerrar archivo
     li   $v0, 16       
     move $a0, $s0      

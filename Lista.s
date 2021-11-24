@@ -372,7 +372,7 @@ Lista_ultimo:
     li $v0, -1
     # Si la lista esta vacia
     lw $t0, 4($a0)
-    beqz $t0, Lista_primero_fin
+    beqz $t0, Lista_ultimo_fin
     
     # Cargar centinela.anterior
     lw $a0, ($a0)

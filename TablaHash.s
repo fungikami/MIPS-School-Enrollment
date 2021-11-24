@@ -32,9 +32,9 @@ TablaHash_crear:
     # Prologo
     sw   $fp,    ($sp)
     sw   $ra,  -4($sp)
-    sw   $s1,  -8($sp)
-    sw   $s2, -12($sp)
-    sw   $s0, -16($sp)
+    sw   $s0,  -8($sp)
+    sw   $s1, -12($sp)
+    sw   $s2, -16($sp)
     move $fp,     $sp
     addi $sp,     $sp, -20
 
@@ -249,7 +249,7 @@ TablaHash_obtenerValor:
     # Calcula la funcion de hash
     jal TablaHash_hash
     
-    # Busca la lista a insertar
+    # Busca la lista a obtener valor
     lw  $t0, 8($s0)   
     add $t0,   $t0, $v0    
     lw  $t0,  ($t0)  

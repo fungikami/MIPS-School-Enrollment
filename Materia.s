@@ -60,7 +60,6 @@ Materia_crear:
     # Crea la lista vacía de estudiantes
     jal Lista_crear
     bltz $v0, Materia_crear_fin
-    move $s1, $v0
 
     # Inicializa la Materia.
     sw $s0    ($s1) # codigo
