@@ -604,7 +604,7 @@ main:
             lw $s2, 8($s2) 
 
             # Si no quedan cupos en la Materia, siguiente solicitud
-            bltz $s5, for_inscripcion_cor
+            blez $s5, for_inscripcion_cor
 
             # Insertar Estudiante en la lista de Materia
             lw $a0, 4($s3)  # Materia 
