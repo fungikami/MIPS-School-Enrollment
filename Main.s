@@ -11,15 +11,8 @@ arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorrecci
 arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
 arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
 
-tamanioTablaHash:   .word 100
-
 buffer:         .space 2097152 # 1Mb = 10485976 (se reservan 2)
 bufferTamanio:  .word  2097152
-
-error1:         .asciiz "Ha ocurrido un error."
-errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
-errorMat:       .asciiz "Materia de la solicitud no se encontro"
-errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
 ident:          .asciiz "   "  
 espC:           .asciiz " \""
@@ -28,12 +21,18 @@ newl:           .asciiz "\n"
 parentIzq:      .asciiz "("
 parentDer:      .asciiz ")"
 
+tablaTamanio:   .word 100
 tablaHashEst:   .word 0
 tablaHashMat:   .word 0
 listaSolIns:    .word 0
 listaSolCor:    .word 0
 listaMat:       .word 0
 listaPriorIns:  .word 0
+
+error1:         .asciiz "Ha ocurrido un error."
+errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
+errorMat:       .asciiz "Materia de la solicitud no se encontro"
+errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
         .text
 main:
@@ -56,7 +55,7 @@ main:
     bltz $v0, errorArchivo
 
     # <TablaHash Estudiantes>.crear()
-    lw  $a0, tamanioTablaHash
+    lw  $a0, tablaTamanio
     jal TablaHash_crear
 
     # Guardar TablaHash Estudiante
@@ -155,7 +154,7 @@ main:
     bltz $v0, errorArchivo
 
     # <TablaHash Materias>.crear()
-    lw  $a0, tamanioTablaHash
+    lw  $a0, tablaTamanio
     jal TablaHash_crear
 
     # Guardar TablaHash Materia
@@ -580,7 +579,7 @@ main:
         # $t0: Cupos de Materia
         # $t1: Codigo de la materia
         
-        # ATENCION
+        # Limpia las materias con cupos negativos
         # Verifica que todas las materias tengan cupos positivos
         lw $s0, listaMat
         lw $s1,  ($s0)  # Centinela de la lista
@@ -654,8 +653,6 @@ main:
 
             b for_materia
         for_materia_fin:
-
-        # CUIDADO PISO MOJADO
 
         # Planificacion de registros:
         # $s0: Lista de inscripciones de correccion
