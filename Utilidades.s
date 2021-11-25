@@ -265,7 +265,7 @@ limpiarBuffer_fin:
 # Convierte un ASCII en entero.
 # Entrada: $a0: ASCII.
 #          $a1: Numero de caracteres a convertir.
-# Salida:  $v0: Entero
+# Salida:  $v0: Entero.
 atoi:
     # Prologo
     sw   $fp, ($sp)
