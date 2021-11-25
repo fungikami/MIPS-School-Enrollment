@@ -7,6 +7,14 @@
 # Fecha:   25-nov-2021
 
         .data
+
+arcEst:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-Estudiantes.txt"
+arcMat:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-Materias.txt"	
+arcIns:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-SolInscripcion.txt"
+arcCor:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-SolCorreccion.txt"
+arcTen: .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:	.asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
+
 buffer:         .space 2097152 
 bufferTamanio:  .word  2097152
 
@@ -218,10 +226,16 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_materias
+
+        # Convierte a entero
+        move $a0, $v0
+        li   $a1, 3
+        jal  atoi
+        
         move $s6, $v0
 
         move $s0, $v1
-        add $s0, $s0, 1     # Salta \n
+        add  $s0, $s0, 1 # Salta \n
 
         # Crear Materia
         move $a0,  $s2
@@ -568,6 +582,77 @@ main:
             b for_solicitud_cor
 
     for_solicitud_cor_fin:
+    
+    # ------------ AGREGADO ------------------
+        # Elimina estudiantes que no cumplen requisitos
+        # de las materias. 
+        # 
+        # Planificacion de registros:
+        # $s0: Lista de materias.
+        # $s1: Centinela de Lista.
+        # $s2: Nodo actual de Lista.
+        # $s4: Materia.
+        # $s5: Lista Estudiantes.
+        # $s6: Centinela de Lista Estudiantes.
+        # $s7: Nodo de actual Lista Estudiantes.
+        # $t0: Minimo de creditos Materia.
+        # $t1: Codigo de la materia.
+        
+        # Verifica que todas las materias tengan cupos positivos
+        lw $s0, listaMat
+        lw $s1,  ($s0)          # Centinela de la lista
+        lw $s2, 8($s1)          # Primer nodo de la lista
+
+        for_materia_eliminar_no_req:
+            beq $s2, $s1, for_materia_fin
+
+            lw $t1,  4($s2) # Valor del nodo (Codigo)
+
+            # Buscar codigo en la TablaHash
+            lw   $a0, tablaHashMat
+            move $a1, $t1
+            jal  TablaHash_obtenerValor
+
+            move $s4,    $v0
+            lw   $t0, 16($s4) # minCreditos de la materia
+
+            # Actualizamos al Nodo.siguiente
+            lw $s2, 8($s2) 
+
+            # Eliminar estudiantes
+            for_no_cumple_req:
+                lw $s5, 20($s4)     # Lista Estudiantes
+                lw $s6,  ($s5)      # Centinela de la lista
+                lw $s7, 8($s6)      # Nodo de la lista
+                
+                for_estudiante_verif_req:
+                    beq $s7, $s6, for_estudiante_verif_req_fin
+
+                    lw $t0, 4($s7)  # Valor del nodo (Par)
+                    lw $t2,  ($t0)  # Estudiante
+                    lw $t3, 4($t0)  # Operacion
+
+                    # Actualizamos al Nodo.siguiente
+                    lw $s7, 8($s7) 
+
+                    # Si la operacion == 'E'
+                    li  $t4, 'E'
+                    beq $t4, $t3, for_estudiante
+
+                    lw $t5, 12($t2) # Creditos aprobados del estudiante actual
+
+                    # Si creditosAprob >= minCreditos
+                    bge $t5, $t0, for_estudiante_verif_req
+
+                    # Se elimina el estudiante pro no cumplir requisitos
+                    move $a0, $s4
+                    move $a1, $t2
+                    jal Materia_eliminarEstudiante
+
+                    b for_estudiante_verif_req
+                for_estudiante_verif_req_fin:
+            b for_materia_eliminar_no_req
+        # ------------ AGREGADO ------------------
         # Elimina estudiantes si las materias
         # tienen cupos negativos.
         #
