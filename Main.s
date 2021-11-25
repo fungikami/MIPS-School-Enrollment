@@ -41,7 +41,7 @@ errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
         .globl main
 main:
     # ---------- ESTUDIANTES ----------
-    # Procesa datos de los estudiantes.
+    # Cargar datos de los estudiantes.
     #
     # Planificacion de registros: 
     # $s0: Direccion del buffer.
@@ -140,7 +140,7 @@ main:
 
     fin_leer_estudiantes:  
     # ---------- MATERIAS ----------
-    # Procesa los datos de las materias.
+    # Cargar los datos de las materias.
     #
     # Planificacion de registros:
     # $s0: Direccion del buffer.
@@ -263,7 +263,7 @@ main:
               
     fin_leer_materias:
     # --------- SOLICITUDES INSCRIPCION ---------
-    # Lee y guarda las solicitudes de inscripcion.
+    # Cargar las solicitudes de inscripcion.
     #
     # Planificacion de registros:
     # $s0: Direccion del buffer.
@@ -430,7 +430,7 @@ main:
         syscall 
 
     # --------- SOLICITUDES CORRECCION ---------
-    # Lee y guarda las solicitudes de correccion.
+    # Cargar las solicitudes de correccion.
     #
     # Planificacion de registros:
     # $s0: Direccion del buffer.
