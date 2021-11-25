@@ -51,7 +51,7 @@
    \end{minipage}
 
    \vspace*{1.0cm}                       
-   \textsc{\huge Universidad Simón \\ \vspace{5px} Bolívar} \\ [1.5cm] 
+   \textsc{\huge Universidad Simón Bolívar} \\ [1.5cm] 
 
    \begin{minipage}{0.9\textwidth} 
       \begin{center}                                                             
@@ -67,8 +67,8 @@
    \begin{minipage}{\textwidth} 
       \begin{flushleft} \large    
          \textbf{\underline{Autor:}} \\ 
-         Christopher Gómez \\
-         Ka Fung \\
+         Christopher Gómez (18-10892)\\
+         Ka Fung (18-10492)\\
       \end{flushleft}
    \end{minipage}
 
@@ -141,7 +141,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       \li \id{est} = \id{tablaHashEst}.\proc{Obtener-Valor}(\id{carnet})
       \li \id{codigo} = Guardar codigo de la materia
       \li \id{mat} = \id{tablaHashMat}.\proc{Obtener-Valor}(\id{codigo})
-      \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat})
+      \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat}, \id{op})
       \li \id{listaSol}.\proc{Insertar}(\id{sol}) \label{li:Extraer-Datos-final}
       \End
    \End
@@ -190,6 +190,80 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       \End
    \end{codebox}
 
+   Luego, se procesa las solicitudes de corrección. Al terminar el siguiente pseudocódigo, 
+   se debe tener una lista de solicitudes de corrección. Se procesa la lista de solicitudes 
+   para que cada materia tenga una lista de estudiantes inscritos y eliminados. Se ordena 
+   la lista de estudiantes de cada materia según la prioridad: M1.5 Se le da prioridad a los 
+   estudiantes con menor número de créditos aprobados. 
+
+   \begin{codebox}
+      \Procname{$\proc{Extraer-Datos-Correccion}$}
+      \li
+      \li \id{listaSolCor} = \kw{new} \proc{Lista}()
+      \li \id{archivoCor} = Leer archivo de solicitudes de corrección
+      \li \For linea in archivoCor:
+      \li \Do
+         \id{carnet} = Guardar carnet del estudiante
+         \li \id{est} = \id{tablaHashEst}.\proc{Obtener-Valor}(\id{carnet})
+         \li \id{codigo} = Guardar codigo de la materia
+         \li \id{mat} = \id{tablaHashMat}.\proc{Obtener-Valor}(\id{codigo})
+         \li \id{op} = Guardar operación de la solicitud
+         \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat}, \id{op})
+         \li \id{listaCor}.\proc{Insertar}(\id{sol}) \label{li:Extraer-Datos-Correccion-final}
+         \End
+      \End
+   \end{codebox}
+
+   \begin{codebox}
+      \setlinenumberplus{li:Extraer-Datos-final}{1}
+      \Procname{$\proc{Procesar-Solicitudes-Correccion}$}
+      \li \For sol in listaCor:
+      \Do
+         \li \id{est} = \attrib{sol}{estudiante}
+         \li \id{mat} = \attrib{sol}{materia}
+
+         \li \If \attrib{sol}{op} == 'E':
+         \Do 
+            \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
+            \li \attrib{mat}{cupos}++
+         \li \Else:
+            \li \id{mat}.\proc{Agregar-Estudiante}(\id{est})
+            \li \attrib{mat}{cupos}- -
+         \End
+
+         
+
+         \label{li:Procesar-Solicitudes-Correccion-final}
+         \End
+      \End
+   \end{codebox}
+
+   Finalmente, se escribe en el archivo de salida cada materia con sus 
+   estudiantes inscritos y eliminados.
+
+   \begin{codebox}
+      \setlinenumberplus{li:Procesar-Solicitudes-final}{1}
+      \Procname{$\proc{Generar-Archivo-Definitivo}$}
+      \li \id{archivoDef} = Abrir archivo definitivo a escribir
+      \li \For mat in listaMat:
+      \Do
+         \li \id{archivoDef}.\proc{Escribir}(`$<$\attrib{mat}{codigo}$>$ ')
+         \li \id{archivoDef}.\proc{Escribir}(```$<$\attrib{mat}{nombre}$>$'' ')
+         \li \id{archivoDef}.\proc{Escribir}(`$<$\attrib{mat}{numCupos}$>\backslash$n')
+         
+         \li \For est in \attrib{mat}{estudiantes}:
+         \Do
+            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{carnet}$>$ ')
+            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{nombre}$>$ ') 
+            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{op}$>\backslash$n') 
+            
+            \label{li:Generar-Archivo-Tentativo-final}
+            \End
+         \End
+         \End
+      \End
+   \end{codebox}
+
    \section{Estructuras utilizadas}
 
    En la seccion anterior se menciona el uso de distintas estructuras de datos
@@ -197,6 +271,24 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    de ellas, junto con sus atributos y operaciones.
 
    \begin{itemize}
+      \item \proc{Par}:
+      \begin{itemize}
+         \item Atributos:
+
+         \begin{itemize}
+            \item Primer elemento.
+            \item Segundo elemento.
+         \end{itemize}
+      \end{itemize}
+
+      \begin{itemize}
+         \item Operaciones:
+
+         \begin{itemize}
+            \item \proc{Crear}(\id{primero}, \id{segundo})
+         \end{itemize}
+      \end{itemize}
+
       \item \proc{Lista}:
 
       \begin{itemize}
@@ -227,7 +319,9 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item Tamaño.
             \item Tabla.
          \end{itemize}
+      \end{itemize}
 
+      \begin{itemize}
          \item Operaciones:
          
          \begin{itemize}
@@ -236,5 +330,74 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item \proc{Obtener-Valor}(\id{clave})
          \end{itemize}
       \end{itemize}
+
+      \item \proc{Estudiante}:
+      \begin{itemize}
+         \item Atributos:
+
+         \begin{itemize}
+            \item Carnet.
+            \item Nombre.
+            \item Índice.
+            \item Créditos aprobados.
+         \end{itemize}
+      \end{itemize}
+
+      \begin{itemize}
+         \item Operaciones:
+         
+         \begin{itemize}
+            \item \proc{Crear}(\id{carnet}, \id{nombre}, \id{indice}, \id{creditosAprob})
+         \end{itemize}
+      \end{itemize}
+
+      \item \proc{Materia}:
+      \begin{itemize}
+         \item Atributos:
+
+         \begin{itemize}
+            \item Código.
+            \item Nombre.
+            \item Número de créditos.
+            \item Cupos.
+            \item Número mínimo de créditos aprobados.
+         \end{itemize}
+      \end{itemize}
+
+      \begin{itemize}
+         \item Operaciones:
+         
+         \begin{itemize}
+            \item \proc{Crear}(\id{codigo}, \id{nombre}, \id{creditos}, \id{numCupos}, \id{minCreditos})
+            \item \proc{Aumentar-Cupo}()
+            \item \proc{Disminuir-Cupo}()
+            \item \proc{Agregar-Estudiante}(\id{Estudiante})
+            \item \proc{Eliminar-Estudiante}(\id{Estudiante})
+         \end{itemize}
+      \end{itemize}
+
+
+      \item \proc{Solicitud}:
+      \begin{itemize}
+         \item Atributos:
+
+         \begin{itemize}
+            \item Estudiante.
+            \item Materia.
+            \item Operación.
+         \end{itemize}
+      \end{itemize}
+
+      \begin{itemize}
+         \item Operaciones:
+         
+         \begin{itemize}
+            \item \proc{Crear}(\id{est}, \id{mat}, \id{op})
+         \end{itemize}
+      \end{itemize}
+      
    \end{itemize}
+
+
+
 \end{document}
