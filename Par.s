@@ -17,11 +17,11 @@
 # Entrada:   $a0: primer elemento del par.
 #            $a1: segundo elemento del par.
 # Salida:    $v0: Par (negativo si no se pudo crear).
-#          ($v0): primero 
-#         4($v0): segundo
+#          ($v0): primero .
+#         4($v0): segundo.
 # 
 # Planificacion de registros:
-# $t0: primero
+# $t0: primero.
 Par_crear:
     # Prologo
 	sw   $fp, ($sp)

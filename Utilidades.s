@@ -1,14 +1,14 @@
 # Utilidades.s
+# Archivo con distintas funciones utilizadas en Main.s
 # 
 # Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
-
-# Funcion: Abre y lee un archivo
+# Funcion: Abre y lee un archivo dado.
 # Entrada: $a0: Archivo.
 #          $a1: Buffer.
-#          $a2: Tamanio Buffer
-# Salida:  $v0: negativo si no logro leer archivo     
+#          $a2: Tamanio Buffer.
+# Salida:  $v0: negativo si no logro leer archivo.    
 # Planificacion de registros:
 # $t0: buffer
 # $t1: archivo
@@ -56,19 +56,19 @@ leer_archivo_fin:
     jr $ra
 
 
-# Funcion: Reserva memoria y guarda un dato dado
+# Funcion: Reserva memoria para guardar un dato dado.
 # Entrada: $a0: Buffer.
 #          $a1: Tamanio del dato.
-#          $a2: Booleano
-#               0: itera hasta el tamanio del dato
-#               1: itera hasta una comilla
-# Salida:  $v0: Dir. del dato
-#          $v1: Dir. del buffer actualizado      
+#          $a2: Booleano.
+#               0: itera hasta el tamanio del dato.
+#               1: itera hasta una comilla.
+# Salida:  $v0: Dir. del dato.
+#          $v1: Dir. del buffer actualizado.  
 # Planificacion de registros:
-# $t0: buffer
-# $t1: tamanio de memoria a reservar
-# $t2: dir. del dato
-# $t3: caracter actual
+# $t0: buffer.
+# $t1: tamanio de memoria a reservar.
+# $t2: dir. del dato.
+# $t3: caracter actual.
 guardar_dato:
     # Prologo
 	sw   $fp, ($sp)
@@ -131,11 +131,11 @@ guardar_dato_fin:
 
     jr $ra
 
-# Funcion comparador
-# Compara dos strings 
-# Entrada: $a0: String a comparar
-#          $a1: String a comparar
-# Salida:  $v0: 0 si a<b, 
+# Funcion comparador.
+# Compara dos strings a y b.
+# Entrada: $a0: String a comparar.
+#          $a1: String a comparar.
+# Salida:  $v0: 0 si a < b, 
 #               1 de otra forma   
 # Planificacion de registros:
 comparador:
@@ -169,8 +169,8 @@ comparador_fin:
     jr $ra
 
 # Funcion comparador carnets de una materia.
-# Entrada: $a0: Par a comparar
-#          $a1: Par a comparar
+# Entrada: $a0: Par a comparar.
+#          $a1: Par a comparar.
 # Salida:  $v0: 0 si a<b, 
 #               1 de otra forma 
 comparador_carnet:
@@ -198,9 +198,9 @@ comparador_carnet_fin:
 
 
 # Funcion comparador de solicitudes segun la modalidad:
-# Prioridad a los estudiantes con menor número de créditos aprobados.
-# Entrada: $a0: Solicitud a comparar
-#          $a1: Solicitud a comparar
+# Prioridad a los estudiantes con menor numero de creditos aprobados.
+# Entrada: $a0: Solicitud a comparar.
+#          $a1: Solicitud a comparar.
 # Salida:  $v0: 0 si a<b, 
 #               1 de otra forma 
 comparador_solicitud:
@@ -232,11 +232,11 @@ comparador_solicitud_fin:
 
     jr $ra
 
-# Funcion limpiarBuffer
-# Limpia el buffer (redactar)
-# Entrada: $a0: Dir. del buffer a limpiar
-#          $a1: Tamanio del buffer a comparar (multiplo de 4)
-# Salida:  $v0: Dir. del buffer
+# Funcion limpiarBuffer.
+# Limpia el buffer (redactar).
+# Entrada: $a0: Dir. del buffer a limpiar.
+#          $a1: Tamanio del buffer a comparar (multiplo de 4).
+# Salida:  $v0: Dir. del buffer.
 limpiarBuffer:
     # Prologo
     sw   $fp, ($sp)
@@ -261,9 +261,9 @@ limpiarBuffer_fin:
 
     jr $ra
 
-# Funcion atoi
-# Entrada: $a0: ASCII
-#          $a1: # Caracteres a convertir
+# Funcion atoi.
+# Entrada: $a0: ASCII.
+#          $a1: Numero de caracteres a convertir.
 # Salida:  $v0: Entero
 atoi:
     # Prologo
@@ -288,7 +288,7 @@ atoi:
         sll $v0, $v0, 1   # $v0 = 2  * $v0
         add $v0, $v0, $t2 # $v0 = 10 * $v0
 
-        # Se suma el dígito
+        # Se suma el digito
         add $t1, $t1, -48
         add $v0, $v0, $t1
         bnez $a1, atoi_loop
@@ -299,19 +299,19 @@ atoi_fin:
 
     jr $ra
 
-# Funcion itoa
-# Convierte un entero a ASCII
-# Entrada: $a0: Entero
-#          $a1: # Caracteres a convertir
-# Salida:  $v0: ASCII null-terminated
-#          $v1: Número de caracteres escritos
-# Planificación de registros:
-# $t0: Caracter a agregar
-# $t1: -1 si el número es negativo, 0 de otra forma
-# $t2: Signo '-' opcional si el número es negativo
-# $t4: Copia del entero
-# $t5: Dir. del buffer (para iterar)
-# $t6: 10
+# Funcion itoa.
+# Convierte un entero a ASCII.
+# Entrada: $a0: Entero.
+#          $a1: # Caracteres a convertir.
+# Salida:  $v0: ASCII null-terminated.
+#          $v1: Numero de caracteres escritos.
+# Planificacion de registros:
+# $t0: Caracter a agregar.
+# $t1: -1 si el numero es negativo, 0 de otra forma.
+# $t2: Signo '-' opcional si el numero es negativo.
+# $t4: Copia del entero.
+# $t5: Dir. del buffer (para iterar).
+# $t6: 10.
 itoa:
     # Prologo
     sw   $fp, ($sp)

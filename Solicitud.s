@@ -14,11 +14,11 @@
 
         .text
 
-# Funcion crear
+# Funcion crear.
 # Crea una solicitud con los parametros dados.
 # Entrada:   $a0: Estudiante.
 #            $a1: Materia.
-#            $a2: operacion
+#            $a2: operacion.
 # Salida:    $v0: Solicitud (negativo si no se pudo crear).
 #          ($v0): Estudiante.
 #         4($v0): Materia.

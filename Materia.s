@@ -19,11 +19,11 @@
 
         .text
 
-# Funcion crear
+# Funcion crear.
 # Crea un Materia con los parametros dados.
-# Entrada:   $a0: codigo
+# Entrada:   $a0: codigo.
 #            $a1: nombre.
-#            $a2: credito
+#            $a2: credito.
 #            $a3: cupos.
 #         4($fp): minCreditos.
 # Salida:    $v0: Materia (negativo si no se pudo crear).
@@ -57,7 +57,7 @@ Materia_crear:
     bltz $v0, Materia_crear_fin
     move $s1, $v0
     
-    # Crea la lista vacía de estudiantes
+    # Crea la lista vacia de estudiantes
     jal Lista_crear
     bltz $v0, Materia_crear_fin
 
@@ -82,7 +82,7 @@ Materia_crear_fin:
 
     jr $ra
 
-# Funcion aumentarCupo
+# Funcion aumentarCupo.
 # Suma uno al numero de cupos de la materia.
 # Entrada:   $a0: Materia.
 #
@@ -106,7 +106,7 @@ Materia_aumentarCupo:
     jr $ra
 
 
-# Funcion disminuirCupo
+# Funcion disminuirCupo.
 # Resta uno al numero de cupos de la materia.
 # Entrada:   $a0: Materia.
 #
@@ -133,13 +133,13 @@ Materia_disminuirCupo:
 # Agrega un estudiante a la lista de estudiantes de la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Estudiante.
-#            $a2: ASCII caracter con la operación.
+#            $a2: ASCII caracter con la operacion.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: Materia.
 # $t0: #Cupos de la materia
 Materia_agregarEstudiante:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     sw   $ra, -4($sp)
@@ -154,7 +154,7 @@ Materia_agregarEstudiante:
     move $a1, $a2 # Op.
     jal  Par_crear
 
-    # Verifica la creación del Par.
+    # Verifica la creacion del Par.
     bltz $v0, Materia_agregarEstudiante_fin
     move $a1, $v0
 
@@ -170,7 +170,7 @@ Materia_agregarEstudiante:
     sw   $t0, 12($s0)
 
 Materia_agregarEstudiante_fin:
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
     lw   $ra, -4($sp)
@@ -178,13 +178,13 @@ Materia_agregarEstudiante_fin:
 
     jr $ra
 
-# Función eliminarEstudiante
-# Marca un estudiante de la lista de estudiantes de la materia 
+# Funcion eliminarEstudiante.
+# Marca un estudiante de la lista de estudiantes de la materia.
 # como eliminado.
 # Entrada:   $a0: Materia.
 #            $a1: Estudiante.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Lista de estudiantes de Materia
 # $t1: Centinela de la Lista.
 # $t2: Nodo de la Lista.
@@ -192,7 +192,7 @@ Materia_agregarEstudiante_fin:
 # $t4: Estudiante del Par.
 # $t5: Auxiliar.
 Materia_eliminarEstudiante:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
@@ -227,24 +227,24 @@ Materia_eliminarEstudiante:
         sw   $t5, 12($a0)
 
 Materia_eliminarEstudiante_fin:
-    # Epílogo
+    # Epilogo
     move $sp,  $fp
     lw   $fp, ($sp)
 
     jr $ra
 
 
-# Función imprimirMateria
+# Funcion imprimirMateria
 # Imprime en un archivo la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Archivo.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $s0: Materia.
 # $s1: Archivo
 # $s2: Caracter actual del nombre de materia
 Materia_imprimirMateria:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     sw   $ra, -4($sp)
     sw   $s0, -8($sp)
@@ -326,7 +326,7 @@ Materia_imprimirMateria:
     syscall
 
 Materia_imprimirMateria_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
     lw   $ra,  -4($sp)
@@ -336,22 +336,23 @@ Materia_imprimirMateria_fin:
 
     jr $ra
 
-# Función imprimirEstudiantes
+# Funcion imprimirEstudiantes.
 # Imprime en un archivo los estudiantes de una materia.
 # Entrada:   $a0: Lista de Estudiantes.
 #            $a1: Archivo.
 # 
-# Planificación de registros:
+# Planificacion de registros:
 # $t0: Materia.
-# $t1: Archivo
-# $t2: Centinela de la lista
-# $t3: Nodo de la lista
-# $t4: Valor del nodo (Par)
-# $t5: Estudiante
+# $t1: Archivo.
+# $t2: Centinela de la lista.
+# $t3: Nodo de la lista.
+# $t4: Valor del nodo (Par).
+# $t5: Estudiante.
 # $t6: Caracter del nombre del Estudiante
-# $t7: 
+# $t7: Operacion de la solicitud
+# $t8: ASCII 'S'
 Materia_imprimirEstudiantes:
-    # Prólogo
+    # Prologo
     sw   $fp,   ($sp)
     move $fp,    $sp
     addi $sp,    $sp, -4
@@ -454,7 +455,7 @@ Materia_imprimirEstudiantes:
         b for_imprimir_est
 
 Materia_imprimirEstudiantes_fin:
-    # Epílogo
+    # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
 

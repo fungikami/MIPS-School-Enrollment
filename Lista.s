@@ -3,8 +3,8 @@
 # Estructura de datos que implementa una lista doblemente enlazada
 # con centinela.
 # 
-# cabeza: nodo centinela
-# tamanio: numero de elementos de la lista
+# cabeza: nodo centinela.
+# tamanio: numero de elementos de la lista.
 # 
 # Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
@@ -16,8 +16,8 @@
 # Funcion crear
 # Crea una lista circular doblemente enlazada vacia.
 # Salida:    $v0: lista (negativo si no se pudo crear).
-#          ($v0): centinela
-#         4($v0): tamanio
+#          ($v0): centinela.
+#         4($v0): tamanio.
 #
 # Planificacion de registros:
 # $t0: dir. de la lista a retornar
@@ -71,10 +71,10 @@ Lista_crear_fin:
 # Salida:  $v0: negativo si no se logro insertar
 #
 # Planificacion de registros:
-# $t0: centinela de la lista
-# $t1: centinela.anterior
-# $t2: tamanio de la lista
-# $t3: lista
+# $t0: centinela de la lista.
+# $t1: centinela.anterior.
+# $t2: tamanio de la lista.
+# $t3: lista.
 Lista_insertar:
     # Prologo
     sw   $fp,   ($sp)
@@ -117,23 +117,23 @@ Lista_insertar_fin:
 
 # Funcion insertarOrdenado
 # Inserta un elemento con el valor dado en la lista, manteniendo
-# un orden indicado por la función.
+# un orden indicado por la funcion.
 # 
 # Entrada: $a0: Lista
 #          $a1: valor del elemento a insertar.
-#          $a2: función de comparación.
+#          $a2: funcion de comparacion.
 #               (a, b -> bool: 0 si a<b, 1 de otra forma)
-# Salida: Ñ
+# Salida:  $v0: negativo si no se logro insertar
 #
 # Planificacion de registros:
-# $s0: centinela de la lista
-# $s1: nodoAInsertar
-# $s2: Lista
-# $s3: nodoActual
-# $s4: valor del nodo a insertar
-# $s5: función de comparación
-# $t0: tamanio de la lista
-# $t1: nodoActual.anterior
+# $s0: centinela de la lista.
+# $s1: nodoAInsertar.
+# $s2: Lista.
+# $s3: nodoActual.
+# $s4: valor del nodo a insertar.
+# $s5: funcion de comparacion.
+# $t0: tamanio de la lista.
+# $t1: nodoActual.anterior.
 Lista_insertarOrdenado:
     # Prologo
     sw   $fp,    ($sp)
@@ -190,7 +190,7 @@ Lista_insertarOrdenado_no_vacia:
         beqz $v0, Lista_insertarOrdenado_loop_siguiente
 
         # Si nodoActual >= nodoAInsertar
-        # Inserta el nodo detrás de nodoActual
+        # Inserta el nodo detras de nodoActual
         lw $t1, ($s3) # nodoActual.anterior
 
         sw $s1, 8($t1) # nodoActual.anterior.siguiente = nodoAInsertar
@@ -235,10 +235,10 @@ Lista_insertarOrdenado_fin:
 # Salida:  $v0: [0 si se pudo eliminar | 1 de otra manera]
 # 
 # Planificacion de registros:
-# $t0: centinela de la lista
-# $t1: x.anterior
-# $t2: x.siguiente
-# $t3: tamanio de la lista
+# $t0: centinela de la lista.
+# $t1: x.anterior.
+# $t2: x.siguiente.
+# $t3: tamanio de la lista.
 Lista_eliminar:
     # Prologo
     sw   $fp, ($sp)
@@ -331,7 +331,7 @@ Lista_eliminarUltimo:
 # Salida:  $v0: valor del primer elemento de la lista.
 # 
 # Planificacion de registros:
-# $t0: tamanio de la lista
+# $t0: tamanio de la lista.
 Lista_primero:
     # Prologo
     sw   $fp,   ($sp)
@@ -362,7 +362,7 @@ Lista_primero_fin:
 # Salida:  $v0: valor del primer elemento de la lista.
 # 
 # Planificacion de registros:
-# $t0: tamanio de la lista
+# $t0: tamanio de la lista.
 Lista_ultimo:
     # Prologo
     sw   $fp,   ($sp)

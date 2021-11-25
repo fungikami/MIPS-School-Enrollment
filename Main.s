@@ -1,25 +1,21 @@
-# Proyecto 1
-# 
-# Autores: Ka Fung & Christopher Gemez
+# Proyecto 1:
+# Implementacion de un sistema de asignacion de cupos
+# para dar soporte al proceso de inscripcion y correccion 
+# de materias de una institucion.
+#
+# Autores: Ka Fung & Christopher Gomez
 # Fecha: 25-nov-2021
 
         .data
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsDefinitiva.txt"
 
-buffer:         .space 2097152 # 1Mb = 10485976 (se reservan 2)
+buffer:         .space 2097152 
 bufferTamanio:  .word  2097152
-
-ident:          .asciiz "   "  
-espC:           .asciiz " \""
-cEsp:           .asciiz "\" "
-newl:           .asciiz "\n"
-parentIzq:      .asciiz "("
-parentDer:      .asciiz ")"
 
 tablaTamanio:   .word 100
 tablaHashEst:   .word 0
@@ -29,6 +25,13 @@ listaSolCor:    .word 0
 listaMat:       .word 0
 listaPriorIns:  .word 0
 
+ident:          .asciiz "   "  
+espC:           .asciiz " \""
+cEsp:           .asciiz "\" "
+newl:           .asciiz "\n"
+parentIzq:      .asciiz "("
+parentDer:      .asciiz ")"
+
 error1:         .asciiz "Ha ocurrido un error."
 errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
 errorMat:       .asciiz "Materia de la solicitud no se encontro"
@@ -36,16 +39,16 @@ errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
         .text
 main:
-
-    # ------------ ESTUDIANTES ---------------
-
+    # ---------- ESTUDIANTES ----------
+    # Procesa datos de los estudiantes.
+    #
     # Planificacion de registros: 
-    # $s0: Direccion del buffer
-    # $s1: TablaHash Estudiantes
-    # $s2: Direccion carnet
-    # $s3: Direccion nombre
-    # $s4: Direccion indice
-    # $s5: Direccion credito
+    # $s0: Direccion del buffer.
+    # $s1: TablaHash Estudiantes.
+    # $s2: Direccion carnet.
+    # $s3: Direccion nombre.
+    # $s4: Direccion indice.
+    # $s5: Direccion credito.
 
     # Abrir y leer el archivo
     la $a0, arcEst
@@ -74,7 +77,7 @@ main:
         blez $v0, fin_leer_estudiantes
         move $s2, $v0
 
-        add $v1, $v1, 1 # Saltar comilla
+        add $v1, $v1, 1     # Saltar comilla
 
         # Guardar el nombre
         move $a0, $v1
@@ -85,7 +88,7 @@ main:
         blez $v0, fin_leer_estudiantes
         move $s3, $v0
 
-        add $v1, $v1, 1 # Saltar comilla
+        add $v1, $v1, 1     # Saltar comilla
 
         # Guardar el indice
         move $a0, $v1
@@ -131,20 +134,21 @@ main:
         bltz $v0, fin_leer_estudiantes 
         
         # Iterar siguiente linea
-        lb   $t2, ($s0)
-        bnez $t2, for_leer_estudiantes      # Nulo
+        lb   $t0, ($s0)
+        bnez $t0, for_leer_estudiantes  # Nulo
 
     fin_leer_estudiantes:  
-    # ------------ MATERIAS ---------------
-    
+    # ---------- MATERIAS ----------
+    # Procesa los datos de las materias.
+    #
     # Planificacion de registros:
-    # $s0: Direccion del buffer
-    # $s1: TablaHash Materias
-    # $s2: Direccion codigo
-    # $s3: Direccion nombre 
-    # $s4: Direccion credito
-    # $s5: Direccion cupos
-    # $s6: Direccion min creditos
+    # $s0: Direccion del buffer.
+    # $s1: TablaHash Materias.
+    # $s2: Direccion codigo.
+    # $s3: Direccion nombre.
+    # $s4: Direccion credito.
+    # $s5: Direccion cupos.
+    # $s6: Direccion min creditos.
 
     # Abrir y leer el archivo
     la $a0, arcMat
@@ -177,7 +181,7 @@ main:
         blez $v0, fin_leer_materias
         move $s2, $v0
 
-        add $v1, $v1, 1 # Saltar comilla
+        add $v1, $v1, 1     # Saltar comilla
 
         # Guardar nombre de la materia
         move $a0, $v1
@@ -188,7 +192,7 @@ main:
         blez $v0, fin_leer_materias
         move $s3, $v0
 
-        add $v1, $v1, 1 # Saltar comilla
+        add $v1, $v1, 1     # Saltar comilla
         
         # Guardar credito
         move $a0, $v1
@@ -223,7 +227,7 @@ main:
         move $s6, $v0
 
         move $s0, $v1
-        add $s0, $s0, 1 # Salta \n
+        add $s0, $s0, 1     # Salta \n
 
         # Crear Materia
         move $a0,  $s2
@@ -253,18 +257,18 @@ main:
         jal Lista_insertarOrdenado
         
         # Iterar siguiente linea
-        lb   $t2, ($s0)
-        bnez $t2, for_leer_materias     # Nulo
+        lb   $t0, ($s0)
+        bnez $t0, for_leer_materias # Nulo
               
     fin_leer_materias:
-    # ------------ SOLICITUDES ---------------
-
+    # --------- SOLICITUDES INSCRIPCION ---------
+    # Lee y guarda las solicitudes de inscripcion.
+    #
     # Planificacion de registros:
-    # $s0: 
-    # $s1: Direccion del buffer
-    # $s2: TablaHash Materias
-    # $s3: Estudiante
-    # $s4: Materia
+    # $s0: Direccion del buffer.
+    # $s2: TablaHash Materias.
+    # $s1: Estudiante.
+    # $s2: Materia.
     
     # Abrir y leer el archivo
     la $a0, arcIns
@@ -280,18 +284,18 @@ main:
     sw $v0, listaSolIns
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s0, buffer
 
     for_leer_solicitud:
         # Guardar carnet
-        move $a0, $s1
+        move $a0, $s0
         li   $a1, 8
         li   $a2, 0
         jal guardar_dato
 
         # Verificar si se guardo carnet
         blez $v0, fin_leer_solicitud
-        move $s3, $v0
+        move $s1, $v0
 
         # Guardar codigo
         move $a0, $v1
@@ -301,35 +305,35 @@ main:
 
         # Verificar si se guardo codigo
         blez $v0, fin_leer_solicitud
-        move $s4, $v0
+        move $s2, $v0
 
-        move $s1, $v1
-        add  $s1, $s1, 1 # Salta \n
+        move $s0, $v1
+        add  $s0, $s0, 1    # Salta \n
         
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
-        move $a1, $s3
+        move $a1, $s1
         jal TablaHash_obtenerValor
 
         # Si no se encontro carnet en la TablaHash
         beqz $v0, errorEstudiante
-        move $s3, $v0
+        move $s1, $v0
 
         # Buscar codigo en la TablaHash
         lw   $a0, tablaHashMat
-        move $a1, $s4
+        move $a1, $s2
         jal TablaHash_obtenerValor
 
         # Si no se encontro codigo en la TablaHash
         beqz $v0, errorMateria
-        move $s4, $v0
+        move $s2, $v0
 
         # Crear Solicitud(Estudiante, Materia, ‘S’)
-        move $a0, $s3
-        move $a1, $s4
+        move $a0, $s1
+        move $a1, $s2
         li   $a2, 'S'
 
-        jal Solicitud_crear # Se crea bien la sol. (verificado)
+        jal Solicitud_crear 
 
         # Insertar solicitud en listaSol
         lw   $a0, listaSolIns
@@ -340,23 +344,25 @@ main:
         bltz $v0, fin_leer_solicitud
 
         # Iterar siguiente linea
-        lb   $t2, ($s1)
-        bnez $t2, for_leer_solicitud     # Nulo
+        lb   $t0, ($s0)
+        bnez $t0, for_leer_solicitud    # Nulo
 
     fin_leer_solicitud:
-    # ---------------- INSCRIPCION ------------------
+    # ---------- INSCRIPCION ----------
+    # Procesa las solicitudes de inscripcion.
+    #
     # Planificacion de registros:
-    # $s0: Lista de Solicitud de inscripcion
-    # $s1: Centinela de Lista
-    # $s2: Nodo de Lista
-    # $s3: valor del nodo (Solicitud)
+    # $s0: Lista de Solicitud de inscripcion.
+    # $s1: Centinela de Lista.
+    # $s2: Nodo de Lista.
+    # $s3: valor del nodo (Solicitud).
 
     lw $s0, listaSolIns
-    lw $s1,  ($s0)  # Centinela de la lista
-    lw $s2, 8($s1)  # Primer nodo de la lista
+    lw $s1,  ($s0)      # Centinela de la lista
+    lw $s2, 8($s1)      # Primer nodo de la lista
 
     for_solicitud:
-        # while Nodo != centinela
+        # Mientras Nodo != centinela
         beq $s2, $s1, for_solicitud_end
 
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
@@ -372,14 +378,16 @@ main:
         b for_solicitud
 
     for_solicitud_end:
-    # ------------- ARCHIVO TENTATIVO --------------------
-
+    # ------------ ARCHIVO TENTATIVO ------------
+    # Imprime las solicitudes de inscripcion en el  
+    # archivo tentativo.
+    #
     # Planificacion de registros:
-    # $s0: Archivo (descriptor)
-    # $s1: Lista de codigos
-    # $s2: Centinela de la lista
-    # $s3: Nodo de la lista 
-    # $s4: Materia actual
+    # $s0: Archivo (descriptor).
+    # $s1: Lista de codigos.
+    # $s2: Centinela de la lista.
+    # $s3: Nodo de la lista.
+    # $s4: Materia actual.
 
     # Abrir archivo para escribir
     li $v0, 13
@@ -389,18 +397,18 @@ main:
     move $s0, $v0
 
     lw $s1, listaMat
-	lw $s2,  ($s1)  # Centinela de la lista
-    lw $s3, 8($s2)  # Primer nodo de la lista
+	lw $s2,  ($s1)      # Centinela de la lista
+    lw $s3, 8($s2)      # Primer nodo de la lista
 
     for_imprimir_mat:
-        # while Nodo != centinela
+        # Mientras Nodo != centinela
         beq $s2, $s3, for_imprimir_mat_fin
 
         lw $a1, 4($s3)  # Codigo de la materia
 
         # Buscar Materia en la TablaHash 
         lw $a0, tablaHashMat
-        jal TablaHash_obtenerValor # $v0: Materia
+        jal TablaHash_obtenerValor
         move $s4, $v0
 
         # Imprimir Materia y Estudiantes
@@ -419,15 +427,14 @@ main:
         move $a0, $s0      
         syscall 
 
-
-    # -------- SOLICITUDES CORRECCION---------------
+    # --------- SOLICITUDES CORRECCION ---------
+    # Lee y guarda las solicitudes de correccion.
+    #
     # Planificacion de registros:
-    # $s0: 
-    # $s1: Direccion del buffer
-    # $s2: TablaHash Materias
-    # $s3: Estudiante
-    # $s4: Materia
-    # $s5: operacion
+    # $s0: Direccion del buffer.
+    # $s1: Estudiante.
+    # $s2: Materia.
+    # $s3: operacion.
     
     # Abre y lee un archivo
     la $a0, arcCor
@@ -443,18 +450,18 @@ main:
     sw $v0, listaSolCor
 
     # Direccion de los datos
-    la $s1, buffer
+    la $s0, buffer
 
     for_leer_sol_cor:
         # Guardar carnet
-        move $a0, $s1
+        move $a0, $s0
         li   $a1, 8
         li   $a2, 0
         jal guardar_dato
 
         # Verificar si se guardo carnet
         blez $v0, fin_leer_sol_cor
-        move $s3, $v0
+        move $s1, $v0
 
         # Guardar codigo
         move $a0, $v1
@@ -464,7 +471,7 @@ main:
 
         # Verificar si se guardo codigo
         blez $v0, fin_leer_sol_cor
-        move $s4, $v0
+        move $s2, $v0
 
         # Guardar operacion
         move $a0, $v1
@@ -474,33 +481,33 @@ main:
 
         # Verificar si se guardo operacion
         blez $v0, fin_leer_sol_cor
-        move $s5, $v0
+        move $s3, $v0
 
-        move $s1, $v1
-        add  $s1, $s1, 1 # Salta \n
+        move $s0, $v1
+        add  $s0, $s0, 1    # Salta \n
         
         # Buscar carnet en la TablaHash
         lw   $a0, tablaHashEst
-        move $a1, $s3
+        move $a1, $s1
         jal TablaHash_obtenerValor
 
         # Si no se encontro carnet en la TablaHash
         beqz $v0, errorEstudiante
-        move $s3, $v0
+        move $s1, $v0
 
         # Buscar codigo en la TablaHash
         lw   $a0, tablaHashMat
-        move $a1, $s4
+        move $a1, $s2
         jal  TablaHash_obtenerValor
 
         # Si no se encontro codigo en la TablaHash
         beqz $v0, errorMateria
-        move $s4, $v0
+        move $s2, $v0
 
         # Crear Solicitud(Estudiante, Materia, op)
-        move $a0,  $s3
-        move $a1,  $s4
-        lb   $a2, ($s5)
+        move $a0,  $s1
+        move $a1,  $s2
+        lb   $a2, ($s3)
         jal Solicitud_crear
 
         # Insertar solicitud en listaSol
@@ -512,11 +519,11 @@ main:
         bltz $v0, fin_leer_sol_cor
         
         # Iterar siguiente linea
-        lb   $t2, ($s1)
-        bnez $t2, for_leer_sol_cor # Nulo
+        lb   $t0, ($s0)
+        bnez $t0, for_leer_sol_cor # Nulo
 
     fin_leer_sol_cor:
-    # ---------------- CORRECCION ------------------
+    # ------------ CORRECCION ------------
     # Planificacion de registros:
     # $s0: Lista de Solicitud de correccion
     # $s1: Centinela de Lista
@@ -530,11 +537,11 @@ main:
     sw $v0, listaPriorIns
 
     lw $s0, listaSolCor
-    lw $s1,  ($s0)  # Centinela de la lista
-    lw $s2, 8($s1)  # Primer nodo de la lista
+    lw $s1,  ($s0)      # Centinela de la lista
+    lw $s2, 8($s1)      # Primer nodo de la lista
 
     for_solicitud_cor:
-        # while Nodo != centinela
+        # Mientras Nodo != centinela
         beq $s2, $s1, for_solicitud_cor_fin
 
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
@@ -545,7 +552,6 @@ main:
         beq $s4, $s5, solicitud_inscribir
 
         # Si la operación no es 'I', es 'E'
-
         # Cambiar la operacion de la inscripcion
         solicitud_eliminar:
             lw $a0, 4($s3)   # Materia
@@ -567,23 +573,25 @@ main:
             b for_solicitud_cor
 
     for_solicitud_cor_fin:
+        # Elimina estudiantes si las materias
+        # tienen cupos negativos.
+        #
         # Planificacion de registros:
-        # $s0: Lista de materias
-        # $s1: Centinela de Lista
-        # $s2: Nodo actual de Lista
-        # $s3: Estudiante no eliminado con más créditos
-        # $s4: Materia
-        # $s5: Lista Estudiantes
-        # $s6: Centinela de Lista Estudiantes
-        # $s7: Nodo de actual Lista Estudiantes
-        # $t0: Cupos de Materia
-        # $t1: Codigo de la materia
+        # $s0: Lista de materias.
+        # $s1: Centinela de Lista.
+        # $s2: Nodo actual de Lista.
+        # $s3: Estudiante no eliminado con mas creditos.
+        # $s4: Materia.
+        # $s5: Lista Estudiantes.
+        # $s6: Centinela de Lista Estudiantes.
+        # $s7: Nodo de actual Lista Estudiantes.
+        # $t0: Cupos de Materia.
+        # $t1: Codigo de la materia.
         
-        # Limpia las materias con cupos negativos
         # Verifica que todas las materias tengan cupos positivos
         lw $s0, listaMat
-        lw $s1,  ($s0)  # Centinela de la lista
-        lw $s2, 8($s1)  # Primer nodo de la lista
+        lw $s1,  ($s0)          # Centinela de la lista
+        lw $s2, 8($s1)          # Primer nodo de la lista
 
         for_materia:
             beq $s2, $s1, for_materia_fin
@@ -596,7 +604,7 @@ main:
             jal  TablaHash_obtenerValor
 
             move $s4, $v0
-            lw   $t0, 12($s4) # Cupos
+            lw   $t0, 12($s4)   # Cupos
 
             # Actualizamos al Nodo.siguiente
             lw $s2, 8($s2) 
@@ -610,7 +618,7 @@ main:
                 lw $s7, 8($s6)  # Nodo de la lista
                 
                 # Se crea estudiante Dummy con -1
-                # para hallar el estudiante con más créditos
+                # para hallar el estudiante con mas creditos
                 la $a0, newl
                 la $a1, newl
                 la $a2, newl
@@ -632,8 +640,8 @@ main:
                     li $t4, 'E'
                     beq $t4, $t3, for_estudiante
 
-                    lw $t5, 12($s3)   # Creditos aprobados max actual
-                    lw $t6, 12($t2)   # Creditos aprobados actual est
+                    lw $t5, 12($s3) # Creditos aprobados max actual
+                    lw $t6, 12($t2) # Creditos aprobados actual est
 
                     # Si creditosAprobMax > creditosAprobEst
                     bgt $t5, $t6, for_estudiante
@@ -643,7 +651,7 @@ main:
                     b for_estudiante
                     
                 for_estudiante_fin:
-                    # Se elimina el estudiante con más creditoAprob de la materia
+                    # Se elimina el estudiante con mas creditoAprob de la materia
                     move $a0, $s4
                     move $a1, $s3
                     jal Materia_eliminarEstudiante
@@ -652,20 +660,23 @@ main:
                     bnez $t0, for_cupos_neg
 
             b for_materia
-        for_materia_fin:
 
+        for_materia_fin:
+        # Inscribe las solicitudes de inscripcion de 
+        # las correcciones si quedan cupos.
+        #
         # Planificacion de registros:
-        # $s0: Lista de inscripciones de correccion
-        # $s1: Centinela de Lista
-        # $s2: Nodo de Lista
-        # $s3: valor del nodo (Solicitud)
-        # $s4: Materia de la Solicitud
-        # $s5: Cupoos de Materia
+        # $s0: Lista de inscripciones de correccion.
+        # $s1: Centinela de Lista.
+        # $s2: Nodo de Lista.
+        # $s3: valor del nodo (Solicitud).
+        # $s4: Materia de la Solicitud.
+        # $s5: Cupos de Materia.
 
         # Procesar inscripciones de correccion
         lw $s0, listaPriorIns
-        lw $s1,  ($s0)  # Centinela de la lista
-        lw $s2, 8($s1)  # Primer nodo de la lista
+        lw $s1,  ($s0)          # Centinela de la lista
+        lw $s2, 8($s1)          # Primer nodo de la lista
 
         # Mientras haya solicitudes de inscripcion
         for_inscripcion_cor:  
@@ -682,24 +693,24 @@ main:
             blez $s5, for_inscripcion_cor
 
             # Insertar Estudiante en la lista de Materia
-            lw $a0, 4($s3)  # Materia 
-            lw $a1,  ($s3)  # Estudiante
-            lw $a2, 8($s3)  # operacion
+            lw $a0, 4($s3)      # Materia 
+            lw $a1,  ($s3)      # Estudiante
+            lw $a2, 8($s3)      # operacion
             jal Materia_agregarEstudiante
 
             b for_inscripcion_cor
 
-
     for_inscripcion_cor_fin:
-
-
-    # ------------- ARCHIVO DEFINITIVO --------------------
+    # ---------- ARCHIVO DEFINITIVO ----------
+    # Imprime las solicitudes de inscripcion en  
+    # el archivo tentativo.
+    #
     # Planificacion de registros:
-    # $s0: Archivo (descriptor)
-    # $s1: Lista de codigos
-    # $s2: Centinela de la lista
-    # $s3: Nodo de la lista 
-    # $s4: Materia actual
+    # $s0: Archivo (descriptor).
+    # $s1: Lista de codigos.
+    # $s2: Centinela de la lista.
+    # $s3: Nodo de la lista.
+    # $s4: Materia actual.
 
     # Abrir archivo para escribir
     li $v0, 13
@@ -709,19 +720,20 @@ main:
     move $s0, $v0
 
     lw $s1, listaMat
-	lw $s2,  ($s1)  # Centinela de la lista
-    lw $s3, 8($s2)  # Primer nodo de la lista
+	lw $s2,  ($s1)      # Centinela de la lista
+    lw $s3, 8($s2)      # Primer nodo de la lista
 
     for_imprimir_mat_def:
-        # while Nodo != centinela
+        # Mientras Nodo != centinela
         beq $s2, $s3, for_imprimir_mat_def_fin
 
         lw $a1, 4($s3)  # Codigo de la materia
 
         # Buscar Materia en la TablaHash 
         lw $a0, tablaHashMat
-        jal TablaHash_obtenerValor # $v0: Materia
+        jal TablaHash_obtenerValor 
         move $s4, $v0
+
         # Imprimir Materia y Estudiantes
         move $a0, $s4
         move $a1, $s0
@@ -737,7 +749,8 @@ main:
         li   $v0, 16       
         move $a0, $s0      
         syscall 
-        
+
+    # Termina ejecucion  del programa    
     j fin
 
 error:

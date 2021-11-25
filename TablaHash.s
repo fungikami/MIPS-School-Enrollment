@@ -2,11 +2,11 @@
 #
 # Estructura de datos que implementa una tabla de Hash con 
 # claves representadas como cadenas de caracteres y valores
-# de tipo genérico. Solamente soporta la operación de agregar.
-# De tamaño estático.
+# de tipo generico. Solamente soporta la operacion de agregar.
+# De tamaño estatico.
 # 
-# numElems: Número de elementos en la tabla de Hash
-# numBuckets: Número de buckets
+# numElems: Numero de elementos en la tabla de Hash
+# numBuckets: Numero de buckets
 # tabla: Cabeza del arreglo que contiene la tabla de Hash.
 # 
 # Autores: Ka Fung & Christopher Gomez
@@ -16,13 +16,13 @@
 
         .text
 
-# Funcion crear
+# Funcion crear.
 # Crea una tabla de hash dado el tamanio.
 # Entrada:   $a0: Tamanio de la tabla.
 # Salida:    $v0: Tabla de hash (negativo si no se pudo crear).
-#          ($v0): numElems
-#         4($v0): numBuckets
-#         8($v0): tabla
+#          ($v0): numero de elementos.
+#         4($v0): numero de buckets.
+#         8($v0): tabla.
 #
 # Planificacion de registros:
 # $s0: Tamanio de la tabla de hash
@@ -105,9 +105,9 @@ TablaHash_crear_fin:
 #          $a1: Clave (String).
 #          
 # Planificacion de registros:
-# $t0: acc
-# $t1: Clave[i]
-# $t2: Numero de buckets
+# $t0: acc.
+# $t1: Clave[i].
+# $t2: Numero de buckets.
 TablaHash_hash:
     # Prologo
     sw   $fp,    ($sp)
@@ -147,7 +147,7 @@ TablaHash_hash:
         jr $ra
     
 
-# Funcion insertar
+# Funcion insertar.
 # Inserta un elemento con la clave y el valor dado en la tabla.
 # Entrada: $a0: TablaHash.
 #          $a1: Clave del elemento a insertar.
@@ -155,10 +155,10 @@ TablaHash_hash:
 # Salida:  $v0: [1 si se pudo eliminar | negativo de otra manera]
 #
 # Planificacion de registros:
-# $s0: TablaHash
-# $s1: Clave
-# $s2: entrada de hash
-# $t0: Numero de elementos de la tabla
+# $s0: TablaHash.
+# $s1: Clave.
+# $s2: entrada de hash.
+# $t0: Numero de elementos de la tabla.
 TablaHash_insertar:
     # Prologo
     sw   $fp,    ($sp)
@@ -219,19 +219,19 @@ TablaHash_insertar_fin:
     jr $ra
 
 
-# Funcion obtenerValor
+# Funcion obtenerValor.
 # Obtiene el valor de un elemento de la tabla dado la clave.
 # Entrada: $a0: TablaHash.
 #          $a1: clave a obtener valor.
 # Salida:  $v0: valor de entrada de hash.
 #          [0 si no encontro el valor].
 # Planificacion de registros:
-# $s0: TablaHash
-# $s1: Clave a buscar
-# $s2: nodo de Lista
-# $s3: centinela de Lista
-# $t0: Lista
-# $t1: valor de Nodo
+# $s0: TablaHash.
+# $s1: Clave a buscar.
+# $s2: nodo de Lista.
+# $s3: centinela de Lista.
+# $t0: Lista.
+# $t1: valor de Nodo.
 TablaHash_obtenerValor:
     # Prologo
     sw   $fp,    ($sp)
@@ -254,18 +254,18 @@ TablaHash_obtenerValor:
     add $t0,   $t0, $v0    
     lw  $t0,  ($t0)  
 
-    lw $s3,  ($t0)  # Centinela de la lista
-    lw $s2, 8($s3)  # Primer nodo de la lista
+    lw $s3,  ($t0)      # Centinela de la lista
+    lw $s2, 8($s3)      # Primer nodo de la lista
 
     TablaHash_obtenerValor_loop:
-        # while Nodo != centinela
+        # Mientras Nodo != centinela
         beq $s2, $s3, TablaHash_obtenerValor_loop_fin
 
         lw   $t1, 4($s2)  # Valor del nodo
         lw   $a0,  ($t1)  # Clave del nodo
-        move $a1,   $s1   # Clave proporcionada a la función
+        move $a1,   $s1   # Clave proporcionada a la funcion
 
-        # while Nodo.clave != clave
+        # Mientras Nodo.clave != clave
         jal TablaHash_compararStrings
         beqz $v0, TablaHash_obtenerValor_loop_fin
         
@@ -277,7 +277,7 @@ TablaHash_obtenerValor:
 TablaHash_obtenerValor_loop_fin:
     lw $t1, 4($s2) # Valor del nodo
 
-    # Si no encontró el valor retorna 0
+    # Si no encontro el valor retorna 0
     beqz $t1, TablaHash_obtenerValor_fin 
 
     # Retorna valor de la entrada de hash
@@ -295,8 +295,8 @@ TablaHash_obtenerValor_fin:
 
     jr $ra
 
-# Funcion compararStrings
-# Evalúa la igualdad de dos strings dadas
+# Funcion compararStrings.
+# Evalua la igualdad de dos strings dadas.
 # Entrada: $a0: clave de un nodo.
 #          $a1: clave a comparar.
 # Salida:  $v0: 0 si son iguales.

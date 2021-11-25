@@ -16,7 +16,7 @@
 
         .text
 
-# Funcion crear
+# Funcion crear.
 # Crea un Estudiante con los parametros dados.
 # Entrada:   $a0: carnet.
 #            $a1: nombre.
