@@ -1,10 +1,10 @@
 CI-0300 "Materia 15" 16
    15-13951 "Estudiante 16" 
-   19-62680 "Estudiante 22" (
-   20-09293 "Estudiante 03" (
+   19-62680 "Estudiante 22" (I)
+   20-09293 "Estudiante 03" (I)
 
 CI-0716 "Materia 08" 20
-   15-20076 "Estudiante 28" (
+   15-20076 "Estudiante 28" (E)
    15-47895 "Estudiante 20" 
    18-13087 "Estudiante 19" 
 
@@ -12,41 +12,41 @@ CI-1120 "Materia 02" 2
    16-62048 "Estudiante 02" 
    19-50992 "Estudiante 10" 
    19-76273 "Estudiante 06" 
-   20-72947 "Estudiante 24" (
+   20-72947 "Estudiante 24" (I)
    21-02172 "Estudiante 21" 
 
 CI-1804 "Materia 09" 7
    15-13951 "Estudiante 16" 
-   16-16475 "Estudiante 00" (
-   17-77199 "Estudiante 05" (
+   16-16475 "Estudiante 00" (E)
+   17-77199 "Estudiante 05" (I)
    18-76646 "Estudiante 23" 
-   18-94273 "Estudiante 11" (
+   18-94273 "Estudiante 11" (I)
 
 CI-2875 "Materia 00" 4
    15-20076 "Estudiante 28" 
    18-76646 "Estudiante 23" 
-   18-82227 "Estudiante 08" (
+   18-82227 "Estudiante 08" (E)
    19-79240 "Estudiante 27" 
 
 CI-3253 "Materia 07" 21
    15-43480 "Estudiante 26" 
-   17-72127 "Estudiante 13" (
+   17-72127 "Estudiante 13" (E)
    20-25866 "Estudiante 04" 
    21-84319 "Estudiante 09" 
 
 CI-3369 "Materia 13" 7
    17-77199 "Estudiante 05" 
    21-02172 "Estudiante 21" 
-   21-84319 "Estudiante 09" (
+   21-84319 "Estudiante 09" (E)
 
 CI-3796 "Materia 16" 5
-   16-16475 "Estudiante 00" (
+   16-16475 "Estudiante 00" (I)
    18-73578 "Estudiante 14" 
-   18-94273 "Estudiante 11" (
+   18-94273 "Estudiante 11" (E)
 
 CI-3885 "Materia 10" 4
    15-13951 "Estudiante 16" 
-   16-16475 "Estudiante 00" (
+   16-16475 "Estudiante 00" (I)
    17-17570 "Estudiante 07" 
    19-62680 "Estudiante 22" 
    19-79240 "Estudiante 27" 
@@ -55,33 +55,33 @@ CI-4108 "Materia 11" 24
 
 CI-4166 "Materia 14" 20
    16-62048 "Estudiante 02" 
-   19-79240 "Estudiante 27" (
-   21-84319 "Estudiante 09" (
+   19-79240 "Estudiante 27" (I)
+   21-84319 "Estudiante 09" (E)
 
 CI-4541 "Materia 01" 9
-   15-43480 "Estudiante 26" (
+   15-43480 "Estudiante 26" (I)
    18-94273 "Estudiante 11" 
    19-50992 "Estudiante 10" 
    19-57883 "Estudiante 12" 
-   19-62680 "Estudiante 22" (
+   19-62680 "Estudiante 22" (I)
    20-09293 "Estudiante 03" 
 
 CI-5379 "Materia 06" 12
-   16-62048 "Estudiante 02" (
+   16-62048 "Estudiante 02" (E)
    20-09293 "Estudiante 03" 
 
 CI-6035 "Materia 05" 18
-   18-73578 "Estudiante 14" (
+   18-73578 "Estudiante 14" (E)
    18-94273 "Estudiante 11" 
    19-76273 "Estudiante 06" 
    21-02172 "Estudiante 21" 
 
 CI-6554 "Materia 19" 19
-   17-77199 "Estudiante 05" (
+   17-77199 "Estudiante 05" (I)
    18-73578 "Estudiante 14" 
-   20-19966 "Estudiante 18" (
-   20-72947 "Estudiante 24" (
-   21-02172 "Estudiante 21" (
+   20-19966 "Estudiante 18" (E)
+   20-72947 "Estudiante 24" (E)
+   21-02172 "Estudiante 21" (E)
 
 CI-6628 "Materia 12" 15
    15-43480 "Estudiante 26" 
@@ -95,17 +95,17 @@ CI-6740 "Materia 18" 15
    19-62680 "Estudiante 22" 
 
 CI-7239 "Materia 04" 23
-   17-17570 "Estudiante 07" (
+   17-17570 "Estudiante 07" (E)
 
 CI-7437 "Materia 17" 9
    19-50992 "Estudiante 10" 
    19-62680 "Estudiante 22" 
-   19-76273 "Estudiante 06" (
+   19-76273 "Estudiante 06" (E)
    20-72947 "Estudiante 24" 
 
 CI-9727 "Materia 03" 16
    16-16475 "Estudiante 00" 
-   18-82227 "Estudiante 08" (
-   20-25866 "Estudiante 04" (
-   21-02172 "Estudiante 21" (
+   18-82227 "Estudiante 08" (I)
+   20-25866 "Estudiante 04" (I)
+   21-02172 "Estudiante 21" (I)
 
