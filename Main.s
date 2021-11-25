@@ -6,12 +6,12 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -27,6 +27,8 @@ ident:          .asciiz "   "
 espC:           .asciiz " \""
 cEsp:           .asciiz "\" "
 newl:           .asciiz "\n"
+parentIzq:      .asciiz "("
+parentDer:      .asciiz ")"
 
 tablaHashEst:   .word 0
 tablaHashMat:   .word 0
