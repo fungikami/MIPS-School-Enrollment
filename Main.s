@@ -11,7 +11,7 @@ arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.tx
 arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
 arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
 arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -517,10 +517,6 @@ main:
 
         # Si no se logro insertar
         bltz $v0, fin_leer_sol_cor
-
-        li $v0, 1
-        li $a0, 1
-        syscall
         
         # Iterar siguiente linea
         lb   $t2, ($s1)
@@ -578,8 +574,6 @@ main:
             b for_solicitud_cor
 
     for_solicitud_cor_end:
-
-
     # for solicitud in <Lista Solicitudes>
     #     Si solicitud.op == ‘E’
     #	for par in solicitud.Materias.Estudiantes
@@ -610,47 +604,47 @@ main:
     # $s4: Materia actual
 
     # Abrir archivo para escribir
-    # li $v0, 13
-    # la $a0, arcDef
-    # li $a1, 1 
-    # syscall
-    # move $s0, $v0
+    li $v0, 13
+    la $a0, arcDef
+    li $a1, 1 
+    syscall
+    move $s0, $v0
 
-    # lw $s1, listaMat
-	# lw $s2,  ($s1)  # Centinela de la lista
-    # lw $s3, 8($s2)  # Primer nodo de la lista
+    lw $s1, listaMat
+	lw $s2,  ($s1)  # Centinela de la lista
+    lw $s3, 8($s2)  # Primer nodo de la lista
 
-    # for_imprimir_mat_def:
-    #     # while Nodo != centinela
-    #     beq $s2, $s3, for_imprimir_mat_def_fin
+    for_imprimir_mat_def:
+        # while Nodo != centinela
+        beq $s2, $s3, for_imprimir_mat_def_fin
 
-    #     lw $a1, 4($s3)  # Codigo de la materia
+        lw $a1, 4($s3)  # Codigo de la materia
 
-    #     # Buscar Materia en la TablaHash 
-    #     lw $a0, tablaHashMat
-    #     jal TablaHash_obtenerValor # $v0: Materia
-    #     move $s4, $v0
+        # Buscar Materia en la TablaHash 
+        lw $a0, tablaHashMat
+        jal TablaHash_obtenerValor # $v0: Materia
+        move $s4, $v0
 
-    #     # Imprimir Materia y Estudiantes
-    #     move $a0, $s4
-    #     move $a1, $s0
-    #     jal Materia_imprimirMateria
+        # Imprimir Materia y Estudiantes
+        move $a0, $s4
+        move $a1, $s0
+        jal Materia_imprimirMateria
 
-    #     # Actualizamos al Nodo.siguiente
-    #     lw $s3, 8($s3) 
+        # Actualizamos al Nodo.siguiente
+        lw $s3, 8($s3) 
         
-    #     b for_imprimir_mat_def
+        b for_imprimir_mat_def
 
-    # for_imprimir_mat_def_fin:
-    #     # Cerrar archivo
-    #     li   $v0, 16       
-    #     move $a0, $s0      
-    #     syscall 
+    for_imprimir_mat_def_fin:
+        # Cerrar archivo
+        li   $v0, 16       
+        move $a0, $s0      
+        syscall 
         
     # for Materia in <TablaHash Materias>
     # 	print Materia
-    #	for Estudiante in Materia.Estudiantes
-    #		print Estudiante.first (print Estudiante.second)
+    # 	for Estudiante in Materia.Estudiantes
+    # 		print Estudiante.first (print Estudiante.second)
     j fin
 
 error:

@@ -223,7 +223,7 @@ Materia_eliminarEstudiante:
     for_est_mat_fin:
         # Disminuye por uno el número de cupos.
         lw   $t5, 12($a0)
-        addi $t5,    $t5, -1
+        addi $t5,    $t5, 1
         sw   $t5, 12($a0)
 
 Materia_eliminarEstudiante_fin:
