@@ -1,5 +1,5 @@
 # Proyecto 1
-# Implementacion de un sistema de asignacion de cupos créditos aprobados
+# Implementacion de un sistema de asignacion de cupos
 # de materias de una institucion.
 #
 # Autores: Ka Fung 18-10492 & Christopher Gomez 18-10892
