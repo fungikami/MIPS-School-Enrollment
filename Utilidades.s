@@ -308,6 +308,7 @@ atoi_fin:
 # Planificación de registros:
 # $t0: Caracter a agregar
 # $t1: -1 si el número es negativo, 0 de otra forma
+# $t2: Signo '-' opcional si el número es negativo
 # $t4: Copia del entero
 # $t5: Dir. del buffer (para iterar)
 # $t6: 10
@@ -342,8 +343,6 @@ itoa_distinto_de_cero:
     bgtz $t4, itoa_escribir_pos
 
     # Si es negativo, se agrega el signo y se convierte el entero a positivo
-    li  $t0,  '-'
-    sb  $t0, ($t5)
     add $t5,  $t5, 1
     abs $t4,  $t4
     add $v1,  $v1, 1
@@ -369,8 +368,13 @@ itoa_loop:
     bnez $t4, itoa_loop
 
 itoa_fin:
-    add $v0, $t5, 1
+    add $v0,    $t5, 1
+
+    li  $t2,  '-'
+    sb  $t2, ($t5)
+    
     add $v0, $v0, $t1
+
     # Epilogo
     move $sp,     $fp
     lw   $fp,    ($sp)
