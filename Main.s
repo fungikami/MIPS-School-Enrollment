@@ -33,9 +33,9 @@ parentIzq:      .asciiz "("
 parentDer:      .asciiz ")"
 
 error1:         .asciiz "Ha ocurrido un error."
-errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo"
-errorMat:       .asciiz "Materia de la solicitud no se encontro"
-errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
+errorArc:       .asciiz "Ha ocurrido un error al abrir el archivo."
+errorMat:       .asciiz "Materia de la solicitud no se encontro."
+errorEst:       .asciiz "Estudiante de la solicitud no se encontro."
 
         .text
         .globl main
@@ -532,7 +532,7 @@ main:
     # $s2: Nodo de Lista
     # $s3: valor del nodo (Solicitud)
     # $s4: operacion de la Solicitud
-    # $s5: Auxiliar
+    # $s5: ASCII 'I'
 
     # Lista de prioridad inscripciones en correccion
     jal Lista_crear
