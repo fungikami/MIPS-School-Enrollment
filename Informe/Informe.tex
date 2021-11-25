@@ -168,7 +168,10 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    asume que la estructura se encarga de mantener actualizado el número de
    cupos y de agregar en orden a los estudiantes en su lista de estudiantes.
    Así, para finalizar esta primera etapa solamente resta escribir en el
-   archivo de salida cada materia con sus estudiantes inscritos.
+   archivo de salida cada materia con sus estudiantes inscritos; nótese que para
+   estas inclusiones no se toma en cuenta el número de créditos aprobados del estudiante
+   ni el mínimo de créditos requeridos por la materia, ya que la modalidad
+   indica que en la primera etapa se aceptar \textbf{todas} las solicitudes.
 
    \begin{codebox}
       \setlinenumberplus{li:Procesar-Solicitudes-final}{1}
@@ -196,8 +199,11 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    que estará ordenada de acuerdo a la prioridad dada en la modalidad M1.5: se le da más prioridad a los 
    estudiantes con menor número de créditos aprobados. \\
 
-   Una vez aceptadas todas las eliminaciones, se procede a eliminar de cada materia que
-   excede el número de cupos a los estudiantes con menor prioridad. Por último, se aceptan
+   Una vez aceptadas todas las eliminaciones, se procede a liberar cupos de las materias,
+   para ello, primero se eliminan de cada materia a los estudiantes que no cuenten con los
+   requisitos necesarios para cursarlas (número mínimo de créditos aprobados, en este caso),
+   y luego se elimina de las materias que exceden el número de cupos a los estudiantes con 
+   menor prioridad. Por último, se aceptan
    inclusiones siguiendo la lista de prioridad siempre y cuando no se exceda el número de cupos.
 
    \begin{codebox}
@@ -235,6 +241,16 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
          \li
          \End
          \End
+
+      \li \For \id{mat} in listaMat:
+      \Do
+         \li \For \id{est} in \attrib{mat}{estudiantes}:
+         \Do
+            \li \If \attrib{est}{creditosAprob} $<$ \attrib{mat}{numCupos}:
+            \Do \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
+         \End
+            \End
+      \End
 
       \li \For \id{mat} in listaMat:
          \li \Do \While \attrib{mat}{numCupos} $<$ 0:
@@ -294,8 +310,6 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item Segundo elemento.
          \end{itemize}
       \end{itemize}
-      
-      \pagebreak
 
       \begin{itemize}
          \item Operaciones:
