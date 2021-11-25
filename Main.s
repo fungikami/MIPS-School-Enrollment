@@ -38,6 +38,7 @@ errorMat:       .asciiz "Materia de la solicitud no se encontro"
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro"
 
         .text
+        .globl main
 main:
     # ---------- ESTUDIANTES ----------
     # Procesa datos de los estudiantes.
