@@ -141,7 +141,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       \li \id{est} = \id{tablaHashEst}.\proc{Obtener-Valor}(\id{carnet})
       \li \id{codigo} = Guardar codigo de la materia
       \li \id{mat} = \id{tablaHashMat}.\proc{Obtener-Valor}(\id{codigo})
-      \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat}, \id{op})
+      \li \id{sol} = \kw{new} \proc{Solicitud}(\id{est}, \id{mat}, `S')
       \li \id{listaSol}.\proc{Insertar}(\id{sol}) \label{li:Extraer-Datos-final}
       \End
    \End
@@ -165,7 +165,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    \end{codebox}
 
    Ahora, cada materia contiene una lista con los estudiantes inscritos. Se
-   supone que la estructura se encarga de mantener actualizado el número de
+   asume que la estructura se encarga de mantener actualizado el número de
    cupos y de agregar en orden a los estudiantes en su lista de estudiantes.
    Así, para finalizar esta primera etapa solamente resta escribir en el
    archivo de salida cada materia con sus estudiantes inscritos.
@@ -190,15 +190,15 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       \End
    \end{codebox}
 
-   Luego, se procesa las solicitudes de corrección. Al terminar el siguiente pseudocódigo, 
+   Luego, se procesan las solicitudes de corrección. Al terminar el siguiente pseudocódigo, 
    se debe tener una lista de solicitudes de corrección. Se procesa la lista de solicitudes 
    para que cada materia tenga una lista de estudiantes inscritos y eliminados. Se ordena 
-   la lista de estudiantes de cada materia según la prioridad: M1.5 Se le da prioridad a los 
+   la lista de estudiantes de cada materia según la prioridad: M1.5. Se le da prioridad a los 
    estudiantes con menor número de créditos aprobados. 
 
    \begin{codebox}
+      \setlinenumberplus{li:Generar-Archivo-Tentativo-final}{1}
       \Procname{$\proc{Extraer-Datos-Correccion}$}
-      \li
       \li \id{listaSolCor} = \kw{new} \proc{Lista}()
       \li \id{archivoCor} = Leer archivo de solicitudes de corrección
       \li \For linea in archivoCor:
@@ -215,26 +215,31 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    \end{codebox}
 
    \begin{codebox}
-      \setlinenumberplus{li:Extraer-Datos-final}{1}
+      \setlinenumberplus{li:Extraer-Datos-Correccion-final}{1}
       \Procname{$\proc{Procesar-Solicitudes-Correccion}$}
+      \li \id{listaPrioridad} = \kw{new} \proc{Lista}()
       \li \For sol in listaCor:
       \Do
          \li \id{est} = \attrib{sol}{estudiante}
          \li \id{mat} = \attrib{sol}{materia}
 
-         \li \If \attrib{sol}{op} == 'E':
+         \li \If \attrib{sol}{op} == `E':
          \Do 
             \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
-            \li \attrib{mat}{cupos}++
          \li \Else:
+            \li \id{listaPrioridad}.\proc{Insertar-Ordenado}(\id{sol}, \id{g})
+          
+         \End
+         \End
+      \li
+      \li \For \id{sol} in \id{listaPrioridad}:
+      \Do 
+         \li \id{mat} = \attrib{sol}{materia}
+         \li \id{est} = \attrib{sol}{estudiante}
+         \li \If \attrib{mat}{cupos} $>$ 0:
+         \Do
             \li \id{mat}.\proc{Agregar-Estudiante}(\id{est})
-            \li \attrib{mat}{cupos}- -
-         \End
 
-         
-
-         \label{li:Procesar-Solicitudes-Correccion-final}
-         \End
       \End
    \end{codebox}
 
@@ -242,7 +247,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    estudiantes inscritos y eliminados.
 
    \begin{codebox}
-      \setlinenumberplus{li:Procesar-Solicitudes-final}{1}
+      \setlinenumberplus{li:Procesar-Solicitudes-Correccion-final}{1}
       \Procname{$\proc{Generar-Archivo-Definitivo}$}
       \li \id{archivoDef} = Abrir archivo definitivo a escribir
       \li \For mat in listaMat:
@@ -255,9 +260,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
          \Do
             \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{carnet}$>$ ')
             \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{nombre}$>$ ') 
-            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{op}$>\backslash$n') 
-            
-            \label{li:Generar-Archivo-Tentativo-final}
+            \li \id{archivoTen}.\proc{Escribir}(`$<$\attrib{est}{op}$>\backslash$n') \label{li:Generar-Archivo-Definitivo-final}
             \End
          \End
          \End
@@ -398,6 +401,6 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       
    \end{itemize}
 
-
+\section{Consideraciones}
 
 \end{document}
