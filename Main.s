@@ -6,12 +6,12 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -255,10 +255,10 @@ main:
         
         # Iterar siguiente linea
         lb   $t2, ($s0)
-        bnez $t2, for_leer_materias         # Nulo
-        bne  $t2, 10, fin_leer_materias     # Salto de linea
-        bne  $t2, 11, fin_leer_materias     # Tab vertical
-        bne  $t2, 32, fin_leer_materias     # Espacio en blanco
+        bnez $t2, for_leer_materias     # Nulo
+        bne  $t2, 10, fin_leer_materias # Salto de linea
+        bne  $t2, 11, fin_leer_materias # Tab vertical
+        bne  $t2, 32, fin_leer_materias # Espacio en blanco
               
     fin_leer_materias:
     # ------------ SOLICITUDES ---------------
@@ -331,7 +331,7 @@ main:
         # Crear Solicitud(Estudiante, Materia, ‘S’)
         move $a0, $s3
         move $a1, $s4
-        li   $a2, 83
+        li   $a2, 'S'
 
         jal Solicitud_crear # Se crea bien la sol. (verificado)
 
@@ -345,10 +345,10 @@ main:
 
         # Iterar siguiente linea
         lb   $t2, ($s1)
-        bnez $t2, for_leer_solicitud         # Nulo
-        bne  $t2, 10, fin_leer_solicitud     # Salto de linea
-        bne  $t2, 11, fin_leer_solicitud     # Tab vertical
-        bne  $t2, 32, fin_leer_solicitud     # Espacio en blanco
+        bnez $t2, for_leer_solicitud    # Nulo
+        bne  $t2, 10, fin_leer_solicitud    # Salto de linea
+        bne  $t2, 11, fin_leer_solicitud    # Tab vertical
+        bne  $t2, 32, fin_leer_solicitud    # Espacio en blanco
 
     fin_leer_solicitud:
     # ---------------- INSCRIPCION ------------------
@@ -498,17 +498,17 @@ main:
         # Buscar codigo en la TablaHash
         lw   $a0, tablaHashMat
         move $a1, $s4
-        jal TablaHash_obtenerValor
+        jal  TablaHash_obtenerValor
 
         # Si no se encontro codigo en la TablaHash
         beqz $v0, errorMateria
         move $s4, $v0
 
         # Crear Solicitud(Estudiante, Materia, op)
-        move $a0, $s3
-        move $a1, $s4
-        move $a2, $s5
-        jal Solicitud_crear 
+        move $a0,  $s3
+        move $a1,  $s4
+        lb   $a2, ($s5)
+        jal Solicitud_crear
 
         # Insertar solicitud en listaSol
         lw   $a0, listaSolCor
@@ -518,12 +518,13 @@ main:
         # Si no se logro insertar
         bltz $v0, fin_leer_sol_cor
 
+        li $v0, 1
+        li $a0, 1
+        syscall
+        
         # Iterar siguiente linea
         lb   $t2, ($s1)
-        bnez $t2, fin_leer_sol_cor         # Nulo
-        bne  $t2, 10, fin_leer_sol_cor     # Salto de linea
-        bne  $t2, 11, fin_leer_sol_cor     # Tab vertical
-        bne  $t2, 32, fin_leer_sol_cor     # Espacio en blanco
+        bnez $t2, for_leer_sol_cor # Nulo
 
     fin_leer_sol_cor:
     # ---------------- CORRECCION ------------------
@@ -548,15 +549,13 @@ main:
         beq $s2, $s1, for_solicitud_cor_end
 
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
-        lw $s4, 8($s3)  # operacion de Solicitud
+        lb $s4, 8($s3)  # operacion de Solicitud
 
         # Si operacion == 'I'
-        li  $s5, 73 
+        li  $s5, 'I'
         beq $s4, $s5, solicitud_inscribir
 
-        # Si operacion == 'E'
-        li  $s5, 69
-        beq $s4, $s5, solicitud_eliminar
+        # Si la operación no es 'I', es 'E'
 
         # Cambiar la operacion de la inscripcion
         solicitud_eliminar:
@@ -570,7 +569,7 @@ main:
         solicitud_inscribir:
             lw $a0, 4($s3)  # Materia 
             lw $a1,  ($s3)  # Estudiante
-            lw $a2, 8($s3)  # operacion
+            lb $a2, 8($s3)  # operacion
             jal Materia_agregarEstudiante
 
         for_solicitud_sig:
@@ -652,8 +651,6 @@ main:
     # 	print Materia
     #	for Estudiante in Materia.Estudiantes
     #		print Estudiante.first (print Estudiante.second)
-        
-
     j fin
 
 error:

@@ -235,8 +235,7 @@ Materia_eliminarEstudiante_fin:
 
 
 # Función imprimirMateria
-# Marca un estudiante de la lista de estudiantes de la materia 
-# como eliminado.
+# Imprime en un archivo la materia.
 # Entrada:   $a0: Materia.
 #            $a1: Archivo.
 # 
@@ -330,16 +329,15 @@ Materia_imprimirMateria_fin:
     # Epílogo
     move $sp,     $fp
     lw   $fp,    ($sp)
-    lw   $ra, -4($sp)
-    lw   $s0, -8($sp)
+    lw   $ra,  -4($sp)
+    lw   $s0,  -8($sp)
     lw   $s1, -12($sp)
     lw   $s2, -16($sp)
 
     jr $ra
 
 # Función imprimirEstudiantes
-# Marca un estudiante de la lista de estudiantes de la materia 
-# como eliminado.
+# Imprime en un archivo los estudiantes de una materia.
 # Entrada:   $a0: Lista de Estudiantes.
 #            $a1: Archivo.
 # 
@@ -351,7 +349,7 @@ Materia_imprimirMateria_fin:
 # $t4: Valor del nodo (Par)
 # $t5: Estudiante
 # $t6: Caracter del nombre del Estudiante
-# $t7:
+# $t7: 
 Materia_imprimirEstudiantes:
     # Prólogo
     sw   $fp,   ($sp)
@@ -418,7 +416,7 @@ Materia_imprimirEstudiantes:
 
         # Imprimir operacion si es necesario
         lw $t7, 4($t4)
-        li $t8, 83      # 'S'
+        li $t8, 'S'      # 'S'
         beq $t7, $t8, for_imprimir_est_sig
 
         # Imprime '('
