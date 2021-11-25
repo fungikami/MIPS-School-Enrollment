@@ -4,7 +4,7 @@
 # de materias de una institucion.
 #
 # Autores: Ka Fung & Christopher Gomez
-# Fecha: 25-nov-2021
+# Fecha:   25-nov-2021
 
         .data
 arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
