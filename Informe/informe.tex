@@ -191,10 +191,14 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    \end{codebox}
 
    Luego, se procesan las solicitudes de corrección. Al terminar el siguiente pseudocódigo, 
-   se debe tener una lista de solicitudes de corrección. Se procesa la lista de solicitudes 
-   para que cada materia tenga una lista de estudiantes inscritos y eliminados. Se ordena 
-   la lista de estudiantes de cada materia según la prioridad: M1.5. Se le da prioridad a los 
-   estudiantes con menor número de créditos aprobados. 
+   se debe tener una lista de solicitudes de corrección. Para procesar dicha lista, se comienza
+   aceptando todas las eliminaciones y paralelamente creando una lista de solicitudes de inclusión
+   que estará ordenada de acuerdo a la prioridad dada en la modalidad M1.5: se le da más prioridad a los 
+   estudiantes con menor número de créditos aprobados. \\
+
+   Una vez aceptadas todas las eliminaciones, se procede a eliminar de cada materia que
+   excede el número de cupos a los estudiantes con menor prioridad. Por último, se aceptan
+   inclusiones siguiendo la lista de prioridad siempre y cuando no se exceda el número de cupos.
 
    \begin{codebox}
       \setlinenumberplus{li:Generar-Archivo-Tentativo-final}{1}
@@ -228,10 +232,16 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
          \li \Else:
             \li \id{listaPrioridad}.\proc{Insertar-Ordenado}(\id{sol}, \id{g})
-          
+         \li
          \End
          \End
-      \li
+
+      \li \For \id{mat} in listaMat:
+         \li \Do \While \attrib{mat}{numCupos} $<$ 0:
+            \li \Do // Eliminar al estudiante con más créditos aprobados. 
+         \End
+         \li
+      \End
       \li \For \id{sol} in \id{listaPrioridad}:
       \Do 
          \li \id{mat} = \attrib{sol}{materia}
@@ -239,7 +249,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
          \li \If \attrib{mat}{cupos} $>$ 0:
          \Do
             \li \id{mat}.\proc{Agregar-Estudiante}(\id{est})
-
+            \label{li:Procesar-Solicitudes-Correccion-final}
       \End
    \end{codebox}
 
@@ -270,7 +280,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    \section{Estructuras utilizadas}
 
    En la seccion anterior se menciona el uso de distintas estructuras de datos
-   utilizadas en el diseño del programa. En esta sección se describe cada una
+   utilizadas en el diseño del programa. En esta sección se enlistan cada una
    de ellas, junto con sus atributos y operaciones.
 
    \begin{itemize}
@@ -411,13 +421,16 @@ del estudiante y la lista de estudiantes de cada \proc{Materia} para insertar la
 Así, para evitar búsquedas lineales con estructuras como listas, con las tablas de hash implementadas se logra 
 obtener la información de cada materia/estudiante en tiempo amortizado constante. En este sentido, la función 
 de Hash escogida para \proc{TablaHash} fue basada en la función de Hash para Strings que utiliza el lenguaje 
-de programación Java \footnote{\href{https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html}{}}.
+de programación Java \footnote{https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html}. \\
 
-Por otro lado, se implementó distintas funciones de comparación. Para imprimir cada materia con sus
+Por otro lado, se implementaron distintas funciones de comparación (a las que refiere el pseudocódigo en
+la sección 1 como $f$ y $g$). Para imprimir cada materia con sus
 respectivos estudiantes inscritos y eliminados, se toma en cuenta el orden ascendente según el código
-de la materia y el carnet del estudiante. Para ello, se realiza comparaciones por cada valor ASCII de 
+de la materia y el carnet del estudiante. Para ello, se realizan comparaciones por cada valor ASCII de 
 un caracter del carnet al insertar el estudiante en la lista de estudiantes de la materia. 
 En cambio, para tomar en cuenta la modalidad asignada en las solicitudes de corrección, se realiza una 
-comparación entre el número de créditos aprobados de cada estudiante a inscribir. 
+comparación entre el número de créditos aprobados de cada estudiante a inscribir. \\
+
+
 
 \end{document}
