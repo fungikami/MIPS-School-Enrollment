@@ -7,17 +7,10 @@
 # Fecha:   25-nov-2021
 
         .data
-arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsDefinitiva.txt"
-
 buffer:         .space 2097152 
 bufferTamanio:  .word  2097152
 
-tablaTamanio:   .word 100
+tablaTamanio:   .word 101
 tablaHashEst:   .word 0
 tablaHashMat:   .word 0
 listaSolIns:    .word 0
