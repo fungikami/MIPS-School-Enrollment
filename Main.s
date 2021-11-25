@@ -57,7 +57,7 @@ main:
     jal leer_archivo
     bltz $v0, errorArchivo
 
-    # <TablaHash Estudiantes>.crear()
+    # Crear TablaHash Estudiantes
     lw  $a0, tablaTamanio
     jal TablaHash_crear
 
@@ -157,7 +157,7 @@ main:
     jal leer_archivo
     bltz $v0, errorArchivo
 
-    # <TablaHash Materias>.crear()
+    # Crear TablaHash Materias
     lw  $a0, tablaTamanio
     jal TablaHash_crear
 
@@ -277,7 +277,7 @@ main:
     jal leer_archivo
     bltz $v0, errorArchivo
 
-    # <Lista Solicitudes>.crear()
+    # Crear Lista Solicitudes
     jal Lista_crear
 
     # Guardar la lista
@@ -335,7 +335,7 @@ main:
 
         jal Solicitud_crear 
 
-        # Insertar solicitud en listaSol
+        # Insertar solicitud en listaSolIns
         lw   $a0, listaSolIns
         move $a1, $v0
         jal Lista_insertar
@@ -350,6 +350,7 @@ main:
     fin_leer_solicitud:
     # ---------- INSCRIPCION ----------
     # Procesa las solicitudes de inscripcion.
+    # Se aceptan todas las solicitudes.
     #
     # Planificacion de registros:
     # $s0: Lista de Solicitud de inscripcion.
@@ -443,7 +444,7 @@ main:
     jal leer_archivo
     bltz $v0, errorArchivo
 
-    # <Lista Solicitudes>.crear()
+    # Crear Lista Solicitudes
     jal Lista_crear
 
     # Guardar la lista
@@ -532,7 +533,7 @@ main:
     # $s4: operacion de la Solicitud
     # $s5: Auxiliar
 
-    # Cola de prioridad inscripciones en correccion
+    # Lista de prioridad inscripciones en correccion
     jal Lista_crear
     sw $v0, listaPriorIns
 
@@ -751,7 +752,7 @@ main:
         syscall 
 
     # Termina ejecucion  del programa    
-    j fin
+    b fin
 
 error:
     li $v0, 4
