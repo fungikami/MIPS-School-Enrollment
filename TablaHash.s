@@ -334,11 +334,3 @@ TablaHash_compararStrings_fin:
     lw   $fp,   ($sp)
 
     jr $ra
-
-# Funcion eliminar
-# TODO
-# TablaHash_eliminar:
-
-# Funcion existe
-# TODO
-# TablaHash_existe:
