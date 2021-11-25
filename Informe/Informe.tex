@@ -199,7 +199,8 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
    que estará ordenada de acuerdo a la prioridad dada en la modalidad M1.5: se le da más prioridad a los 
    estudiantes con menor número de créditos aprobados. \\
 
-   Una vez aceptadas todas las eliminaciones, se procede a liberar cupos de las materias,
+   Una vez aceptadas todas las eliminaciones, se procede a liberar cupos de las materias (líneas
+   64-70),
    para ello, primero se eliminan de cada materia a los estudiantes que no cuenten con los
    requisitos necesarios para cursarlas (número mínimo de créditos aprobados, en este caso),
    y luego se elimina de las materias que exceden el número de cupos a los estudiantes con 
@@ -235,18 +236,22 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
 
          \li \If \attrib{sol}{op} == `E':
          \Do 
-            \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
-         \li \Else:
+            \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est}) \label{li:Procesar-Solicitudes-Correccion-corte}
+         \end{codebox}
+
+         \begin{codebox}
+         \setlinenumberplus{li:Procesar-Solicitudes-Correccion-corte}{1}
+         \li\Do \Do \Else:
             \li \id{listaPrioridad}.\proc{Insertar-Ordenado}(\id{sol}, \id{g})
          \li
          \End
          \End
-
+      
       \li \For \id{mat} in listaMat:
       \Do
          \li \For \id{est} in \attrib{mat}{estudiantes}:
          \Do
-            \li \If \attrib{est}{creditosAprob} $<$ \attrib{mat}{numCupos}:
+            \li \If \attrib{est}{creditosAprob} $<$ \attrib{mat}{minCreditos}:
             \Do \li \id{mat}.\proc{Eliminar-Estudiante}(\id{est})
          \End
             \End
@@ -264,13 +269,22 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
          \li \id{est} = \attrib{sol}{estudiante}
          \li \If \attrib{mat}{cupos} $>$ 0:
          \Do
-            \li \id{mat}.\proc{Agregar-Estudiante}(\id{est})
-            \label{li:Procesar-Solicitudes-Correccion-final}
+         \li \If \attrib{est}{creditosAprob} $\geq$ \attrib{mat}{minCreditos}:
+         \Do 
+         \li \id{mat}.\proc{Agregar-Estudiante}(\id{est})
+         \label{li:Procesar-Solicitudes-Correccion-final}
+         \End
       \End
    \end{codebox}
 
    Finalmente, se escribe en el archivo de salida cada materia con sus 
-   estudiantes inscritos y eliminados.
+   estudiantes inscritos y eliminados. Si el estudiante fue inscrito en
+   el proceso de inscripción, no se denota la operación. En cambio, si 
+   estaba inscrito y fue eliminado, se denota la operación de eliminación,
+   o si se inscribió en corrección, se denota la operación de inscripción.
+   No estarán en en archivo definitivo los estudiantes cuya inclusión se
+   haya negado en la corrección, bien sea por falta de créditos o porque
+   no habían cupos disponibles.
 
    \begin{codebox}
       \setlinenumberplus{li:Procesar-Solicitudes-Correccion-final}{1}
@@ -310,7 +324,8 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item Segundo elemento.
          \end{itemize}
       \end{itemize}
-
+      
+      \pagebreak
       \begin{itemize}
          \item Operaciones:
 
