@@ -89,10 +89,6 @@ guardar_dato:
     beqz $a2, guardar_hasta_tamanio
 
     # Si se debe iterar hasta comilla
-    # lb $t3, ($t0)
-    # sb $t3, ($t2)
-    # add $t0, $t0, 1
-    # add $t2, $t2, 1
     guardar_hasta_comilla:
         lb $t3, ($t0)
 
@@ -106,13 +102,6 @@ guardar_dato:
         add $t2, $t2, 1
 
         b guardar_hasta_comilla
-    
-    # guardar_hasta_comilla_fin:
-    #     lb $t3, ($t0)
-    #     sb $t3, ($t2)
-    #     add $t0, $t0, 1
-    #     add $t2, $t2, 1
-    #     b guardar_dato_exitoso
 
     guardar_hasta_tamanio:
         lb $t3, ($t0)
@@ -179,13 +168,11 @@ comparador_fin:
 
     jr $ra
 
-# Funcion comparador
-# Compara dos strings 
+# Funcion comparador carnets de una materia.
 # Entrada: $a0: Par a comparar
 #          $a1: Par a comparar
 # Salida:  $v0: 0 si a<b, 
-#               1 de otra forma   
-# Planificacion de registros:
+#               1 de otra forma 
 comparador_carnet:
     # Prologo
     sw   $fp,   ($sp)
@@ -193,10 +180,12 @@ comparador_carnet:
     move $fp,    $sp
     addi $sp,    $sp, -8
 
-    lw $a0, ($a0)
-    lw $a0, ($a0)
-    lw $a1, ($a1)
-    lw $a1, ($a1)
+    lw $a0, ($a0)   # Estudiante a
+    lw $a0, ($a0)   # Carnet a
+
+    lw $a1, ($a1)   # Estudiante b
+    lw $a1, ($a1)   # Carnet b
+
     jal comparador
 
 comparador_carnet_fin:
@@ -207,12 +196,47 @@ comparador_carnet_fin:
 
     jr $ra
 
+
+# Funcion comparador de solicitudes segun la modalidad:
+# Prioridad a los estudiantes con menor número de créditos aprobados.
+# Entrada: $a0: Solicitud a comparar
+#          $a1: Solicitud a comparar
+# Salida:  $v0: 0 si a<b, 
+#               1 de otra forma 
+comparador_solicitud:
+    # Prologo
+    sw   $fp,   ($sp)
+    sw   $ra, -4($sp)
+    move $fp,    $sp
+    addi $sp,    $sp, -8
+
+    lw $a0,   ($a0)   # Estudiante a
+    lw $a0, 12($a0)   # Creditos aprobados a
+
+    lw $a1,   ($a1)   # Estudiante b
+    lw $a1, 12($a1)   # Creditos aprobados b
+
+    move $v0, $zero
+
+    # Si a < b, retorna 0
+    blt $a0, $a1, comparador_solicitud_fin
+
+    # En cambio, retorna 1
+    li $v0, 1
+
+comparador_solicitud_fin:
+    # Epilogo
+    move $sp,    $fp
+    lw   $fp,   ($sp)
+    lw   $ra, -4($sp)
+
+    jr $ra
+
 # Funcion limpiarBuffer
 # Limpia el buffer (redactar)
 # Entrada: $a0: Dir. del buffer a limpiar
-#          $a1: Tamaniop del buffer a comparar (multiplo de 4)
+#          $a1: Tamanio del buffer a comparar (multiplo de 4)
 # Salida:  $v0: Dir. del buffer
-# Planificacion de registros:
 limpiarBuffer:
     # Prologo
     sw   $fp, ($sp)

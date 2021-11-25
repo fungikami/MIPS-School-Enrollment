@@ -6,12 +6,12 @@
         .data
 # chus/Documents 
 # fung/Downloads
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/fung/Downloads/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/fung/Downloads/Orga/proyecto1/AA-InsDefinitiva.txt"
 
 tamanioTablaHash:   .word 100
 
@@ -35,7 +35,7 @@ tablaHashMat:   .word 0
 listaSolIns:    .word 0
 listaSolCor:    .word 0
 listaMat:       .word 0
-listaInsCor:    .word 0
+listaPriorIns:  .word 0
 
         .text
 main:
@@ -106,6 +106,11 @@ main:
         jal guardar_dato
 
         blez $v0, fin_leer_estudiantes
+        
+        move $a0, $v0
+        li   $a1, 3
+        jal  atoi
+
         move $s5, $v0
 
         move $s0, $v1
@@ -532,9 +537,9 @@ main:
     # $s4: operacion de la Solicitud
     # $s5: Auxiliar
 
-    # Lista inscripciones en correccion
+    # Cola de prioridad inscripciones en correccion
     jal Lista_crear
-    sw $v0, listaInsCor
+    sw $v0, listaPriorIns
 
     lw $s0, listaSolCor
     lw $s1,  ($s0)  # Centinela de la lista
@@ -542,7 +547,7 @@ main:
 
     for_solicitud_cor:
         # while Nodo != centinela
-        beq $s2, $s1, for_solicitud_cor_end
+        beq $s2, $s1, for_solicitud_cor_fin
 
         lw $s3, 4($s2)  # Valor del nodo (Solicitud)
         lb $s4, 8($s3)  # operacion de Solicitud
@@ -561,30 +566,57 @@ main:
 
             b for_solicitud_sig
 
-        # Insertar Estudiante en la lista de Materia
+        # Insertar Estudiante en la Lista de Prioridad de Inscripciones
         solicitud_inscribir:
-            lw $a0, 4($s3)  # Materia 
-            lw $a1,  ($s3)  # Estudiante
-            lb $a2, 8($s3)  # operacion
-            jal Materia_agregarEstudiante
+            lw   $a0, listaPriorIns
+            move $a1, $s3
+            la   $a2, comparador_solicitud
+            jal Lista_insertarOrdenado
 
         for_solicitud_sig:
             # Actualizamos al Nodo.siguiente
             lw $s2, 8($s2) 
             b for_solicitud_cor
 
-    for_solicitud_cor_end:
-    # for solicitud in <Lista Solicitudes>
-    #     Si solicitud.op == ‘E’
-    #	for par in solicitud.Materias.Estudiantes
-    #		Si par.primero == solicitud.Estudiante
-    #			par.segundo = ‘E’
-    #			break
-    # 	Materia.cupos++
-    #
-    #     Si solicitud.op == ‘I’
-    #	prioridad = solicitud.Estudiante.creditosAprob
-    #	<ColaDePrioridad Inscribir>.encolar(Pair<solicitud, prioridad>)
+    for_solicitud_cor_fin:
+        # Planificacion de registros:
+        # $s0: Lista de inscripciones de correccion
+        # $s1: Centinela de Lista
+        # $s2: Nodo de Lista
+        # $s3: valor del nodo (Solicitud)
+        # $s4: Materia de la Solicitud
+        # $s5: Cupoos de Materia
+
+        # Procesar inscripciones de correccion
+        lw $s0, listaPriorIns
+        lw $s1,  ($s0)  # Centinela de la lista
+        lw $s2, 8($s1)  # Primer nodo de la lista
+
+        # Mientras haya solicitudes de inscripcion
+        for_inscripcion_cor:  
+            beq $s2, $s1, for_inscripcion_cor_fin
+
+            lw $s3,  4($s2)     # Valor del nodo (Solicitud)
+            lw $s4,  4($s3)     # Materia
+            lw $s5, 12($s4)     # Cupos
+
+            # Actualizamos al Nodo.siguiente
+            lw $s2, 8($s2) 
+
+            # Si no quedan cupos en la Materia, siguiente solicitud
+            bltz $s5, for_inscripcion_cor
+
+            # Insertar Estudiante en la lista de Materia
+            lw $a0, 4($s3)  # Materia 
+            lw $a1,  ($s3)  # Estudiante
+            lw $a2, 8($s3)  # operacion
+            jal Materia_agregarEstudiante
+
+            b for_inscripcion_cor
+
+
+        for_inscripcion_cor_fin:
+
 
     #    while !<ColaDePrioridad Inscribir>.estaVacia()
     #	solicitud = <ColaDePrioridad Inscribir>.pop()
@@ -641,10 +673,6 @@ main:
         move $a0, $s0      
         syscall 
         
-    # for Materia in <TablaHash Materias>
-    # 	print Materia
-    # 	for Estudiante in Materia.Estudiantes
-    # 		print Estudiante.first (print Estudiante.second)
     j fin
 
 error:
