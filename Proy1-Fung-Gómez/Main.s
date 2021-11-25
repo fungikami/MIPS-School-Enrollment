@@ -1,6 +1,5 @@
 # Proyecto 1
-# Implementacion de un sistema de asignacion de cupos
-# para dar soporte al proceso de inscripcion y correccion 
+# Implementacion de un sistema de asignacion de cupos créditos aprobados
 # de materias de una institucion.
 #
 # Autores: Ka Fung 18-10492 & Christopher Gomez 18-10892
@@ -8,12 +7,12 @@
 
         .data
 
-arcEst:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-Estudiantes.txt"
-arcMat:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-Materias.txt"	
-arcIns:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-SolInscripcion.txt"
-arcCor:	.asciiz "/home/chus/Documents/Orga/proyecto1/caso1-SolCorreccion.txt"
-arcTen: .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:	.asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
+arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
+arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
+arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
+arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
+arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
+arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
 
 buffer:         .space 2097152 
 bufferTamanio:  .word  2097152
@@ -39,7 +38,7 @@ errorMat:       .asciiz "Materia de la solicitud no se encontro."
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro."
 
         .text
-        .globl main
+
 main:
     # ---------- ESTUDIANTES ----------
     # Cargar datos de los estudiantes.
@@ -398,7 +397,6 @@ main:
     # $s3: Nodo de la lista.
     # $s4: Materia actual.
 
-    # Abrir archivo para escribir
     li $v0, 13
     la $a0, arcTen
     li $a1, 1 
@@ -591,11 +589,12 @@ main:
         # $s0: Lista de materias.
         # $s1: Centinela de Lista.
         # $s2: Nodo actual de Lista.
+        # $s3: Mínimo de créditos de la materia.
         # $s4: Materia.
         # $s5: Lista Estudiantes.
         # $s6: Centinela de Lista Estudiantes.
         # $s7: Nodo de actual Lista Estudiantes.
-        # $t0: Minimo de creditos Materia.
+        # $t0: Uso interno en el ciclo.
         # $t1: Codigo de la materia.
         
         # Verifica que todas las materias tengan cupos positivos
@@ -604,7 +603,7 @@ main:
         lw $s2, 8($s1)          # Primer nodo de la lista
 
         for_materia_eliminar_no_req:
-            beq $s2, $s1, for_materia_fin
+            beq $s2, $s1, for_materia_eliminar_no_req_fin
 
             lw $t1,  4($s2) # Valor del nodo (Codigo)
 
@@ -614,7 +613,7 @@ main:
             jal  TablaHash_obtenerValor
 
             move $s4,    $v0
-            lw   $t0, 16($s4) # minCreditos de la materia
+            lw   $s3, 16($s4) # minCreditos de la materia
 
             # Actualizamos al Nodo.siguiente
             lw $s2, 8($s2) 
@@ -637,14 +636,13 @@ main:
 
                     # Si la operacion == 'E'
                     li  $t4, 'E'
-                    beq $t4, $t3, for_estudiante
+                    beq $t4, $t3, for_estudiante_verif_req
 
                     lw $t5, 12($t2) # Creditos aprobados del estudiante actual
 
-                    # Si creditosAprob >= minCreditos
-                    bge $t5, $t0, for_estudiante_verif_req
+                    bge $t5, $s3, for_estudiante_verif_req
 
-                    # Se elimina el estudiante pro no cumplir requisitos
+                    # Se elimina el estudiante por no cumplir requisitos
                     move $a0, $s4
                     move $a1, $t2
                     jal Materia_eliminarEstudiante
@@ -652,7 +650,10 @@ main:
                     b for_estudiante_verif_req
                 for_estudiante_verif_req_fin:
             b for_materia_eliminar_no_req
+        
+        for_materia_eliminar_no_req_fin:
         # ------------ AGREGADO ------------------
+
         # Elimina estudiantes si las materias
         # tienen cupos negativos.
         #
@@ -672,6 +673,17 @@ main:
         lw $s0, listaMat
         lw $s1,  ($s0)          # Centinela de la lista
         lw $s2, 8($s1)          # Primer nodo de la lista
+
+        # Para hallar el estudiante con más creditos en el ciclo
+        # se crea estudiante Dummy con -1 créditos aprobados
+        # Se guarda en la pila
+        la   $a0, newl
+        la   $a1, newl
+        la   $a2, newl
+        li   $a3, -1
+        jal  Estudiante_crear
+        sw   $v0, ($sp)
+        add  $sp, $sp, -4
 
         for_materia:
             beq $s2, $s1, for_materia_fin
@@ -697,15 +709,8 @@ main:
                 lw $s6,  ($s5)      # Centinela de la lista
                 lw $s7, 8($s6)      # Nodo de la lista
                 
-                # Se crea estudiante Dummy con -1
-                # para hallar el estudiante con mas creditos
-                la $a0, newl
-                la $a1, newl
-                la $a2, newl
-                li $a3, -1
-                jal Estudiante_crear
-                move $s3, $v0
-                
+                # Se carga en $s3 el estudiante dummy de la pila
+                lw $s3, 4($sp)
                 for_estudiante:
                     beq $s7, $s6, for_estudiante_fin
 
@@ -740,10 +745,13 @@ main:
                     bnez $t0, for_cupos_neg
 
             b for_materia
+            # Se desempila el estudiante Dummy
+            add $sp, $sp, 4
 
         for_materia_fin:
         # Inscribe las solicitudes de inscripcion de 
-        # las correcciones si quedan cupos.
+        # las correcciones si quedan cupos y el estudiante
+        # cumple los requisitos de minCreditos.
         #
         # Planificacion de registros:
         # $s0: Lista de inscripciones de correccion.
@@ -752,6 +760,8 @@ main:
         # $s3: valor del nodo (Solicitud).
         # $s4: Materia de la Solicitud.
         # $s5: Cupos de Materia.
+        # $t0: Creditos aprobados del estudiante.
+        # $t1: minCreditos de la materia.
 
         # Procesar inscripciones de correccion
         lw $s0, listaPriorIns
@@ -771,10 +781,17 @@ main:
 
             # Si no quedan cupos en la Materia, siguiente solicitud
             blez $s5, for_inscripcion_cor
+            
+            lw $a0,  4($s3) # Materia 
+            lw $t0, 16($a0) # minCreditos
+
+            lw $a1,   ($s3)  # Estudiante
+            lw $t1,  12($a1) # Creditos aprobados
+
+            # Si el estudiante no cumple los requisitos se salta
+            blt $t1, $t0, for_inscripcion_cor
 
             # Insertar Estudiante en la lista de Materia
-            lw $a0, 4($s3)      # Materia 
-            lw $a1,  ($s3)      # Estudiante
             lw $a2, 8($s3)      # operacion
             jal Materia_agregarEstudiante
 
@@ -792,7 +809,6 @@ main:
     # $s3: Nodo de la lista.
     # $s4: Materia actual.
 
-    # Abrir archivo para escribir
     li $v0, 13
     la $a0, arcDef
     li $a1, 1 

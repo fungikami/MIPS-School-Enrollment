@@ -6,10 +6,14 @@ CI-0716 "Materia 08" 19
    15-47895 "Estudiante 20" 
    18-13087 "Estudiante 19" 
 
-CI-1120 "Materia 02" 3
+CI-1120 "Materia 02" -1
    16-62048 "Estudiante 02" 
    19-50992 "Estudiante 10" 
+   19-62680 "Estudiante 22" 
    19-76273 "Estudiante 06" 
+   19-79240 "Estudiante 27" 
+   20-09293 "Estudiante 03" 
+   20-19966 "Estudiante 18" 
    21-02172 "Estudiante 21" 
 
 CI-1804 "Materia 09" 8

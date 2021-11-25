@@ -1,98 +1,93 @@
-CI-0300 "Materia 15" 16
-   15-13951 "Estudiante 16" 
-   19-62680 "Estudiante 22" (I)
-   20-09293 "Estudiante 03" (I)
+CI-0300 "Materia 15" 19
+   15-13951 "Estudiante 16" (E)
 
-CI-0716 "Materia 08" 20
+CI-0716 "Materia 08" 22
    15-20076 "Estudiante 28" (E)
-   15-47895 "Estudiante 20" 
-   18-13087 "Estudiante 19" 
+   15-47895 "Estudiante 20" (E)
+   18-13087 "Estudiante 19" (E)
 
-CI-1120 "Materia 02" 2
-   16-62048 "Estudiante 02" 
-   19-50992 "Estudiante 10" 
-   19-76273 "Estudiante 06" 
-   20-72947 "Estudiante 24" (I)
-   21-02172 "Estudiante 21" 
+CI-1120 "Materia 02" 7
+   16-62048 "Estudiante 02" (E)
+   19-50992 "Estudiante 10" (E)
+   19-62680 "Estudiante 22" (E)
+   19-76273 "Estudiante 06" (E)
+   19-79240 "Estudiante 27" (E)
+   20-09293 "Estudiante 03" (E)
+   20-19966 "Estudiante 18" (E)
+   21-02172 "Estudiante 21" (E)
 
-CI-1804 "Materia 09" 7
-   15-13951 "Estudiante 16" 
+CI-1804 "Materia 09" 11
+   15-13951 "Estudiante 16" (E)
    16-16475 "Estudiante 00" (E)
-   17-77199 "Estudiante 05" (I)
-   18-76646 "Estudiante 23" 
-   18-94273 "Estudiante 11" (I)
+   18-76646 "Estudiante 23" (E)
 
-CI-2875 "Materia 00" 4
-   15-20076 "Estudiante 28" 
-   18-76646 "Estudiante 23" 
+CI-2875 "Materia 00" 7
+   15-20076 "Estudiante 28" (E)
+   18-76646 "Estudiante 23" (E)
    18-82227 "Estudiante 08" (E)
-   19-79240 "Estudiante 27" 
+   19-79240 "Estudiante 27" (E)
 
-CI-3253 "Materia 07" 21
-   15-43480 "Estudiante 26" 
+CI-3253 "Materia 07" 24
+   15-43480 "Estudiante 26" (E)
    17-72127 "Estudiante 13" (E)
-   20-25866 "Estudiante 04" 
-   21-84319 "Estudiante 09" 
-
-CI-3369 "Materia 13" 7
-   17-77199 "Estudiante 05" 
-   21-02172 "Estudiante 21" 
+   20-25866 "Estudiante 04" (E)
    21-84319 "Estudiante 09" (E)
 
-CI-3796 "Materia 16" 5
+CI-3369 "Materia 13" 9
+   17-77199 "Estudiante 05" (E)
+   21-02172 "Estudiante 21" (E)
+   21-84319 "Estudiante 09" (E)
+
+CI-3796 "Materia 16" 6
    16-16475 "Estudiante 00" (I)
-   18-73578 "Estudiante 14" 
+   18-73578 "Estudiante 14" (E)
    18-94273 "Estudiante 11" (E)
 
-CI-3885 "Materia 10" 4
-   15-13951 "Estudiante 16" 
-   16-16475 "Estudiante 00" (I)
-   17-17570 "Estudiante 07" 
-   19-62680 "Estudiante 22" 
-   19-79240 "Estudiante 27" 
+CI-3885 "Materia 10" 9
+   15-13951 "Estudiante 16" (E)
+   17-17570 "Estudiante 07" (E)
+   19-62680 "Estudiante 22" (E)
+   19-79240 "Estudiante 27" (E)
 
 CI-4108 "Materia 11" 24
 
-CI-4166 "Materia 14" 20
-   16-62048 "Estudiante 02" 
+CI-4166 "Materia 14" 21
+   16-62048 "Estudiante 02" (E)
    19-79240 "Estudiante 27" (I)
    21-84319 "Estudiante 09" (E)
 
-CI-4541 "Materia 01" 9
-   15-43480 "Estudiante 26" (I)
+CI-4541 "Materia 01" 12
    18-94273 "Estudiante 11" 
    19-50992 "Estudiante 10" 
-   19-57883 "Estudiante 12" 
-   19-62680 "Estudiante 22" (I)
+   19-57883 "Estudiante 12" (E)
    20-09293 "Estudiante 03" 
 
-CI-5379 "Materia 06" 12
+CI-5379 "Materia 06" 13
    16-62048 "Estudiante 02" (E)
-   20-09293 "Estudiante 03" 
+   20-09293 "Estudiante 03" (E)
 
-CI-6035 "Materia 05" 18
+CI-6035 "Materia 05" 21
    18-73578 "Estudiante 14" (E)
-   18-94273 "Estudiante 11" 
-   19-76273 "Estudiante 06" 
-   21-02172 "Estudiante 21" 
+   18-94273 "Estudiante 11" (E)
+   19-76273 "Estudiante 06" (E)
+   21-02172 "Estudiante 21" (E)
 
-CI-6554 "Materia 19" 19
-   17-77199 "Estudiante 05" (I)
-   18-73578 "Estudiante 14" 
+CI-6554 "Materia 19" 21
+   18-73578 "Estudiante 14" (E)
    20-19966 "Estudiante 18" (E)
    20-72947 "Estudiante 24" (E)
    21-02172 "Estudiante 21" (E)
 
-CI-6628 "Materia 12" 15
-   15-43480 "Estudiante 26" 
-   17-17570 "Estudiante 07" 
+CI-6628 "Materia 12" 18
+   15-43480 "Estudiante 26" (E)
+   17-17570 "Estudiante 07" (E)
    18-94273 "Estudiante 11" 
-   21-74460 "Estudiante 29" 
+   21-74460 "Estudiante 29" (E)
    21-84319 "Estudiante 09" 
 
-CI-6740 "Materia 18" 15
-   18-94273 "Estudiante 11" 
-   19-62680 "Estudiante 22" 
+CI-6740 "Materia 18" 17
+   18-94273 "Estudiante 11" (E)
+   19-62680 "Estudiante 22" (E)
 
 CI-7239 "Materia 04" 23
    17-17570 "Estudiante 07" (E)
@@ -103,9 +98,6 @@ CI-7437 "Materia 17" 9
    19-76273 "Estudiante 06" (E)
    20-72947 "Estudiante 24" 
 
-CI-9727 "Materia 03" 16
-   16-16475 "Estudiante 00" 
-   18-82227 "Estudiante 08" (I)
-   20-25866 "Estudiante 04" (I)
-   21-02172 "Estudiante 21" (I)
+CI-9727 "Materia 03" 20
+   16-16475 "Estudiante 00" (E)
 
