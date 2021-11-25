@@ -4,8 +4,6 @@
 # Fecha: 25-nov-2021
 
         .data
-# chus/Documents 
-# fung/Downloads
 arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
 arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
 arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
@@ -571,6 +569,95 @@ main:
 
     for_solicitud_cor_fin:
         # Planificacion de registros:
+        # $s0: Lista de materias
+        # $s1: Centinela de Lista
+        # $s2: Nodo actual de Lista
+        # $s3: Estudiante no eliminado con más créditos
+        # $s4: Materia
+        # $s5: Lista Estudiantes
+        # $s6: Centinela de Lista Estudiantes
+        # $s7: Nodo de actual Lista Estudiantes
+        # $t0: Cupos de Materia
+        # $t1: Codigo de la materia
+        
+        # ATENCION
+        # Verifica que todas las materias tengan cupos positivos
+        lw $s0, listaMat
+        lw $s1,  ($s0)  # Centinela de la lista
+        lw $s2, 8($s1)  # Primer nodo de la lista
+
+        for_materia:
+            beq $s2, $s1, for_materia_fin
+
+            lw $t1,  4($s2)     # Valor del nodo (Codigo)
+
+            # Buscar codigo en la TablaHash
+            lw   $a0, tablaHashMat
+            move $a1, $t1
+            jal  TablaHash_obtenerValor
+
+            move $s4, $v0
+            lw   $t0, 12($s4) # Cupos
+
+            # Actualizamos al Nodo.siguiente
+            lw $s2, 8($s2) 
+
+            bgez $t0, for_materia
+
+            # Eliminar estudiantes
+            for_cupos_neg:
+                lw $s5, 20($s4) # Lista Estudiantes de la Materia
+                lw $s6,  ($s5)  # Centinela de la lista
+                lw $s7, 8($s6)  # Nodo de la lista
+                
+                # Se crea estudiante Dummy con -1
+                # para hallar el estudiante con más créditos
+                la $a0, newl
+                la $a1, newl
+                la $a2, newl
+                li $a3, -1
+                jal Estudiante_crear
+                move $s3, $v0
+                
+                for_estudiante:
+                    beq $s7, $s6, for_estudiante_fin
+
+                    lw $t0, 4($s7)  # Valor del nodo (Par)
+                    lw $t2, ($t0)   # Estudiante
+                    lw $t3, 4($t0)  # Operacion
+
+                    # Actualizamos al Nodo.siguiente
+                    lw $s7, 8($s7) 
+
+                    # Si la operacion == 'E'
+                    li $t4, 'E'
+                    beq $t4, $t3, for_estudiante
+
+                    lw $t5, 12($s3)   # Creditos aprobados max actual
+                    lw $t6, 12($t2)   # Creditos aprobados actual est
+
+                    # Si creditosAprobMax > creditosAprobEst
+                    bgt $t5, $t6, for_estudiante
+
+                    # En cambio, actualizar max
+                    move $s3, $t2
+                    b for_estudiante
+                    
+                for_estudiante_fin:
+                    # Se elimina el estudiante con más creditoAprob de la materia
+                    move $a0, $s4
+                    move $a1, $s3
+                    jal Materia_eliminarEstudiante
+                    
+                    lw $t0, 12($s4) # Cupos de la Materia
+                    bnez $t0, for_cupos_neg
+
+            b for_materia
+        for_materia_fin:
+
+        # CUIDADO PISO MOJADO
+
+        # Planificacion de registros:
         # $s0: Lista de inscripciones de correccion
         # $s1: Centinela de Lista
         # $s2: Nodo de Lista
@@ -607,7 +694,7 @@ main:
 
 
     for_inscripcion_cor_fin:
-    # Chequear que todas las materias tengan cupos positivos
+
 
     # ------------- ARCHIVO DEFINITIVO --------------------
     # Planificacion de registros:
