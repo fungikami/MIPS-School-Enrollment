@@ -1,4 +1,4 @@
-# Proyecto 1:
+# Proyecto 1
 # Implementacion de un sistema de asignacion de cupos
 # para dar soporte al proceso de inscripcion y correccion 
 # de materias de una institucion.
