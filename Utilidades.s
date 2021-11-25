@@ -262,6 +262,7 @@ limpiarBuffer_fin:
     jr $ra
 
 # Funcion atoi.
+# Convierte un ASCII en entero.
 # Entrada: $a0: ASCII.
 #          $a1: Numero de caracteres a convertir.
 # Salida:  $v0: Entero

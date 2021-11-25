@@ -114,7 +114,7 @@ main:
         move $s5, $v0
 
         move $s0, $v1
-        add  $s0, $s0, 1 # Salta \n
+        add  $s0, $s0, 1    # Salta \n
 
         # Crear Estudiante
         move $a0, $s2
@@ -613,9 +613,9 @@ main:
 
             # Eliminar estudiantes
             for_cupos_neg:
-                lw $s5, 20($s4) # Lista Estudiantes de la Materia
-                lw $s6,  ($s5)  # Centinela de la lista
-                lw $s7, 8($s6)  # Nodo de la lista
+                lw $s5, 20($s4)     # Lista Estudiantes
+                lw $s6,  ($s5)      # Centinela de la lista
+                lw $s7, 8($s6)      # Nodo de la lista
                 
                 # Se crea estudiante Dummy con -1
                 # para hallar el estudiante con mas creditos
