@@ -129,7 +129,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
       \li \id{minCreditos} = Guardar mínimo de créditos
       \li \id{mat} = \kw{new} \proc{Materia}(\id{codigo}, \id{nombre}, \id{creditos}, \id{numCupos}, \id{minCreditos})
       \li \id{tablaHashMat}.\proc{Insertar}(\id{carnet}, \id{est})
-      \li \id{listaMat}.\proc{Insertar-Ordenado}(\id{codigo})
+      \li \id{listaMat}.\proc{Insertar-Ordenado}(\id{codigo}, \id{f})
       \End
 
    \li
@@ -212,7 +212,28 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
          \item Operaciones:
 
          \begin{itemize}
-            \item \proc{crear}()
+            \item \proc{Crear}()
+            \item \proc{Insertar}(\id{elemento})
+            \item \proc{Insertar-Ordenado}(\id{elemento}, \id{f})
+         \end{itemize}
+      \end{itemize}
+
+      \item \proc{TablaHash}:
+      
+      \begin{itemize}
+         \item Atributos:
+
+         \begin{itemize}
+            \item Tamaño.
+            \item Tabla.
+         \end{itemize}
+
+         \item Operaciones:
+         
+         \begin{itemize}
+            \item \proc{Crear}(\id{tam})
+            \item \proc{Insertar}(\id{clave}, \id{valor})
+            \item \proc{Obtener-Valor}(\id{clave})
          \end{itemize}
       \end{itemize}
    \end{itemize}
