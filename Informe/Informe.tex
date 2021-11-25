@@ -281,7 +281,8 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
 
    En la seccion anterior se menciona el uso de distintas estructuras de datos
    utilizadas en el diseño del programa. En esta sección se enlistan cada una
-   de ellas, junto con sus atributos y operaciones.
+   de ellas, junto con sus atributos y operaciones. En algunos casos, se implementaron
+   más operaciones de las aquí mencionadas, que se dejaron en el código fuente.
 
    \begin{itemize}
       \item \proc{Par}:
@@ -293,6 +294,8 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item Segundo elemento.
          \end{itemize}
       \end{itemize}
+      
+      \pagebreak
 
       \begin{itemize}
          \item Operaciones:
@@ -377,7 +380,7 @@ archivo de entrada, para ello, se usan tablas de hash y listas.
             \item Lista Estudiantes.
          \end{itemize}
       \end{itemize}
-
+      
       \begin{itemize}
          \item Operaciones:
          
@@ -421,16 +424,19 @@ del estudiante y la lista de estudiantes de cada \proc{Materia} para insertar la
 Así, para evitar búsquedas lineales con estructuras como listas, con las tablas de hash implementadas se logra 
 obtener la información de cada materia/estudiante en tiempo amortizado constante. En este sentido, la función 
 de Hash escogida para \proc{TablaHash} fue basada en la función de Hash para Strings que utiliza el lenguaje 
-de programación Java \footnote{https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html}. \\
+de programación Java\footnote{https://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-15.html}, la
+cual es sencilla de calcular a la vez que da buenos resultados en la práctica. \\
 
 Por otro lado, se implementaron distintas funciones de comparación (a las que refiere el pseudocódigo en
-la sección 1 como $f$ y $g$). Para imprimir cada materia con sus
+la sección 1 como $f$ y $g$ en las líneas 22 y 62). Para imprimir cada materia con sus
 respectivos estudiantes inscritos y eliminados, se toma en cuenta el orden ascendente según el código
 de la materia y el carnet del estudiante. Para ello, se realizan comparaciones por cada valor ASCII de 
 un caracter del carnet al insertar el estudiante en la lista de estudiantes de la materia. 
 En cambio, para tomar en cuenta la modalidad asignada en las solicitudes de corrección, se realiza una 
 comparación entre el número de créditos aprobados de cada estudiante a inscribir. \\
 
-
-
+Para la implementación y almacenamiento en MIPS de algunos atributos de las estructuras de datos
+(como \proc{Estudiante} y \proc{Materia}), se realizaron funciones \proc{itoa} y \proc{atoi}, las cuales
+converten un entero a una cadena de caracteres y viceversa, lo cual facilita las comparaciones
+numéricas cuando es necesario, y la impresión del archivo de texto al final de cada etapa. \\
 \end{document}
