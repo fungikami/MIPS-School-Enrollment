@@ -7,13 +7,6 @@
 
         .data
 
-arcEst:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Estudiantes.txt"
-arcMat:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-Materias.txt"
-arcIns:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolInscripcion.txt"
-arcCor:         .asciiz "/home/chus/Documents/Orga/proyecto1/ejemplo-SolCorreccion.txt"
-arcTen:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsTentativa.txt"
-arcDef:         .asciiz "/home/chus/Documents/Orga/proyecto1/AA-InsDefinitiva.txt"
-
 buffer:         .space 2097152 
 bufferTamanio:  .word  2097152
 
@@ -38,7 +31,7 @@ errorMat:       .asciiz "Materia de la solicitud no se encontro."
 errorEst:       .asciiz "Estudiante de la solicitud no se encontro."
 
         .text
-
+.globl main
 main:
     # ---------- ESTUDIANTES ----------
     # Cargar datos de los estudiantes.
