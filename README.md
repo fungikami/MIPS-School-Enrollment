@@ -1,7 +1,4 @@
-# proyecto1
+# School Enrollment in MIPS Assembly
+## CI3815 Project II
 
-## Proyecto 1 de Organización del Computador (CI3815) USB
-
-No sabemos de qué trata aún.
-
-Peleando con Github.
+Design and implementation of a registration system for subjects taught by an educational institution.
