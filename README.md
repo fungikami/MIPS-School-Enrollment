@@ -43,15 +43,21 @@ The files containing the enrollment information for each student have the follow
 The program overwrites the following files:
 
 + ***Tentative and definitive enrollments***:
-First line of each subject:
-  - Subject Code: 7 characters.
-  - Name: Maximum 30 characters.
-  - Number of free Quotas: 3 characters.
+  - First line of each subject:
+    Subject Code: 7 characters.
+    Name: Maximum 30 characters.
+    Number of free Quotas: 3 characters.
+  - Rest of the lines (registered students):
+    Student Card:
+    Name: Maximum 20 characters.
+    Correction (if there is any): Inclusion in Correction (I) or Elimination in Correction (E).
 
-Rest of the lines (registered students):
-  - Student Card:
-  - Name: Maximum 20 characters.
-  - Correction (if there is any): Inclusion in Correction (I) or Elimination in Correction (E).
+## Considerations
+
++ In the registration application process: all applications are accepted. This criterion does not consider quota limits.
++ In the correction process:
+  - In the case of eliminations: All must be accepted.
+  - In the case of registration: Priority is given to students with the lowest number of approved credits.
 
 ---
 
