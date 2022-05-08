@@ -10,8 +10,9 @@ Design and implementation of a registration system for subjects taught by an edu
 ```
 
 + Go to Settings/Exception Handler, mark "Include this exception handler file in all assemble operation", then click "Browse" and select `myexception.s`.
++ Modify the test cases in .data of `myexception.s`
 + Go to File/Open and click `Main.s`. Assemble and run.
-+ You can see the results in the new .tex files.
++ See the results in the new .txt files :).
 
 ---
 
