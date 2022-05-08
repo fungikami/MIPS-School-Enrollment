@@ -43,14 +43,8 @@ The files containing the enrollment information for each student have the follow
 The program overwrites the following files:
 
 + ***Tentative and definitive enrollments***:
-  - First line of each subject:
-    Subject Code: 7 characters.
-    Name: Maximum 30 characters.
-    Number of free Quotas: 3 characters.
-  - Rest of the lines (registered students):
-    Student Card:
-    Name: Maximum 20 characters.
-    Correction (if there is any): Inclusion in Correction (I) or Elimination in Correction (E).
+  - First line of each subject: Subject Code, Name, Number of free quotas.
+  - Rest of the lines (registered students): Student ID, Name, Correction (if there is any).
 
 ## Considerations
 
