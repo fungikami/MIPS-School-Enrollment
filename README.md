@@ -40,6 +40,8 @@ The files containing the enrollment information for each student have the follow
   - Subject Code: 7 characters. Fixed size.
   - Operation: 1 character. Possible values: I (Inclusion) or E (Elimination).
 
+The program overwrites the following files:
+
 + ***Tentative and definitive enrollments***:
 First line of each subject:
   - Subject Code: 7 characters.
